@@ -1,0 +1,8 @@
+"ID","Parm","Parm.Description","Select","Min","Max","Category","Unit"
+1,"PSOL","Pesticide solubility in ppm.",0,NA,NA,NA,""
+2,"PHLS","Pesticide half-life in soil in days.",0,NA,NA,NA,""
+3,"PHLF","Pesticide half-life in foliage in days.",0,NA,NA,NA,""
+4,"PWOF","Pesticide wash off fraction",0,NA,NA,NA,""
+5,"PKOC","Pesticide organic C absorption coefficient.",0,NA,NA,NA,""
+6,"PCST","Pesticide cost",0,NA,NA,NA,"$/kg"
+7,"PCEM","Carbon emission per unit pesticide",0,NA,NA,NA,"kg/kg"

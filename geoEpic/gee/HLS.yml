@@ -1,0 +1,63 @@
+# Global parameters
+global_scope:
+  time_range:
+  - '2022-05-16'
+  - '2022-09-19'
+  variables: [nir, red, green, blue, swir1, swir2, ndvi]
+  resolution: 10
+
+
+# Specify Earth Engine collections and their respective variables
+collections:
+
+  # le05:
+  #   collection: LANDSAT/LT05/C02/T1_L2
+  #   select: (b('QA_PIXEL') >> 6) & 1
+  #   variables:
+  #     nir: b('SR_B4')*0.0000275 - 0.2
+  #     red: b('SR_B3')*0.0000275 - 0.2
+  #     green: b('SR_B2')*0.0000275 - 0.2
+  #     blue: b('SR_B1')*0.0000275 - 0.2
+  #     swir1: b('SR_B5')*0.0000275 - 0.2
+  #     swir2: b('SR_B7')*0.0000275 - 0.2
+
+  le07:
+    collection: LANDSAT/LE07/C02/T1_L2
+    select: (b('QA_PIXEL') >> 6) & 1
+    variables:
+      nir: b('SR_B4')*0.0000275 - 0.2
+      red: b('SR_B3')*0.0000275 - 0.2
+      green: b('SR_B2')*0.0000275 - 0.2
+      blue: b('SR_B1')*0.0000275 - 0.2
+      swir1: b('SR_B5')*0.0000275 - 0.2
+      swir2: b('SR_B7')*0.0000275 - 0.2
+
+  hlsl30:
+    collection: NASA/HLS/HLSL30/v002
+    select: "!((b('Fmask') >> 1 & 1) | (b('Fmask') >> 4 & 1))"
+    variables:
+      nir: b('B5')
+      red: b('B4')
+      green: b('B3')
+      blue: b('B2')
+      swir1: b('B6')
+      swir2: b('B7')
+
+  sentinel2:
+    collection: COPERNICUS/S2_HARMONIZED
+    linkcollection:
+      collection: GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED
+      bands: [cs_cdf]
+    select: b('cs_cdf') > 0.8
+    variables:
+      nir: 0.9983 * (b('B8')*0.0001) - 0.0001
+      red: 0.9765 * (b('B4')*0.0001) + 0.00094
+      green: 1.005 * (b('B3')*0.0001) - 0.00093
+      blue: 0.9978 * (b('B2')*0.0001) - 0.004
+      swir1: 0.9987 * (b('B11')*0.0001) - 0.0011
+      swir2: 1.003 * (b('B12')*0.0001) - 0.0012
+
+# Derived variables
+derived_variables:
+  ndvi: (nir - red)/(nir + red)
+  

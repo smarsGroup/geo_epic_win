@@ -1,0 +1,29 @@
+# Global parameters
+global_scope:
+  time_range: ['2005-01-01', '2022-12-31']
+  variables: ['srad', 'tmax', 'tmin', 'prcp', 'rh', 'ws']  
+  resolution: 1000
+
+
+# Specify Earth Engine collections and their respective variables
+collections:
+  daymet:
+    collection: NASA/ORNL/DAYMET_V4
+    variables:
+      tmax: b('tmax')
+      tmin: b('tmin')
+      srad: b('srad')
+      dayl: b('dayl')
+      prcp: b('prcp')
+      vp: b('vp')
+      
+  gridmet:
+    collection: 'IDAHO_EPSCOR/GRIDMET'
+    variables:
+      ws: b('vs')
+
+# Derived variables
+derived_variables:
+  srad: ({srad} * {dayl}) / 1e6
+  rh: '{vp}/(611 * exp(17.502 * (({tmax} + {tmin})/2) / ((({tmax} + {tmin})/2) + 240.97 )))'
+

@@ -1,0 +1,52 @@
+   1   2   3   4   6   7   9  10  11  13  14  15  16  17  18  19  28  29  30  31
+  33  34  35  36  37  42  43  47  48  49  50  51  52  53  54  56  57  58  59  60
+  61  62  63  65  67  68  73  74  75  76  77  85  86  87  88  89  90  91  92  93
+  94  95  96 101 103 105 107                                                    
+                                                                                
+  44  45  46  55                                                                
+   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20
+  21  22  23  24  25  26  27  28  29                                            
+   1   2   3   4   5   6  10  11  13  74  43  44  46  47  48  49  50  51  52  85
+  93 101 103 105 107                                                            
+   4  11  14  16  17  18  19  33  38  43  44  45  46  47  89  93  49  50  51  52
+  53  54  55  56  57  58  65  66  73  74  75  76  77  85  95  96 101 103 105 107
+   4  10  11  13  14  16  17  18  19  20                                        
+                                                                                
+   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0   1   0
+   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0                    
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  -1  -2  19  -3
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+These are the extensions of the output files to turn on/off in lines 15-16.     
+The last 6 file extensions are not file extensions. Files with an asterisk to th
+have been selected for output (RCI, 7/22/09). Changes made 7/25/09 8.abr not nee
+--------------------------------------------------------------------------------
+*out acm*sum dhy dps mfs mps*ann*sot dtp mcm dcs sco*acn dcn*scn dgn dwt*acy aco
+ dsl mwc abr*atg msw*aps dwc dhs dgz erx run rtc rts sgi gis                    
+                                                                                

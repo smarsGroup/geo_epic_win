@@ -1,0 +1,20 @@
+# Global parameters
+global_scope:
+  time_range: ['2010-01-01', '2022-12-31']
+  variables: ['ws']  
+  resolution: 10
+
+collections:
+      
+  le07:
+    collection: NASA/NLDAS/FORA0125_H002
+    variables:
+      wind_u: b('wind_u')
+      wind_v: b('wind_v')
+      
+# Derived variables
+derived_variables:
+  ws: '(nir - red)/(nir + red)'
+  lai_ndvi: where(11.266*ndvi - 4.007 < 0, 0, 11.266*ndvi - 4.007)
+  lai_sr: where(-9.29*exp(-0.163*(nir/red)) + 6.91 < 0, 0, -9.29*exp(-0.163*(nir/red)) + 6.91)
+  rdvi: '(nir - red)/sqrt(nir + red)'

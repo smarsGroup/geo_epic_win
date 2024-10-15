@@ -1,0 +1,8 @@
+mkdocs/site
+test
+build
+geo_epic.egg-info
+geo_epic/__pycache__
+geo_epic/*/__pycache__
+__pycache__/
+geoEpic/gee/config.json

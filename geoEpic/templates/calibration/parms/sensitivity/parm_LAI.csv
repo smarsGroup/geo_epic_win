@@ -1,0 +1,144 @@
+"ID","Parm","Parm.Description","Select","Min","Max","Category","Unit"
+1,"SRCP1_1","Expresses the effect of soil course fragment content",0,NA,NA,"",NA
+2,"SRCP1_2","Governs soil evaporation as a function of soil depth",0,NA,NA,"",NA
+3,"SRCP1_3","Drives harvest index development as a function of crop Maturity",0,NA,NA,"",NA
+4,"SRCP1_4","NRCS runoff curve number soil water relationship",0,NA,NA,"",NA
+5,"SRCP1_5","Estimates soil cover factor used in simulating soil temperature",0,NA,NA,"",NA
+6,"SRCP1_6","Settles after tillage soil bulk density to normal value",0,NA,NA,"",NA
+7,"SRCP1_7","Determines the root growth aeration stress factor",0,NA,NA,"",NA
+8,"SRCP1_8","Determines the plant stress caused by N or P deficiency",0,NA,NA,"",NA
+9,"SRCP1_9","Calculates the pest damage factor",0,NA,NA,"",NA
+10,"SRCP1_10","Calculates the effect of water stress on harvest index",0,NA,NA,"",NA
+11,"SRCP1_11","Estimates plant water stress",0,NA,NA,"",NA
+12,"SRCP1_12","Governs N volatilization",0,NA,NA,"",NA
+13,"SRCP1_13","Calculates wind erosion vegetative cover factor",0,NA,NA,"",NA
+14,"SRCP1_14","Calculates soil temperature factor",0,NA,NA,"",NA
+15,"SRCP1_15","Expresses plant population effect on epic water erosion cover factor",0,NA,NA,"",NA
+16,"SRCP1_16","Increases snow melt",0,NA,NA,"",NA
+17,"SRCP1_17","Estimates the snow cover factor",0,NA,NA,"",NA
+18,"SRCP1_18","Expresses soil temperature effect",0,NA,NA,"",NA
+19,"SRCP1_19","Drives water table between maximum and minimum limits",0,NA,NA,"",NA
+20,"SRCP1_20","Simulates oxygen content of soil as a function of depth",0,NA,NA,"",NA
+21,"SRCP1_21","Governs plant water stress",0,NA,NA,"",NA
+22,"SRCP1_22","",0,NA,NA,"",NA
+23,"SRCP1_23","Estimates fraction plant ground cover",0,NA,NA,"",NA
+24,"SRCP1_24","Simulates oxygen content of soil",0,NA,NA,"",NA
+25,"SRCP1_25","Regulates denitrification",0,NA,NA,"",NA
+26,"SRCP1_26","Estimates plant ground cover",0,NA,NA,"",NA
+27,"SRCP1_27","",0,NA,NA,"",NA
+28,"SRCP1_28","",0,NA,NA,"",NA
+29,"SRCP1_29","",0,NA,NA,"",NA
+30,"SRCP1_30","Exception to normal S-Curve procedure",0,NA,NA,"",NA
+31,"SRCP2_1","Expresses the effect of soil course fragment content",0,NA,NA,"",NA
+32,"SRCP2_2","Governs soil evaporation as a function of soil depth",0,NA,NA,"",NA
+33,"SRCP2_3","Drives harvest index development as a function of crop Maturity",0,NA,NA,"",NA
+34,"SRCP2_4","NRCS runoff curve number soil water relationship",0,NA,NA,"",NA
+35,"SRCP2_5","Estimates soil cover factor used in simulating soil temperature",0,NA,NA,"",NA
+36,"SRCP2_6","Settles after tillage soil bulk density to normal value",0,NA,NA,"",NA
+37,"SRCP2_7","Determines the root growth aeration stress factor",0,NA,NA,"",NA
+38,"SRCP2_8","Determines the plant stress caused by N or P deficiency",0,NA,NA,"",NA
+39,"SRCP2_9","Calculates the pest damage factor",0,NA,NA,"",NA
+40,"SRCP2_10","Calculates the effect of water stress on harvest index",0,NA,NA,"",NA
+41,"SRCP2_11","Estimates plant water stress",0,NA,NA,"",NA
+42,"SRCP2_12","Governs N volatilization",0,NA,NA,"",NA
+43,"SRCP2_13","Calculates wind erosion vegetative cover factor",0,NA,NA,"",NA
+44,"SRCP2_14","Calculates soil temperature factor",0,NA,NA,"",NA
+45,"SRCP2_15","Expresses plant population effect on epic water erosion cover factor",0,NA,NA,"",NA
+46,"SRCP2_16","Increases snow melt",0,NA,NA,"",NA
+47,"SRCP2_17","Estimates the snow cover factor",0,NA,NA,"",NA
+48,"SRCP2_18","Expresses soil temperature effect",0,NA,NA,"",NA
+49,"SRCP2_19","Drives water table between maximum and minimum limits",0,NA,NA,"",NA
+50,"SRCP2_20","Simulates oxygen content of soil as a function of depth",0,NA,NA,"",NA
+51,"SRCP2_21","Governs plant water stress",0,NA,NA,"",NA
+52,"SRCP2_22","",0,NA,NA,"",NA
+53,"SRCP2_23","Estimates fraction plant ground cover",0,NA,NA,"",NA
+54,"SRCP2_24","Simulates oxygen content of soil",0,NA,NA,"",NA
+55,"SRCP2_25","Regulates denitrification",0,NA,NA,"",NA
+56,"SRCP2_26","Estimates plant ground cover",0,NA,NA,"",NA
+57,"SRCP2_27","",0,NA,NA,"",NA
+58,"SRCP2_28","",0,NA,NA,"",NA
+59,"SRCP2_29","",0,NA,NA,"",NA
+60,"SRCP2_30","Exception to normal S-Curve procedure",0,NA,NA,"",NA
+61,"PARM1","Crop canopy",1,1,2,"1,2,3,4,5,6,8",NA
+62,"PARM2","Root growth - soil strength",0,1.2,1.5,"3,5,7",NA
+63,"PARM3","Water stress - harvest index (0 – 1)",0,0,1,"1,4",NA
+64,"PARM4","Denitrification rate constant",0,0.1,5,"1,4",NA
+65,"PARM5","Soil water lower limit of water content in the top 0.5 m soil depth",0,0,1,"3,5,7",NA
+66,"PARM6","Winter dormancy (h) causes dormancy in winter grown crops",0,0,1,"0",NA
+67,"PARM7","Nitrogen fixation is limited by soil water or nitrate content or by crop growth stage",0,0,1,"1,4",NA
+68,"PARM8","Soluble P runoff coefficient",0,10,20,"0",NA
+69,"PARM9","Pest damage moisture threshold",0,25,150,"0",NA
+70,"PARM10","Pest damage cover threshold",0,1,10,"0",NA
+71,"PARM11","Moisture required for seed germination",1,-30,-10,"1,2,4,6,7",NA
+72,"PARM12","Soil evaporation coefficient",0,1.5,2.5,"3,5,7",NA
+73,"PARM13","Hargreaves PET equation exponent",0,0.5,0.6,"3,5,7",NA
+74,"PARM14","Nitrate leaching ratio",0,0.1,1,"0",NA
+75,"PARM15","Runoff CN Residue Adjustment Parameter",0,0,0.3,"0",NA
+76,"PARM16","Plow layer depth",0,NA,NA,"0",NA
+77,"PARM17","Crack flow coefficient",0,0,0.3,"5",NA
+78,"PARM18","Pesticide leaching ratio",0,0.1,1,"0",NA
+79,"PARM19","Fraction of maturity at spring growth initiation",0,0,1,"0",NA
+80,"PARM20","",0,NA,NA,"",NA
+81,"PARM21","KOC for carbon loss in water and sediment",0,500,1500,"0",NA
+82,"PARM22","K pool flow coefficient",0,1e-05,5e-04,"0",NA
+83,"PARM23","Exponential coefficient in RUSLE C residue factor",0,0.01,0.5,"0",NA
+84,"PARM24","Maximum depth for biological mixing (m)",0,0.1,0.3,"1,4",NA
+85,"PARM25","Biological mixing efficiency",0,0.1,0.5,"1,4",NA
+86,"PARM26","Exponential coefficient in RUSLE C live plant factor",0,0.01,0.2,"5",NA
+87,"PARM27","Lower limit nitrate concentration",0,0,10,"0",NA
+88,"PARM28","Acceptable plant N stress level",0,0,1,"1,4",NA
+89,"PARM29","K pool flow coefficient",0,0.001,0.02,"0",NA
+90,"PARM30","Denitrification soil - water threshold",0,0.9,1.1,"1,4",NA
+91,"PARM31","Furrow irrigation sediment routing exponent",0,1,1.5,"5",NA
+92,"PARM32","Minimum C factor value",0,1e-04,0.8,"0",NA
+93,"PARM33","Puddling saturated conductivity",0,1e-05,0.1,"5",NA
+94,"PARM34","Soluble P runoff exponent",0,1,1.5,"0",NA
+95,"PARM35","Water stress weighting coefficient",0,0,1,"5,6,7",NA
+96,"PARM36","Furrow irrigation base sediment concentration",0,0.01,0.2,"5",NA
+97,"PARM37","Pest kill scaling factor",0,100,10000,"0",NA
+98,"PARM38","Hargreaves PET equation coefficient",0,0.0023,0.0032,"3,5",NA
+99,"PARM39","Auto N fertilizer scaling factor",0,50,500,"0",NA
+100,"PARM40","Crop growth climatic factor",0,40,100,"0",NA
+101,"PARM41","Soil evaporation- plant cover factor",0,0,0.5,"",NA
+102,"PARM42","NRCS curve number index coefficient",0,0.5,1.5,"3,5",NA
+103,"PARM43","Upward movement of soluble P by evaporation coefficient",0,1,20,"0",NA
+104,"PARM44","Ratio of soluble C concentration in runoff to percolate",0,0.1,1,"0",NA
+105,"PARM45","Coefficient in century equation allocating slow to passive humus",0,0.001,0.05,"0",NA
+106,"PARM46","Auto fertilizer weighting factor",0,0,1,"0",NA
+107,"PARM47","Slow humus transformation rate",0,0.00041,0.00068,"0",NA
+108,"PARM48","Passive humus transformation rate",0,8.2e-06,1.5e-05,"0",NA
+109,"PARM49","Fraction of above ground plant material burned",0,0,1,"0",NA
+110,"PARM50","Technology annual rate coefficient",0,0,0.01,"4,5",NA
+111,"PARM51","Coefficient in oxygen equation",0,0.8,0.95,"0",NA
+112,"PARM52","Exponential coefficient in equation",0,5,15,"0",NA
+113,"PARM53","Coefficient in oxygen equation",0,0.8,0.95,"0",NA
+114,"PARM54","Exponential coefficient in potential water use root growth distribution equation",1,2.5,7.5,"1,2,4,5,6,7",NA
+115,"PARM55","Coefficient used in allocating root growth",1,0,1,"1,2,4",NA
+116,"PARM56","Exponential coefficient in root growth distribution",1,5,10,"1,2,3,7",NA
+117,"PARM57","Volatilization/nitrification partitioning coefficient",0,0.05,0.5,"0",NA
+118,"PARM58","Runoff amount to delay pest application",0,0,25,"0",NA
+119,"PARM59","Soil water value to delay tillage",1,0.97,1,"1,2,4,5,6,7,8",NA
+120,"PARM60","Exponential coefficient in EPIC soil erosion C factor",0,0.5,2,"0",NA
+121,"PARM61","Weighting factor for estimating soil evaporation",0,0,1,"3,5",NA
+122,"PARM62","Exponential coefficient regulates upward N movement by evaporation",1,0.2,2,"1,2,4",NA
+123,"PARM63","Upper limit of N concentration in percolating water",1,100,10000,"1,2,4,5",NA
+124,"PARM64","Upper limit of nitrification - volatilization as a fraction",0,0,1,"0",NA
+125,"PARM65","Reduces NRCS runoff CN retention PARM",0,0.05,0.5,"0",NA
+126,"PARM66","Converts standing dead residue to flat residue",1,1e-04,0.05,"1,2,4,6,7,8",NA
+127,"PARM67","Wind erosion threshold wind speed",0,4,10,"0",NA
+128,"PARM68","N fixation upper limit",1,1,30,"1,2,4",NA
+129,"PARM69","Heat unit adjustment at harvest",0,0,1,"4,5",NA
+130,"PARM70","Power of change in day length component of LAI growth equation",1,1,10,"1,2,4,5",NA
+131,"PARM71","RUSLE 2 transport capacity parameter",0,0.001,0.1,"0",NA
+132,"PARM72","RUSLE 2 Threshold transport capacity coefficient",0,1,10,"0",NA
+133,"PARM73","Upper limit of curve number retention parameter",0,1,2,"0",NA
+134,"PARM74","Penman - Monteith adjustment factor",0,0.5,1.5,"3,5",NA
+135,"PARM75","Runoff CN residue adjustment parameter",0,0,0.3,"0",NA
+136,"PARM76","Harvest index adjustment for fruit and nut trees",0,100,1500,"0",NA
+137,"PARM77","Coefficient regulating p flux between labile and active pool",0,1e-04,0.001,"0",NA
+138,"PARM78","Coefficient regulating p flux between active and stable pool",0,1e-04,0.001,"0",NA
+139,"PARM79","Weighting factor for locating appropriate weather stations",0,0.8,1,"0",NA
+140,"PARM80","Partitions N2 and N2O",0,0.1,0.9,"0",NA
+141,"PARM81","Weights the effect of TMX - TMN and RAD on soil temperature",0,5,20,"0",NA
+142,"PARM82","Damping depth adjustment for soil temperature",0,0,2,"3",NA
+143,"PARM83","Runoff volume adjustment for direct link",0,0.1,2,"0",NA
