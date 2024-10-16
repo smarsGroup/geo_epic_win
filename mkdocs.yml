@@ -1,0 +1,93 @@
+### Site metadata ###
+
+site_name: GeoEPIC
+site_description: Python Utility function to run EPIC model
+site_url: https://smarsgroup.github.io/geo_epic_win/
+
+repo_url: https://github.com/smarsGroup/geo_epic_win
+
+# site_dir: './site'
+### Build settings ###
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+
+theme:
+  name: material
+  # custom_dir: custom
+  features:
+    - announce.dismiss
+    # - content.action.edit
+    # - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.tooltips
+    - navigation.footer
+    - navigation.indexes
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+  
+  extra_css:
+  - extra.css
+
+  palette:
+    primary: black #
+    # # Palette toggle for dark mode
+    # media: "(prefers-color-scheme: dark)"
+    #   scheme: slate
+    #   toggle:
+    #     icon: material/brightness-4
+    #     name: Switch to light mode
+
+    # Palette toggle for light mode
+    # - media: "(prefers-color-scheme: light)"
+    #   scheme: default
+    #   toggle:
+    #     icon: material/brightness-7
+    #     name: Switch to dark mode
+
+    
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/logo.png
+  icon:
+    logo: logo
+    repo: fontawesome/brands/github
+
+# Plugins
+plugins:
+  - blog
+  - search:
+      separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+
+nav:
+  - Home:
+    - Overview: index.md
+    - Installation: installation.md
+  - EPIC Model:
+    - Environmental Policy Integrated Climate Model: epic.md
+  - Modules:
+    - Crop Sequence Boundaries: csb.md
+    - Weather Module: Weather.md
+    - Soil Module: Soil.md
+    - Crop Management: OPC.md
+    - Google Earth Engine Utility: gee.md
+  - Getting Started:
+    - Code in Python: runexp.md
+    - Model Calibration: opt.md
+    - Running an Experiment: runepic.md
+  - API: api.md
