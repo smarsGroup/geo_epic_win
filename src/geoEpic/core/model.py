@@ -71,7 +71,7 @@ class EPICModel:
     
     @property
     def start_year(self):
-        with open('./EPICRUN.DAT', 'r') as file:
+        with open('./EPICCONT.DAT', 'r') as file:
             line = file.readline()
             values = line.split()
             self._start_year = int(values[1])
@@ -80,7 +80,7 @@ class EPICModel:
     @start_year.setter
     def start_year(self, value):
         self._start_year = value
-        with open('./EPICRUN.DAT', 'r+') as file:
+        with open('./EPICCONT.DAT', 'r+') as file:
             lines = file.readlines()
             values = lines[0].split()
             values[1] = f"{value:04d}"
@@ -90,7 +90,7 @@ class EPICModel:
 
     @property
     def duration(self):
-        with open('./EPICRUN.DAT', 'r') as file:
+        with open('./EPICCONT.DAT', 'r') as file:
             line = file.readline()
             values = line.split()
             self._duration = int(values[0])
@@ -99,7 +99,7 @@ class EPICModel:
     @duration.setter
     def duration(self, value):
         self._duration = value
-        with open('./EPICRUN.DAT', 'r+') as file:
+        with open('./EPICCONT.DAT', 'r+') as file:
             lines = file.readlines()
             values = lines[0].split()
             values[0] = f"{value:03d}"

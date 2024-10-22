@@ -9,7 +9,7 @@ class CropCom:
     """
 
     # Columns that need to be split into integer and decimal parts
-    split_columns = ['DLAP1', 'DLAP2', 'WAC2', 'PPLP1', 'PPLP2']
+    split_columns = ['DLAP1', 'DLAP2', 'WAC2', 'PPLP1', 'PPLP2', 'FRST1', 'FRST2']
     
     def __init__(self, path):
         """
