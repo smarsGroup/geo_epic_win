@@ -1,65 +1,27 @@
-# geo_epic_win
-Windows version of geo epic
+# Geo-EPIC
 
-# pushing docs
+A toolkit for geospatial crop simulations using EPIC model
 
-This project uses [MkDocs](https://www.mkdocs.org/) with the [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/getting-started/) theme to generate a static site from Markdown files.
+version: win_v1.0
 
-## Prerequisites
+Documentation: https://smarsgroup.github.io/geo_epic_win/
 
-Before you begin, make sure you have the following installed on your machine:
+## Overview
 
-- Python 3.x
-- `pip` (Python package manager)
-- `sudo` privileges (if you're using Linux or macOS)
+This package expands the capabilities of the EPIC crop simulation model, to simulate crop growth and development across large geographies, such as entire states or counties by leveraging openly availabe remote sensing products and geospatial databases. Additionally, the toolkit features a unique calibration module that allows fine-tuning of model parameters to reflect specific local conditions or experimental results. This toolkit allows researchers to assess crop production potential, management scenarios and risks at broader scales, informing decision-making for sustainable agricultural practices.
 
 ## Installation
 
-### Step 1: Install MkDocs
+Before starting the setup, ensure you have wget and conda installed.
+Follow the links for corresponding installation guides.
 
-On Linux or macOS, you can use the following command to install MkDocs:
+Setup a Virtual environment. (conda Recommended)
 
-```bash
-sudo apt install mkdocs
 ```
+>> conda create --name epic_env python=3.11
+>> conda activate epic_env
 
-Alternatively, you can use pip to install MkDocs on any platform:
-
-```bash
-pip install mkdocs
+Install the Geo-Epic Toolkit
+>> pip install git+https://github.com/smarsGroup/geo_epic_pre.git
 ```
-
-### Step 2: Install the Material for MkDocs theme
-Install the Material theme for MkDocs using pip:
-
-```bash
-pip install mkdocs-material
-```
-
-### Step 3: Install the pymdown-extensions (Optional)
-For additional Markdown extensions supported by the Material theme, install the pymdown-extensions:
-
-```bash
-pip install pymdown-extensions
-```
-
-Running Locally
-To preview your documentation site locally, use the following command:
-
-```bash
-mkdocs serve
-```
-This will start a local development server. You can access the site at http://127.0.0.1:8000 in your browser to view changes in real-time.
-
-### Step 4: Deploying to GitHub Pages
-Once you're ready to deploy your MkDocs site to GitHub Pages, use the following command:
-
-```bash
-mkdocs gh-deploy --force
-```
-This will build your site and push it to the gh-pages branch of your GitHub repository, which will automatically serve the site using GitHub Pages.
-
-### Editing Content
-To edit the content of your MkDocs site, modify the Markdown files in the docs/ folder. For detailed instructions on editing and configuring your MkDocs project, refer to the official documentation:
-
-[Material for MkDocs - Getting Started](https://squidfunk.github.io/mkdocs-material/getting-started/) 
+Refer to the user guide and quick start tutorials to understand the Geo-EPIC simulation workflow.

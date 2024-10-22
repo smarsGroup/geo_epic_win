@@ -1,0 +1,192 @@
+# Guide (user-friendly):
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+
+# Specification (technical, formal):
+# https://packaging.python.org/en/latest/specifications/pyproject-toml/
+
+
+# Choosing a build backend:
+# https://packaging.python.org/en/latest/tutorials/packaging-projects/#choosing-a-build-backend
+[build-system]
+# A list of packages that are needed to build your package:
+requires = ["setuptools"]  # REQUIRED if [build-system] table is used
+# The name of the Python object that frontends will use to perform the build:
+build-backend = "setuptools.build_meta"  # If not defined, then legacy behavior can happen.
+
+
+[project]
+# This is the name of your project. The first time you publish this
+# package, this name will be registered for you. It will determine how
+# users can install this project, e.g.:
+#
+# $ pip install sampleproject
+#
+# And where it will live on PyPI: https://pypi.org/project/sampleproject/
+#
+# There are some restrictions on what makes a valid project name
+# specification here:
+# https://packaging.python.org/specifications/core-metadata/#name
+name = "geo_epic"  # REQUIRED, is the only field that cannot be marked as dynamic.
+
+# Versions should comply with PEP 440:
+# https://www.python.org/dev/peps/pep-0440/
+#
+# For a discussion on single-sourcing the version, see
+# https://packaging.python.org/guides/single-sourcing-package-version/
+version = "win_v1.0"  # REQUIRED, although can be dynamic
+
+# This is a one-line description or tagline of what your project does. This
+# corresponds to the "Summary" metadata field:
+# https://packaging.python.org/specifications/core-metadata/#summary
+description = "A toolkit for geospatial crop simulations"
+
+# This is an optional longer description of your project that represents
+# the body of text which users will see when they visit PyPI.
+#
+# Often, this is the same as your README, so you can just read it in from
+# that file directly.
+#
+# This field corresponds to the "Description" metadata field:
+# https://packaging.python.org/specifications/core-metadata/#description-optional
+readme = "README.md"
+
+# Specify which Python versions you support. In contrast to the
+# 'Programming Language' classifiers in this file, 'pip install' will check this
+# and refuse to install the project if the version does not match. See
+# https://packaging.python.org/guides/distributing-packages-using-setuptools/#python-requires
+requires-python = "==3.11"
+
+# This is either text indicating the license for the distribution, or a file
+# that contains the license.
+# https://packaging.python.org/en/latest/specifications/core-metadata/#license
+license = {file = "LICENSE"}
+
+# This field adds keywords for your project which will appear on the
+# project page. What does your project relate to?
+#
+# Note that this is a list of additional keywords, separated
+# by commas, to be used to assist searching for the distribution in a
+# larger catalog.
+keywords = ["EPIC", "geospatial", "crop", "gee", "geo_epic"]
+
+# This should be your name or the name of the organization who originally
+# authored the project, and a valid email address corresponding to the name
+# listed.
+authors = [
+  {name = "Bharath Irigireddy", email = "iambharathchandra@icloud.com" },
+  {name = "Bharath Irigireddy", email = "iambharathchandra@icloud.com" }
+]
+
+# This should be your name or the names of the organization who currently
+# maintains the project, and a valid email address corresponding to the name
+# listed.
+# maintainers = [
+#  {name = "A. Great Maintainer", email = "maintainer@example.com" }
+#]
+
+# Classifiers help users find your project by categorizing it.
+#
+# For a list of valid classifiers, see https://pypi.org/classifiers/
+classifiers = [
+  # How mature is this project? Common values are
+  #   3 - Alpha
+  #   4 - Beta
+  #   5 - Production/Stable
+  "Development Status :: 3 - Alpha",
+
+  # Indicate who your project is intended for
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Build Tools",
+
+  # Pick your license as you wish
+  "License :: OSI Approved :: BSD License",
+
+  # Specify the Python versions you support here. In particular, ensure
+  # that you indicate you support Python 3. These classifiers are *not*
+  # checked by "pip install". See instead "requires-python" key in this file.
+  "Programming Language :: Python :: 3.11",
+]
+
+# This field lists other packages that your project depends on to run.
+# Any package you put here will be installed by pip when your project is
+# installed, so they must be valid existing projects.
+#
+# For an analysis of this field vs pip's requirements files see:
+# https://packaging.python.org/discussions/install-requires-vs-requirements/
+dependencies = [
+    "affine==2.4.0",
+    "attrs==23.2.0",
+    "beautifulsoup4==4.12.3",
+    "certifi==2024.7.4",
+    "charset-normalizer==3.3.2",
+    "contourpy==1.2.1",
+    "cycler==0.12.1",
+    "fonttools==4.53.1",
+    "geopandas==1.0.1",
+    "lxml==5.2.2",
+    "matplotlib==3.9.1",
+    "numpy==1.26.4",
+    "pandas==2.2.2",
+    "pathspec==0.12.1",
+    "pillow==10.4.0",
+    "platformdirs==4.2.2",
+    "pydap==3.4.1",
+    "pyogrio==0.9.0",
+    "ruamel.yaml.clib==0.2.8",
+    "scikit-learn==1.5.1",
+    "scipy==1.14.0",
+    "shapely==2.0.5",
+    "tqdm==4.66.4",
+    "urllib3==2.2.2",
+    "xarray==2024.7.0",
+    "us==3.2.0",
+    "earthengine-api==1.0.0",
+    "SALib==1.5.1",
+    "shortuuid",
+]
+
+# List additional groups of dependencies here (e.g. development
+# dependencies). Users will be able to install these using the "extras"
+# syntax, for example:
+#
+#   $ pip install sampleproject[dev]
+#
+# Optional dependencies the project provides. These are commonly 
+# referred to as "extras". For a more extensive definition see:
+# https://packaging.python.org/en/latest/specifications/dependency-specifiers/#extras
+[project.optional-dependencies]
+dev = ["gdal==3.7"]
+test = ["coverage"]
+
+# List URLs that are relevant to your project
+#
+# This field corresponds to the "Project-URL" and "Home-Page" metadata fields:
+# https://packaging.python.org/specifications/core-metadata/#project-url-multiple-use
+# https://packaging.python.org/specifications/core-metadata/#home-page-optional
+#
+# Examples listed include a pattern for specifying where the package tracks
+# issues, where the source is hosted, where to say thanks to the package
+# maintainers, and where to support the project financially. The key is
+# what's used to render the link text on PyPI.
+[project.urls]
+"Homepage" = "https://github.com/smarsGroup/geo_epic_win"
+"Bug Reports" = "https://github.com/smarsGroup/geo_epic_win/issues"
+"Source" = "https://github.com/smarsGroup/geo_epic_win/"
+
+# The following would provide a command line executable called `sample`
+# which executes the function `main` from this package when invoked.
+[project.scripts]
+geo_epic = "geoEpic.dispatcher:main"
+
+
+# This is configuration specific to the `setuptools` build backend.
+# If you are using a different build backend, you will need to change this.
+[tool.setuptools]
+# If there are data files included in your packages that need to be
+# installed, specify them here.
+package-data = {"geoEpic" = [
+    "assets/**/**/*",
+    "soil/template.sol",
+    "sites/template.sit",
+    "assets/EPICeditor.xlsm",
+]}

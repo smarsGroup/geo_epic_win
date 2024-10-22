@@ -76,18 +76,18 @@ plugins:
 
 nav:
   - Home:
-    - Overview: index.md
-    - Installation: installation.md
+    - Overview: pages/index.md
+    - Installation: pages/  installation.md
   - EPIC Model:
-    - Environmental Policy Integrated Climate Model: epic.md
+    - Environmental Policy Integrated Climate Model: pages/epic.md
   - Modules:
-    - Crop Sequence Boundaries: csb.md
-    - Weather Module: Weather.md
-    - Soil Module: Soil.md
-    - Crop Management: OPC.md
-    - Google Earth Engine Utility: gee.md
+    - Crop Sequence Boundaries: pages/csb.md
+    - Weather Module: pages/weather.md
+    - Soil Module: pages/soil.md
+    - Crop Management: pages/opc.md
+    - Google Earth Engine Utility: pages/gee.md
   - Getting Started:
-    - Code in Python: runexp.md
-    - Model Calibration: opt.md
-    - Running an Experiment: runepic.md
-  - API: api.md
+    - Code in Python: pages/runexp.md
+    - Model Calibration: pages/opt.md
+    - Running an Experiment: pages/runepic.md
+  - API: pages/api.md
