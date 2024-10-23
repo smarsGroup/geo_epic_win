@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
-from geoEpic.io import DLY
+from .dly import DLY
 
 class OPC(pd.DataFrame):
     _metadata = ['header', 'name', 'prms', 'start_year']
