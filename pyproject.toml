@@ -186,7 +186,7 @@ geo_epic = "geoEpic.dispatcher:main"
 # installed, specify them here.
 package-data = {"geoEpic" = [
     "assets/**/**/*",
-    "soil/template.sol",
-    "sites/template.sit",
+    "io/inputs/template.sol",
+    "io/inputs/template.sit",
     "assets/EPICeditor.xlsm",
 ]}
