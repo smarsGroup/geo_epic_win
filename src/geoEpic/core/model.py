@@ -67,59 +67,7 @@ class EPICModel:
         signal.signal(signal.SIGTERM, self._signal_handler)
         
         # Load file names from EPICFILE.DAT
-        self.load_file_names()
-    
-    @property
-    def start_year(self):
-        with open('./EPICCONT.DAT', 'r') as file:
-            line = file.readline()
-            values = line.split()
-            self._start_year = int(values[1])
-        return self._start_year
-
-    @start_year.setter
-    def start_year(self, value):
-        self._start_year = value
-        with open('./EPICCONT.DAT', 'r+') as file:
-            lines = file.readlines()
-            values = lines[0].split()
-            values[1] = f"{value:04d}"
-            lines[0] = ' '.join(values) + '\n'
-            file.seek(0)
-            file.writelines(lines)
-
-    @property
-    def duration(self):
-        with open('./EPICCONT.DAT', 'r') as file:
-            line = file.readline()
-            values = line.split()
-            self._duration = int(values[0])
-        return self._duration
-
-    @duration.setter
-    def duration(self, value):
-        self._duration = value
-        with open('./EPICCONT.DAT', 'r+') as file:
-            lines = file.readlines()
-            values = lines[0].split()
-            values[0] = f"{value:03d}"
-            lines[0] = ' '.join(values) + '\n'
-            file.seek(0)
-            file.writelines(lines)
-
-    @property
-    def output_types(self):
-        print_file_path = os.path.join(self.path, self.file_names['FPRNT'])
-        with open(print_file_path, 'r') as file:
-            lines = file.readlines()
-        exts = lines[self.PF_EXT1].replace('*', ' ').strip().split() + lines[self.PF_EXT2].replace('*', ' ').strip().split()
-        toggles = lines[self.PF_TOG1].strip().split() + lines[self.PF_TOG2].strip().split()
-        self._output_types = [ext for ext, toggle in zip(exts, toggles) if toggle == '1']
-        return self._output_types
-
-    @output_types.setter
-    def output_types(self, value):
-        self.set_output_types(value)
+        self._load_file_names()
 
     def _signal_handler(self, signum, frame):
         '''Release lock on exit'''
@@ -143,7 +91,95 @@ class EPICModel:
     def __exit__(self, exc_type, exc_value, traceback):
         self.close()
 
-    def load_file_names(self):
+    @property
+    def start_year(self):
+        """
+        Get the start year of the EPIC model simulation.
+
+        Returns:
+            int: The start year of the simulation.
+        """
+        with open('./EPICCONT.DAT', 'r') as file:
+            line = file.readline()
+            values = line.split()
+            self._start_year = int(values[1])
+        return self._start_year
+
+    @start_year.setter
+    def start_year(self, value):
+        """
+        Set the start year of the EPIC model simulation.
+
+        Args:
+            value (int): The new start year to set.
+        """
+        self._start_year = value
+        with open('./EPICCONT.DAT', 'r+') as file:
+            lines = file.readlines()
+            values = lines[0].split()
+            values[1] = f"{value:04d}"
+            lines[0] = ' '.join(values) + '\n'
+            file.seek(0)
+            file.writelines(lines)
+
+    @property
+    def duration(self):
+        """
+        Get the duration of the EPIC model simulation.
+
+        Returns:
+            int: The duration of the simulation in years.
+        """
+        with open('./EPICCONT.DAT', 'r') as file:
+            line = file.readline()
+            values = line.split()
+            self._duration = int(values[0])
+        return self._duration
+
+    @duration.setter
+    def duration(self, value):
+        """
+        Set the duration of the EPIC model simulation.
+
+        Args:
+            value (int): The new duration to set in years.
+        """
+        self._duration = value
+        with open('./EPICCONT.DAT', 'r+') as file:
+            lines = file.readlines()
+            values = lines[0].split()
+            values[0] = f"{value:03d}"
+            lines[0] = ' '.join(values) + '\n'
+            file.seek(0)
+            file.writelines(lines)
+
+    @property
+    def output_types(self):
+        """
+        Get the current output types of the EPIC model.
+
+        Returns:
+            list: A list of enabled output types.
+        """
+        print_file_path = os.path.join(self.path, self.file_names['FPRNT'])
+        with open(print_file_path, 'r') as file:
+            lines = file.readlines()
+        exts = lines[self.PF_EXT1].replace('*', ' ').strip().split() + lines[self.PF_EXT2].replace('*', ' ').strip().split()
+        toggles = lines[self.PF_TOG1].strip().split() + lines[self.PF_TOG2].strip().split()
+        self._output_types = [ext for ext, toggle in zip(exts, toggles) if toggle == '1']
+        return self._output_types
+
+    @output_types.setter
+    def output_types(self, value):
+        """
+        Set the output types for the EPIC model.
+
+        Args:
+            value (list): A list of output types to enable.
+        """
+        self.set_output_types(value)
+
+    def _load_file_names(self):
         """Load file names from EPICFILE.DAT"""
         epicfile_path = os.path.join(self.path, 'EPICFILE.DAT')
         with open(epicfile_path, 'r') as f:
