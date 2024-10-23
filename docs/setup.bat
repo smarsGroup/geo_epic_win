@@ -71,5 +71,5 @@ if %ERRORLEVEL% equ 0 (
 
 :create_env
 echo Creating Conda environment '%ENV_NAME%' ...
-call conda env create -f https://raw.githubusercontent.com/smarsGroup/geo_epic_win/master/docs/conda_env.yml
+call conda env create -f https://raw.githubusercontent.com/smarsGroup/geo_epic_win/main/docs/conda_env.yml
 exit /b 0
