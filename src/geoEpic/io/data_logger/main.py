@@ -3,6 +3,8 @@ import platform
 from shortuuid import uuid 
 from .sql_writer import SQLTableWriter
 from .csv_writer import CSVWriter
+from .lmdb_writer import LMDBWriter
+
 
 class DataLogger:
     """
@@ -20,39 +22,48 @@ class DataLogger:
         Initialize the DataLogger with a specified output folder and backend.
 
         Args:
-            output_folder (str): Directory to store the files (if applicable).
-            delete_after_use (bool): Flag to indicate if the data should be deleted after use.
-            backend (str): The backend to use ('redis', 'csv', 'sql').
+            output_folder (str, optional): Directory to store the files. Defaults to current directory.
+            delete_after_use (bool): Whether to delete the data after retrieval. Defaults to True.
+            backend (str): The backend to use ('lmdb', 'sql', 'csv'). Defaults to 'lmdb'.
             **kwargs: Additional parameters for backend configuration.
-        """
-        # Check the platform and adjust the backend if running on Windows
-        if platform.system() == 'Windows' and backend.lower() == 'redis':
-            print("Redis is not supported on Windows by default. Falling back to 'sql' backend.")
-            backend = 'sql'
 
-        self.output_folder = output_folder or '.'
+        Raises:
+            ValueError: If an unsupported backend is specified.
+        """
+        self.output_folder = output_folder or os.getcwd()
         self.backend = backend.lower()
-        if self.backend != 'redis':
-            os.makedirs(self.output_folder, exist_ok=True)
         self.delete_after_use = delete_after_use
-        self.backend_kwargs = kwargs  # Additional kwargs for the writer classes
+        self.backend_kwargs = kwargs
         self.uuid = uuid()
 
-    def get_writer(self, func_name):
-        """Get the appropriate writer based on the backend."""
-        if self.backend == 'redis':
-            # For Redis, func_name is used as the table_name
-            return RedisWriter(f'{self.uuid}:{func_name}', **self.backend_kwargs)
-        elif self.backend == 'sql':
-            # For SQL, construct the file path using func_name and uuid
-            filename = os.path.join(self.output_folder, f"{self.uuid}_{func_name}")
-            return SQLTableWriter(filename, **self.backend_kwargs)
-        elif self.backend == 'csv':
-            # For CSV, construct the file path using func_name and uuid
-            filename = os.path.join(self.output_folder, f"{self.uuid}_{func_name}")
-            return CSVWriter(filename, **self.backend_kwargs)
-        else:
+        os.makedirs(self.output_folder, exist_ok=True)
+
+        if self.backend not in ['lmdb', 'sql', 'csv']:
             raise ValueError(f"Unsupported backend: {self.backend}")
+
+    def get_writer(self, func_name):
+        """
+        Get the appropriate writer based on the backend.
+
+        Args:
+            func_name (str): The name of the function to create a writer for.
+
+        Returns:
+            Writer: An instance of the appropriate writer class.
+
+        Raises:
+            ValueError: If an unsupported backend is specified.
+        """
+        filename = os.path.join(self.output_folder, f"{self.uuid}_{func_name}")
+        writer_classes = {
+            'lmdb': LMDBWriter,
+            'sql': SQLTableWriter,
+            'csv': CSVWriter
+        }
+        writer_class = writer_classes.get(self.backend)
+        if not writer_class:
+            raise ValueError(f"Unsupported backend: {self.backend}")
+        return writer_class(filename, **self.backend_kwargs)
 
     def log_dict(self, func_name, result):
         """

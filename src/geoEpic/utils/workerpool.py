@@ -31,7 +31,7 @@ class WorkerPool:
                                                   stdout=cls.log_file,
                                                   stderr=cls.log_file,
                                                   start_new_session=True)
-            print("Pool Manager Server starting. (Logging to {log_path})")
+            print(f"Pool Manager Server starting. (Logging to {log_path})")
             time.sleep(1)  # Give the server a moment to start
 
     @classmethod
