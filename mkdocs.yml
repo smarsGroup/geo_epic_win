@@ -71,6 +71,18 @@ theme:
 # Plugins
 plugins:
   - blog
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_root_heading: true
+            show_source: false
+            summary: true
+            parameter_headings: true
+            filters:
+              - "!^_"
+          paths:
+            - src/geoEpic
   - search:
       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
 
@@ -90,4 +102,11 @@ nav:
     - Code in Python: pages/runexp.md
     - Model Calibration: pages/opt.md
     - Running an Experiment: pages/runepic.md
-  - API: pages/api.md
+  - API: 
+    - Getting Started: pages/api/api.md
+    - Core: pages/api/core.md
+    - Google Earth Engine: pages/api/gee.md
+    - Weather: pages/api/weather.md
+    - soil: pages/api/soil.md
+    - Input/Output Handling: pages/api/io.md
+    - utility: pages/api/utils.md
