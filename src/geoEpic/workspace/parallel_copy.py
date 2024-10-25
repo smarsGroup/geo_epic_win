@@ -53,8 +53,8 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 file_mapping = {
     'epic_editor': [os.path.join(script_dir, "../assets/EPICeditor.xlsm")],
     'calibration_utils': [
-        os.path.join(script_dir, "../assets/calibration/calibration.py"),
-        os.path.join(script_dir, "../assets/calibration/parms")
+        os.path.join(script_dir, "../assets/calibration/calibration_starter.ipynb"),
+        os.path.join(script_dir, "../assets/calibration/calibration_files")
     ],
     'HLS.yml': [os.path.join(script_dir, "../gee/HLS.yml")],
     'daily_weather.yml': [os.path.join(script_dir, "../gee/daily_weather.yml")],

@@ -94,7 +94,8 @@ nav:
   - Tutorials:
     - Site Simulation: pages/starter_notebook.md
     - Model Calibration: pages/opt.md
-    # - Running an Experiment: pages/runepic.md
+    - Creating Input Files: pages/runepic.md
+    - Running an Experiment: pages/runepic.md
   - API: 
     - Command Line Interface: pages/api/api.md
     - geoEpic.core: pages/api/core.md
