@@ -1,5 +1,4 @@
 import os
-from geoEpic.weather import DailyWeather
 from geoEpic.io import DLY, SIT
 
 class Site:
@@ -28,10 +27,10 @@ class Site:
             sit (str, optional): Path to the SIT file.
             site_id (str, optional): An explicit identifier for the site.
         """
-        self.opc_path = opc
-        self.dly_path = dly
-        self.sol_path = sol
-        self.sit_path = sit
+        self.opc_path = os.path.abspath(opc) if opc else None
+        self.dly_path = os.path.abspath(dly) if dly else None
+        self.sol_path = os.path.abspath(sol) if sol else None
+        self.sit_path = os.path.abspath(sit) if sit else None
         self.site_id = site_id
         self.outputs = {}
 
@@ -41,6 +40,7 @@ class Site:
             self.sit = SIT.load(self.sit_path)
             self.lat = self.sit.site_info.get('lat')
             self.lon = self.sit.site_info.get('lon')
+            self.ele = self.sit.site_info.get('elevation')
 
     def __str__(self):
         return (f"Site ID: {self.site_id}\n"

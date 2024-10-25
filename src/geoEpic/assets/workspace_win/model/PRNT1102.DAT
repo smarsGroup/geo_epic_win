@@ -12,8 +12,8 @@
   34  42
    4  10  11  13  14  16  17  18  19  20  
    
-   1   0   0   0   0   1   0   1   1   0   0   1   0   1   1   1   1   1   1   1
-   1   0   1   0   0   1   1   1   1   1   1   0   0
+   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0   1   0
+   0   0   0   0   0   0   0   0   0   0   0   0   0
 
 
 
@@ -32,8 +32,6 @@
 
                                                                                    
 These are the extensions of the output files to turn on/off in lines 15-16.     
-The last 6 file extensions are not file extensions. Files with an asterisk to th
-have been selected for output (RCI, 7/22/09). Changes made 7/25/09 8.abr not nee
 --------------------------------------------------------------------------------
-*out acm*sum dhy dps mfs mps*ann*sot dtp mcm dcs sco*acn dcn*scn dgn dwt*acy aco
- dsl mwc abr*atg msw*aps dwc dhs dgz erx run rtc rts sgi gis         
+ out acm sum dhy dps mfs mps ann sot dtp mcm dcs sco acn dcn scn dgn dwt acy aco
+ dsl mwc abr atg msw aps dwc dhs dgz erx dnc asl ddn          

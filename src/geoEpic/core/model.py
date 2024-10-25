@@ -8,7 +8,7 @@ from geoEpic.io import ConfigParser
 import platform
 import atexit
 import signal     
-
+from datetime import datetime
 
 class EPICModel:
     """
@@ -17,10 +17,13 @@ class EPICModel:
     Attributes:
         base_dir (str): The base directory for model runs.
         executable (str): Path to the executable model file.
-        path (str): Directory path where the executable is located.
-        executable_name (str): Name of the executable file.
         output_dir (str): Directory to store model outputs.
         log_dir (str): Directory to store logs.
+        start_date (datetime): The start date of the EPIC model simulation.
+        duration (int): The duration of the EPIC model simulation in years.
+        output_types (list): A list of enabled output types for the EPIC model.
+        model_dir (str): Directory path where the executable is located.
+        executable_name (str): Name of the executable file.
     """
 
     # Class attributes for line numbers
@@ -31,22 +34,24 @@ class EPICModel:
     EC_IRR = 3    # Line number for irrigation settings in the EPICCONT.DAT file
     EC_NIT = 4    # Line number for nitrogen settings in the EPICCONT.DAT file
 
-    def __init__(self, path):
+    def __init__(self, path_to_executable):
         """
         Initialize an EPICModel instance with the path to the executable model.
 
         Args:
-            path (str): Path to the executable model file.
+            path_to_executable (str): Path to the executable model file.
         """
-        self.base_dir = os.getcwd()
-        self.executable = path
-        self.path = os.path.dirname(self.executable)
+        self.base_dir = os.path.abspath(os.getcwd())
+        self.executable = os.path.abspath(path_to_executable)
+        self._model_dir = os.path.dirname(self.executable)
         self.executable_name = os.path.basename(self.executable)
-        self._start_year = None
+        self._start_date = None
         self._duration = None
-        self._output_types = None
-        self.output_dir = os.path.dirname(self.path)
-        self.log_dir = os.path.dirname(self.path)
+        self.output_dir = os.path.dirname(self._model_dir)
+        self.log_dir = os.path.dirname(self._model_dir)
+        # Load file names from EPICFILE.DAT
+        self._load_file_names()
+        self.get_output_types()
 
         if platform.system() != "Windows":
             # On Unix-like systems, use chmod to make the file executable
@@ -56,7 +61,7 @@ class EPICModel:
         self.cache_path = os.path.join(self.base_dir, '.cache')#'/dev/shm'  # On Linux systems
 
         # Define the path to the lock file
-        self.lock_file = os.path.join(self.path, '.model_lock')
+        self.lock_file = os.path.join(self._model_dir, '.model_lock')
         # Automatically acquire the lock when the instance is created
         self.acquire_lock()
         self.delete_after_run = True
@@ -66,9 +71,6 @@ class EPICModel:
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
         
-        # Load file names from EPICFILE.DAT
-        self._load_file_names()
-
     def _signal_handler(self, signum, frame):
         '''Release lock on exit'''
         self.close()
@@ -83,41 +85,69 @@ class EPICModel:
 
     def close(self):
         """Release the lock on the model's directory by deleting the lock file."""
-        os.remove(self.lock_file)
+        if os.path.exists(self.lock_file):
+            os.remove(self.lock_file)
+        self._model_dir = None
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.close()
+    
+    def __del__(self):
+        self.close()
 
     @property
-    def start_year(self):
+    def model_dir(self):
+        if self._model_dir is None:
+            raise RuntimeError("Model closed or not initialized.")
+        return self._model_dir
+
+    @property
+    def start_date(self):
         """
-        Get the start year of the EPIC model simulation.
+        Get the start date of the EPIC model simulation.
 
         Returns:
-            int: The start year of the simulation.
+            datetime: The start date of the simulation.
         """
-        with open('./EPICCONT.DAT', 'r') as file:
+        epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
+        with open(epiccont_path, 'r') as file:
             line = file.readline()
             values = line.split()
-            self._start_year = int(values[1])
-        return self._start_year
+            year = int(values[1])
+            month = int(values[2])
+            day = int(values[3])
+            self._start_date = datetime(year, month, day)
+        return self._start_date
 
-    @start_year.setter
-    def start_year(self, value):
+    @start_date.setter
+    def start_date(self, value):
         """
-        Set the start year of the EPIC model simulation.
+        Set the start date of the EPIC model simulation.
 
         Args:
-            value (int): The new start year to set.
+            value (datetime or str): The new start date to set. If a string is provided,
+                                     it should be in the format 'YYYY-MM-DD'.
         """
-        self._start_year = value
-        with open('./EPICCONT.DAT', 'r+') as file:
+        if isinstance(value, str):
+            try:
+                value = datetime.strptime(value, '%Y-%m-%d')
+            except ValueError:
+                raise ValueError("Invalid date string. Please use the format 'YYYY-MM-DD'.")
+        
+        if not isinstance(value, datetime):
+            raise TypeError("Start date must be a datetime object or a string in 'YYYY-MM-DD' format.")
+        
+        self._start_date = value
+        epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
+        with open(epiccont_path, 'r+') as file:
             lines = file.readlines()
             values = lines[0].split()
-            values[1] = f"{value:04d}"
+            values[1] = f"{value.year:4d}"
+            values[2] = f"{value.month:2d}"
+            values[3] = f"{value.day:2d}"
             lines[0] = ' '.join(values) + '\n'
             file.seek(0)
             file.writelines(lines)
@@ -130,7 +160,8 @@ class EPICModel:
         Returns:
             int: The duration of the simulation in years.
         """
-        with open('./EPICCONT.DAT', 'r') as file:
+        epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
+        with open(epiccont_path, 'r') as file:
             line = file.readline()
             values = line.split()
             self._duration = int(values[0])
@@ -145,10 +176,11 @@ class EPICModel:
             value (int): The new duration to set in years.
         """
         self._duration = value
-        with open('./EPICCONT.DAT', 'r+') as file:
+        epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
+        with open(epiccont_path, 'r+') as file:
             lines = file.readlines()
             values = lines[0].split()
-            values[0] = f"{value:03d}"
+            values[0] = f" {value:3d}"
             lines[0] = ' '.join(values) + '\n'
             file.seek(0)
             file.writelines(lines)
@@ -161,12 +193,15 @@ class EPICModel:
         Returns:
             list: A list of enabled output types.
         """
-        print_file_path = os.path.join(self.path, self.file_names['FPRNT'])
+        return self.get_output_types()
+
+    def get_output_types(self):
+        print_file_path = os.path.join(self.model_dir, self.file_names['FPRNT'])
         with open(print_file_path, 'r') as file:
             lines = file.readlines()
         exts = lines[self.PF_EXT1].replace('*', ' ').strip().split() + lines[self.PF_EXT2].replace('*', ' ').strip().split()
         toggles = lines[self.PF_TOG1].strip().split() + lines[self.PF_TOG2].strip().split()
-        self._output_types = [ext for ext, toggle in zip(exts, toggles) if toggle == '1']
+        self._output_types = [ext.upper() for ext, toggle in zip(exts, toggles) if toggle == '1']
         return self._output_types
 
     @output_types.setter
@@ -181,11 +216,10 @@ class EPICModel:
 
     def _load_file_names(self):
         """Load file names from EPICFILE.DAT"""
-        epicfile_path = os.path.join(self.path, 'EPICFILE.DAT')
+        self.file_names = {}
+        epicfile_path = os.path.join(self.model_dir, 'EPICFILE.DAT')
         with open(epicfile_path, 'r') as f:
             lines = f.readlines()
-        
-        self.file_names = {}
         for line in lines:
             parts = line.split()
             if len(parts) == 2:
@@ -198,15 +232,15 @@ class EPICModel:
         Args:
             config (dict): Configuration dictionary containing model settings.
         """
-        self.start_year = config.get('start_year', 2014)
-        self.duration = config.get('duration', 10)
-        self.output_dir = config.get('output_dir', self.output_dir)
-        self.log_dir = config.get('log_dir', self.log_dir)
+        self.start_date = config.get('start_date', self.start_date)
+        self.duration = config.get('duration', self.duration)
+        self.output_dir = os.path.abspath(config.get('output_dir', self.output_dir))
+        self.log_dir = os.path.abspath(config.get('log_dir', self.log_dir))
         if self.output_dir:
             os.makedirs(self.output_dir, exist_ok=True)
         if self.log_dir:
             os.makedirs(self.log_dir, exist_ok=True)
-        self.set_output_types(config.get('output_types', ['ACY']))
+        self.set_output_types(config.get('output_types', self.output_types))
 
     @classmethod
     def from_config(cls, config_path):
@@ -221,7 +255,7 @@ class EPICModel:
         """
         config = ConfigParser(config_path)
         instance = cls(config['EPICModel'])
-        instance.base_dir = config.dir
+        instance.base_dir = os.path.abspath(config.dir)
         instance.setup(config)
         instance.set_output_types(config['output_types'])
         return instance
@@ -234,7 +268,7 @@ class EPICModel:
             output_types (list of str): List of output types to be enabled.
         """
         self._output_types = output_types
-        print_file_path = os.path.join(self.path, self.file_names['FPRNT'])
+        print_file_path = os.path.join(self.model_dir, self.file_names['FPRNT'])
         outputs_to_enable = ' '.join(output_types).lower().split()
         with open(print_file_path, 'r') as file:
             lines = file.readlines()
@@ -250,17 +284,9 @@ class EPICModel:
         with open(print_file_path, 'w') as file:
             file.writelines(lines)
 
-    def run(self, site, dest = None):
+    def run(self, site, verbose = True, dest = None):
         """
-        Execute the model for the given site and manage outputs.
-
-        This method performs the following steps:
-        1. Set up the run directory
-        2. Prepare the daily weather data
-        3. Write necessary DAT files
-        4. Run the EPIC executable
-        5. Process and move output files
-        6. Clean up temporary files
+        Execute the model for the given site and handle output files.
 
         Args:
             site (Site): A site instance containing site-specific configuration.
@@ -270,46 +296,41 @@ class EPICModel:
             Exception: If any output file is not generated or is empty.
         """
         fid = site.site_id
+        dly = site.get_dly()
         new_dir = os.path.join(self.cache_path, 'EPICRUNS', str(fid)) #if dest is None else dest
 
         if os.path.exists(new_dir):
             shutil.rmtree(new_dir)
 
-        shutil.copytree(self.path, new_dir)
+        shutil.copytree(self.model_dir, new_dir)
         os.chdir(new_dir)
-
-        # Prepare weather data
-        dly = site.get_dly()
-        dly.save(fid)
-        dly.to_monthly(fid)
         
-        # Write configuration files
-        self.writeDATFiles(site)
+        try:
+            # Prepare weather data
+            dly.save(1)
+            dly.to_monthly(1)
+            # Write configuration files
+            self._writeDATFiles(site)
+            # Run EPIC executable
+            log_file = f"{fid}.out"
+            with open(log_file, 'w') as log:
+                subprocess.run([self.executable_name], stdout=log, stderr=log)
+            # Process output files
+            for out_type in self._output_types:
+                out_path = f'{fid}.{out_type}'
+                if not os.path.exists(out_path) or os.path.getsize(out_path) == 0:
+                    shutil.move(log_file, os.path.join(self.log_dir, f"{fid}.out"))
+                    raise FileNotFoundError(f"Output file ({out_type}) not found or empty. Check {log_file} for details")
+                dst = os.path.join(self.output_dir if dest is None else os.path.dirname(new_dir), out_path)
+                shutil.move(out_path, dst)
+                site.outputs[out_type] = dst
+        finally:
+            # Clean up
+            os.chdir(self.base_dir)
+            if self.delete_after_run or self.cache_path == '/dev/shm':
+                shutil.rmtree(new_dir)
 
-        # Run EPIC executable
-        log_file = f"{fid}.out"
-        with open(log_file, 'w') as log:
-            subprocess.run([self.executable], stdout=log, stderr=log)
-
-        # Process output files
-        for out_type in self.output_types:
-            out_path = f'{fid}.{out_type}'
-            if not os.path.exists(out_path) or os.path.getsize(out_path) == 0:
-                shutil.move(log_file, os.path.join(self.log_dir, f"{fid}.out"))
-                os.chdir(self.base_dir)
-                if self.delete_after_run or self.cache_path == '/dev/shm':
-                    shutil.rmtree(new_dir)
-                raise FileNotFoundError(f"Output file ({out_type}) not found or empty. Check {log_file} for details")
-            dst = os.path.join(self.output_dir if dest is None else os.path.dirname(new_dir), out_path)
-            shutil.move(out_path, dst)
-            site.outputs[out_type] = dst
-
-        # Clean up
-        os.chdir(self.base_dir)
-        if self.delete_after_run or self.cache_path == '/dev/shm':
-            shutil.rmtree(new_dir)  
-
-    def writeDATFiles(self, site):
+    def _writeDATFiles(self, site):
         """
         Write configuration data files required for the model run.
 
@@ -317,27 +338,30 @@ class EPICModel:
             site (Site): A Site object for which data files are being prepared.
         """
         with open('./EPICRUN.DAT', 'w') as ofile:
-            fmt = '%8d %8d  0  0  0  %8d  %8d  %8d/'
-            np.savetxt(ofile, [[int(site.site_id)]*5], fmt=fmt)
+            fmt = '%s 1  0  0  0  1  1  1/'%(site.site_id)
+            ofile.write(fmt)
 
         with open(self.file_names['FSITE'], 'w') as ofile:
-            fmt = '%8d    "%s"\n' % (site.site_id, site.sit_path)
+            fmt = '1    "%s"\n' % (site.sit_path)
             ofile.write(fmt)
 
         with open(self.file_names['FSOIL'], 'w') as ofile:
-            fmt = '%8d    "%s"\n' % (site.site_id, site.sol_path)
+            fmt = '1    "%s"\n' % (site.sol_path)
             ofile.write(fmt)
 
         with open(self.file_names['FWLST'], 'w') as ofile:
-            fmt = '%8d    "./%s.DLY"\n' % (site.site_id, site.site_id)
-            ofile.write(fmt)
+            ofile.write('1    1.DLY\n')
 
         with open(self.file_names['FWPM1'], 'w') as ofile:
-            fmt = '%8d    "./%s.INP"   %.2f   %.2f  NB            XXXX\n' % (site.site_id, site.site_id, site.lon, site.lat)
+            fmt = '1    2.WP1   %.2f   %.2f    %.2f\n' % (site.lat, site.lon, site.ele)
+            ofile.write(fmt)
+        
+        with open(self.file_names['FWIND'], 'w') as ofile:
+            fmt = '1    1.WND   %.2f   %.2f    %.2f\n' % (site.lat, site.lon, site.ele)
             ofile.write(fmt)
         
         with open(self.file_names['FOPSC'], 'w') as ofile:
-            fmt = '%8d    "%s"\n' % (site.site_id, site.opc_path)
+            fmt = '1    "%s"\n' % (site.opc_path)
             ofile.write(fmt)
     
 
@@ -353,7 +377,7 @@ class EPICModel:
         :param armn: Minimum single application volume (ARMN) in mm - optional
         :param armx: Maximum single application volume (ARMX) in mm - optional
         """
-        epiccont_path = os.path.join(self.path, 'EPICCONT.DAT')
+        epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
         with open(epiccont_path, 'r+') as file:
             lines = file.readlines()
             if len(lines) < self.EC_IRR + 1:
@@ -388,7 +412,7 @@ class EPICModel:
         :param fnp: Fertilizer application variable (FNP) - optional
         :param fmx: Maximum annual N fertilizer applied for a crop (FMX) - optional
         """
-        epiccont_path = os.path.join(self.path, 'EPICCONT.DAT')
+        epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
         with open(epiccont_path, 'r+') as file:
             lines = file.readlines()
             if len(lines) < self.EC_NIT + 1:

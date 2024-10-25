@@ -6,8 +6,8 @@ Area_of_Interest: ./NE_site/NE_site.shp
 
 
 # Model configuration
-EPICModel: ./model/epic1102-release.exe
-start_year: 1995
+EPICModel: ./model/EPIC1102.exe
+start_date: '1995-01-01'
 duration: 25
 output_types:
   - ACY  # Annual Crop data file

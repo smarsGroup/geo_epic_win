@@ -82,15 +82,29 @@ class DLY(pd.DataFrame):
         ss = ss[ss.columns[order]]
         values = np.float64(ss.T.values)
         
-        lines = ['Monthly', ' ']
-        fmt = "%6.2f%6.2f%6.2f%6.2f%6.2f%6.2f%6.2f%6.2f%6.2f%6.2f%6.2f%6.2f%5s"
+        lines = ['Monthly Weather', 'Statistics']
+        fmt = "%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%8s"
         for i, row in enumerate(values):
             line = fmt % tuple(row.tolist() + [str(ss.columns[i])])
             lines.append(line)
         
         path = str(path)
-        if not path.endswith('.INP'): path += '.INP'
+        if not path.endswith('.WP1'): path += '.WP1'
         with open(path, 'w') as ofile:
             ofile.write('\n'.join(lines))
+            
+        # Generate WND file
+        wnd_path = path.replace('.WP1', '.WND')
+        with open(wnd_path, 'w') as wnd_file:
+            # Write station name (placeholder)
+            wnd_file.write("Monthly Wind Statistics\n")
+            # Write two placeholder values
+            wnd_file.write("     .00     .00\n")
+            # Write last row of values (UAVO - wind speed)
+            wind_speeds = [f"{speed:10.2f}" for speed in values[-1]]
+            wnd_file.write("".join(wind_speeds) + "\n")
+            # Write 16 lines of zeros (4 to 19)
+            for _ in range(16):
+                wnd_file.write("".join([f"{0.0:10.1f}" for _ in range(12)]) + "\n")
         return ss
 

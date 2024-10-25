@@ -11,7 +11,7 @@ def rsync_copy(src_dst):
     if platform.system() == "Windows":
         # Use robocopy for Windows
         robocopy_command = ["robocopy", os.path.dirname(src_dst[0]), os.path.dirname(src_dst[1]), os.path.basename(src_dst[0]), "/E", "/DCOPY:DA", "/COPY:DAT", "/R:3", "/W:3"]
-        subprocess.run(robocopy_command, check=True)
+        subprocess.run(robocopy_command, check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def parallel_copy(source_dir, destination_dir, max_workers=4, extension=None, level_one=False, exclude_dirs=False, progress_bar=True):
