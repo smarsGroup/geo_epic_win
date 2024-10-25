@@ -46,7 +46,6 @@ output_types:
   - DGN  # Daily general output file
 log_dir: ./log
 output_dir: ./output
-
 ```
 
 - To edit the OPC, SOL or files in the epic model folder, you could use the epic_editor. the following command will copy the epiceditor in to your current folder.

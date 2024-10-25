@@ -1,7 +1,7 @@
 ### Site metadata ###
 
 site_name: GeoEPIC
-site_description: Python Utility function to run EPIC model
+site_description: Python toolkit to run EPIC model
 site_url: https://smarsgroup.github.io/geo_epic_win/
 
 repo_url: https://github.com/smarsGroup/geo_epic_win
@@ -81,24 +81,24 @@ plugins:
 nav:
   - Home:
     - Overview: pages/index.md
-    - Installation: pages/  installation.md
+    - Installation: pages/installation.md
+    - License: pages/LICENSE.md
+    - Contributing: pages/Contributing.md
   - EPIC Model:
     - Environmental Policy Integrated Climate Model: pages/epic.md
-  - Modules:
-    - Crop Sequence Boundaries: pages/csb.md
-    - Weather Module: pages/weather.md
-    - Soil Module: pages/soil.md
-    - Crop Management: pages/opc.md
-    - Google Earth Engine Utility: pages/gee.md
   - Getting Started:
-    - Code in Python: pages/runexp.md
+    - Weather Module: pages/weather.md
+    - Soil Module: pages/Soil.md
+    - Crop Management: pages/OPC.md
+    - Earth Engine Utility: pages/gee.md
+  - Tutorials:
+    - Site Simulation: pages/starter_notebook.md
     - Model Calibration: pages/opt.md
-    - Running an Experiment: pages/runepic.md
+    # - Running an Experiment: pages/runepic.md
   - API: 
-    - Getting Started: pages/api/api.md
-    - Core: pages/api/core.md
-    - Google Earth Engine: pages/api/gee.md
-    - Weather: pages/api/weather.md
-    - soil: pages/api/soil.md
-    - Input/Output Handling: pages/api/io.md
-    - utility: pages/api/utils.md
+    - Command Line Interface: pages/api/api.md
+    - geoEpic.core: pages/api/core.md
+    - geoEpic.io: pages/api/io.md
+    - geoEpic.weather: pages/api/weather.md
+    - geoEpic.soil: pages/api/soil.md
+    # - utility: pages/api/utils.md

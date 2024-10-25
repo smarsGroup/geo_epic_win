@@ -19,22 +19,22 @@ GeoEPIC comes with a command-line tool to filter and clip the CSB file for your 
 The tool can be invoked with various options to specify the region:
 ```bash
 # Help with the options provided by the tool
->> GeoEPIC crop_csb -h
+>> geo_epic crop_csb -h
 
 # Cropping the csb to get the shapefile for Maryland:
->> GeoEPIC crop_csb path/to/input.gdb output.shp --state_name "Maryland"
+>> geo_epic crop_csb path/to/input.gdb output.shp --state_name "Maryland"
 
 # Using the state FIPS code (24) for Maryland:
->> GeoEPIC crop_csb path/to/input.gdb output.shp --state_fips "24"
+>> geo_epic crop_csb path/to/input.gdb output.shp --state_fips "24"
 
 # To get the shapefile for Montgomery County, Maryland:
->> GeoEPIC crop_csb path/to/input.gdb output.shp --county_name "Montgomery, Maryland"
+>> geo_epic crop_csb path/to/input.gdb output.shp --county_name "Montgomery, Maryland"
 
 # Cropping the CSB using a bounding box:
->> GeoEPIC crop_csb path/to/input.gdb output.shp --bbox "-77.5,38.0,-76.0,39.5"
+>> geo_epic crop_csb path/to/input.gdb output.shp --bbox "-77.5,38.0,-76.0,39.5"
 
 # Cropping the csb around a center point with a specified extent in km:
->> GeoEPIC crop_csb path/to/input.gdb output.shp --center "39.0,-77.0" --extent "50x50"
+>> geo_epic crop_csb path/to/input.gdb output.shp --center "39.0,-77.0" --extent "50x50"
 ```
 
 **Note:** For **countries other than USA**, a geo-tiff file covering the region of interest with one channel being the cultivated crop land mask of that region and another channel containing corresponding management info ID can be used to utilize GeoEPIC.

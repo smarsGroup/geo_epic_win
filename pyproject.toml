@@ -143,6 +143,9 @@ dependencies = [
     "earthengine-api==1.0.0",
     "SALib==1.5.1",
     "shortuuid",
+    "rasterio",
+    "lmdb",
+    "jupyter-notebook"
 ]
 
 # List additional groups of dependencies here (e.g. development

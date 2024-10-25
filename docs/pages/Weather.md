@@ -75,15 +75,17 @@ derived_variables:
 **Using the config file to get data:**
 
 
-```
+```bash
 # Fetch and output weather input files for a specific latitude and longitude
->> GeoEPIC weather config.yml --fetch {lat} {lon} --out {out_path}
-
+geo_epic weather config.yml --fetch {lat} {lon} --out {out_path}
+```
+```bash
 # Fetch for a list of locations in a csv file with lat, lon, out_path columns
->> GeoEPIC weather config.yml --fetch {list.csv} --out {column_name}
-
+geo_epic weather config.yml --fetch {list.csv} --out {column_name}
+```
+```bash
 # Fetch for crop sequence boundaries shape file.
->> GeoEPIC weather config.yml --fetch {aoi_csb.shp} --out {out_dir}
+geo_epic weather config.yml --fetch {aoi_csb.shp} --out {out_dir}
 ```
 
 **Note:** This command will write weather grid IDs corresponding to each location as an attribute into the input file, when used with a CSV file or crop sequence boundary shapefile.
@@ -94,10 +96,11 @@ To fetch weather data for a specific latitude and longitude using the Daymet dat
 
 ```bash
 # To download windspeed data, use the following command
->> GeoEPIC weather windspeed -bbox <bounding_box> -start <start_date> -end <end_date> -out './weather'
-
+geo_epic weather windspeed -bbox <bounding_box> -start <start_date> -end <end_date> -out './weather'
+```
+```bash
 # To fetch and output weather input files for a specific latitude and longitude
->> GeoEPIC weather daymet --fetch {lat} {lon} -start <start_date> -end <end_date> --out './weather'
+geo_epic weather daymet --fetch {lat} {lon} -start <start_date> -end <end_date> --out './weather'
 ```
 
 <!-- 

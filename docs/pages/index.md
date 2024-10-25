@@ -1,5 +1,5 @@
 
-# GeoEPIC
+# GeoEPIC (win_v1.0)
 
 ###<strong>A toolkit for geospatial Crop Simulations</strong>
 
@@ -15,17 +15,16 @@ This package expands the capabilities of the **EPIC crop simulation model**, to 
 
 ### <strong>Installation</strong>
 
-Before starting the setup, ensure you have [`wget`](https://cloudcone.com/docs/article/the-linux-wget-command/) and [`conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html) installed. Follow the links for corresponding installation guides. Find the detailed instructions in the setup section.
+Before starting the setup, ensure you have [`conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html) installed. Follow the links for corresponding installation guides. Find the detailed instructions in the setup section. This version is developed exclusively for windows operating system.
 
 ```bash
-conda create --name epic_env python=3.11.9
-
+conda create --name epic_env python=3.11
 ```
 ```bash
 conda activate epic_env
 ```
 ```bash
-pip install git+https://github.com/smarsGroup/geo-epic.git
+pip install git+https://github.com/smarsGroup/geo_epic_win.git
 ```
 
 <!-- 
@@ -39,13 +38,13 @@ To begin using GeoEPIC:
 4. **Result Analysis**: Analyze simulation outputs with built-in tools or export data for external analysis.
 
 For detailed instructions, visit the [Getting Started](index.md) section. -->
-
+<!-- 
 ### <strong>Use Cases</strong>
 <!-- 
 GeoEPIC has been adopted in various research projects and integrated into several tools: -->
 
-- **Crop Yield Forecasting**: Used in studies predicting crop yields under different climate scenarios.
-- **Sustainable Agriculture Tools**: Incorporated into platforms promoting sustainable farming practices.
+<!-- - **Crop Yield Forecasting**: Used in studies predicting crop yields under different climate scenarios.
+- **Sustainable Agriculture Tools**: Incorporated into platforms promoting sustainable farming practices. -->
 <!-- - **Academic Research**: Featured in numerous [publications](#) exploring geospatial crop modeling.
 - **Collaborations**:
   - **University of Agriculture**: Partnership focusing on soil health and crop productivity.
@@ -55,3 +54,11 @@ GeoEPIC has been adopted in various research projects and integrated into severa
 ### <strong>Contributors</strong>
 
 - Bharath Irigireddy, Varaprasad Bandaru, Sachin Velmurgan, Rohit Nandan, SMaRS Group
+
+<!-- 
+### <strong>Cite the Package as</strong>
+
+If you use GeoEPIC in your research, please cite it as follows:
+ -->
+
+

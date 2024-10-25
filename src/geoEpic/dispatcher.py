@@ -36,7 +36,7 @@ default_functions = {
     "weather": "gee",
     "soil": "usda",
     "sites": "generate",
-    "workspace": "run",
+    "workspace": "new",
     "init": "init",
 }
 
