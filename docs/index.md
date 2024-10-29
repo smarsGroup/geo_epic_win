@@ -1,7 +1,7 @@
 
 # GeoEPIC (win_v1.0)
 
-###<strong>A toolkit for geospatial Crop Simulations</strong>
+### <strong>A toolkit for geospatial Crop Simulations</strong>
 
 
 <img src="./pages/assets/Yield_MD.png" alt="Maryland_Yield" width="90%"/> 
