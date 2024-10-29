@@ -27,6 +27,12 @@ conda activate epic_env
 pip install git+https://github.com/smarsGroup/geo_epic_win.git
 ```
 
+### <strong>Contributors</strong>
+
+- [Bharath Irigireddy](https://github.com/Bharath2), [Varaprasad Bandaru](https://scholar.google.com/citations?user=KJDTwhcAAAAJ&hl=en), [Sachin Velmurgan](https://github.com/SachinVel), [SMaRS Group](https://www.smarsgroup.org/)
+
+
+
 <!-- 
 ### <strong>Getting Started</strong>
 
@@ -37,7 +43,9 @@ To begin using GeoEPIC:
 3. **Running Simulations**: Use the provided modules to set up and execute your EPIC model simulations.
 4. **Result Analysis**: Analyze simulation outputs with built-in tools or export data for external analysis.
 
-For detailed instructions, visit the [Getting Started](index.md) section. -->
+For detailed instructions, visit the [Getting Started](index.md) section. 
+-->
+
 <!-- 
 ### <strong>Use Cases</strong>
 <!-- 
@@ -50,10 +58,6 @@ GeoEPIC has been adopted in various research projects and integrated into severa
   - **University of Agriculture**: Partnership focusing on soil health and crop productivity.
   - **AgriTech Solutions**: Integration of GeoEPIC into precision agriculture tools. -->
 
-
-### <strong>Contributors</strong>
-
-- [Bharath Irigireddy](https://github.com/Bharath2), [Varaprasad Bandaru](https://scholar.google.com/citations?user=KJDTwhcAAAAJ&hl=en), [Sachin Velmurgan](https://github.com/SachinVel), [SMaRS Group](https://www.smarsgroup.org/)
 
 <!-- 
 ### <strong>Cite the Package as</strong>
