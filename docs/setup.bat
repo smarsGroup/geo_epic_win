@@ -24,7 +24,7 @@ if %ERRORLEVEL% neq 0 (
     :: If environment exists, install the GitHub package via pip
     echo Updating geo_epic package...
     call conda activate %ENV_NAME%
-    call pip uninstall -y geo-epic
+    call pip uninstall -y geo_epic_win
     call pip install %GITHUB_PACKAGE_URL%
     call conda deactivate
 )

@@ -8,4 +8,5 @@ src/geoEpic/__pycache__/
 src/geoEpic/gee/config.json
 site
 
-test
+**/__pycache__
+trial

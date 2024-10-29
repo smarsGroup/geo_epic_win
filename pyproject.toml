@@ -145,7 +145,7 @@ dependencies = [
     "shortuuid",
     "rasterio",
     "lmdb",
-    "jupyter-notebook"
+    "notebook==7.2"
 ]
 
 # List additional groups of dependencies here (e.g. development
