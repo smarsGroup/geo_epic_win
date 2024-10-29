@@ -78,7 +78,7 @@ plugins:
       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
 
 nav:
-  - Home:
+  - Overview:
     - Overview: index.md
     - Installation: pages/installation.md
     - License: pages/LICENSE.md
