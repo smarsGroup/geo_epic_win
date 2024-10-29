@@ -5,6 +5,7 @@ site_description: Python toolkit to run EPIC model
 site_url: https://smarsgroup.github.io/geo_epic_win/
 
 repo_url: https://github.com/smarsGroup/geo_epic_win
+edit_uri: edit/main/docs/
 
 # site_dir: './site'
 ### Build settings ###
@@ -26,7 +27,7 @@ theme:
   # custom_dir: custom
   features:
     - announce.dismiss
-    # - content.action.edit
+    - content.action.edit
     # - content.action.view
     - content.code.annotate
     - content.code.copy
