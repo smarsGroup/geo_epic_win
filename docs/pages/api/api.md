@@ -19,11 +19,11 @@ geo_epic workspace new -n Test
 #### **utility**
   - **gee**: Download required time-series from Google Earth Engine.
 #### **weather**
-  - **ee**: 
+  - **ee**: Get the required weather data from earth engine.
   - **windspeed**: 
   - **download_daily**: Download daily weather data. 
 #### **soil**
-  - **usda**:
+  - **usda**: Get Soil data from USDA SSURGO.
   - **process_gdb**: Process ssurgo gdb file.
 #### **sites**
   - **generate**: Generate site files from processed data.
