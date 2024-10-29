@@ -61,7 +61,7 @@ class SOL:
         if template is not None:
             template_lines = template.copy()
         else:
-            with open(f'{os.path.dirname(__file__)}/template.sol', 'r') as file:
+            with open(f'{os.path.dirname(__file__)}/template.SOL', 'r') as file:
                 template_lines = file.readlines()
         
         template_lines[0] = f"ID: {self.soil_id}\n"
@@ -112,7 +112,7 @@ class SOL:
         hydgrp_map = {1: 'A', 2: 'B', 3: 'C', 4: 'D'}
         hydgrp = hydgrp_map.get(int(hydgrp_conv), 'C')
         
-        num_layers = len(lines[2].split())
+        num_layers = len(lines[3].split())
         
         properties_data = [[] for _ in range(num_layers)]
         for i in range(3, 3 + 19):
@@ -136,6 +136,6 @@ class SOL:
 
 
 if __name__ == "__main__":
-    s1 = SOL.load('template.sol')
+    s1 = SOL.load('template.SOL')
     print(s1.properties_df)
-    s1.save('test2.sol')
+    s1.save('test2.SOL')
