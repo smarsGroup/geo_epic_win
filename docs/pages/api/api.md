@@ -14,14 +14,13 @@ geo_epic workspace new -n Test
 
 #### **workspace**
   - **new**: Create a new workspace with a template structure.
-  - **prepare**: Prepare the input files using config file.
+  - **copy**: Can be used to copy files between folders.
   - **run**: Execute the simulations.
 #### **utility**
   - **gee**: Download required time-series from Google Earth Engine.
 #### **weather**
   - **ee**: Get the required weather data from earth engine.
-  - **windspeed**: 
-  - **download_daily**: Download daily weather data. 
+  - **download_daily**: Download daily weather data from daymet. 
 #### **soil**
   - **usda**: Get Soil data from USDA SSURGO.
   - **process_gdb**: Process ssurgo gdb file.
