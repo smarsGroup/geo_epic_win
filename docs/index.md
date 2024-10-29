@@ -53,7 +53,10 @@ GeoEPIC has been adopted in various research projects and integrated into severa
 
 ### <strong>Contributors</strong>
 
-- Bharath Irigireddy, Varaprasad Bandaru, Sachin Velmurgan, SMaRS Group
+- [Bharath Irigireddy](https://github.com/Bharath2)
+- [Varaprasad Bandaru](mailto:bvprasad1007@gmail.com)
+- [Sachin Velmurgan](https://github.com/SachinVel)
+- [SMaRS Group](https://smars.utk.edu/)
 
 <!-- 
 ### <strong>Cite the Package as</strong>
