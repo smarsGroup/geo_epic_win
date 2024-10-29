@@ -1,7 +1,11 @@
 docs/site
 build
 src/geo_epic_win.egg-info
+src/geo_epic.egg-info/*
+
 src/geoEpic/*/__pycache__
 src/geoEpic/__pycache__/
 src/geoEpic/gee/config.json
 site
+
+test

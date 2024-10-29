@@ -18,6 +18,8 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
 
+extra_css:
+- extra.css
 
 theme:
   name: material
@@ -40,9 +42,6 @@ theme:
     - search.suggest
     - toc.follow
   
-  extra_css:
-  - extra.css
-
   palette:
     primary: black
     
@@ -61,16 +60,15 @@ plugins:
       handlers:
         python:
           options:
-            # docstring_style: numpy
             show_root_heading: true
             show_source: false
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            show_root_toc_entry: true
             summary:
               classes: true
-              # attributes: true
-              # functions: true
-              # modules: true
+              functions: true
             show_docstring_modules: false
-            parameter_headings: true
             filters:
               - "!^_"
           paths:
@@ -100,6 +98,7 @@ nav:
     - Command Line Interface: pages/api/api.md
     - geoEpic.core: pages/api/core.md
     - geoEpic.io: pages/api/io.md
+    - geoEpic.gee: pages/api/gee.md
     - geoEpic.weather: pages/api/weather.md
     - geoEpic.soil: pages/api/soil.md
     # - utility: pages/api/utils.md
