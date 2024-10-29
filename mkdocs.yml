@@ -96,10 +96,10 @@ nav:
     - Creating Input Files: pages/runepic.md
     - Running an Experiment: pages/runepic.md
   - API: 
-    - Command Line Interface: pages/api/api.md
     - geoEpic.core: pages/api/core.md
     - geoEpic.io: pages/api/io.md
-    - geoEpic.gee: pages/api/gee.md
     - geoEpic.weather: pages/api/weather.md
     - geoEpic.soil: pages/api/soil.md
+    - geoEpic.gee: pages/api/gee.md
+    - Command Line Interface: pages/api/api.md
     # - utility: pages/api/utils.md
