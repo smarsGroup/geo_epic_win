@@ -8,14 +8,10 @@ from geoEpic.utils.workerpool import WorkerPool
 import ee
 from geoEpic.gee.initialize import ee_Initialize
 
-project_name = ee_Initialize()
-
-pool = WorkerPool(f'gee_global_lock_{project_name}')
-# pool.open(40)
+pool = ee_Initialize()
 
 def extract_features(collection, aoi, date_range, resolution):
-    # pool = WorkerPool(f'gee_global_lock_{project_name}')
-    
+
     def map_function(image):
         # Function to reduce image region and extract data
         date = image.date().format()
@@ -35,7 +31,6 @@ def extract_features(collection, aoi, date_range, resolution):
             })
     finally: 
         pool.release(worker)
-        # pass
 
     if not df.empty:
         df['Date'] = pd.to_datetime(df['Date']).dt.date
@@ -229,7 +224,6 @@ class CompositeCollection:
 
 
 class TimeSeries:
-
     def __init__(self, collection, vars, date_range = None):
         self.collection = collection.select(vars)
         self.vars = vars

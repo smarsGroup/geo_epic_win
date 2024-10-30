@@ -17,12 +17,14 @@ class SOL:
                 Sand_content, Silt_content, N_concen, pH, Sum_Bases, Organic_Carbon,
                 Calcium_Carbonate, Cation_exchange, Course_Fragment, cnds, pkrz, rsd,
                 Bulk_density_dry, psp, Saturated_conductivity
+            num_layers_after_split (int): Number of layers after splitting by the EPIC model (TSLN in the SOL file format).
         """
         self.soil_id = soil_id
         self.albedo = albedo
         self.hydgrp = hydgrp
         self.num_layers = num_layers
         self.properties_df = properties_df
+        self.num_layers_after_split = 10
 
     @classmethod
     def from_sda(cls, query):
@@ -67,7 +69,7 @@ class SOL:
         template_lines[0] = f"ID: {self.soil_id}\n"
         hydgrp_conv = {'A': 1, 'B': 2, 'C': 3, 'D': 4}.get(self.hydgrp, 3)  # Default to 3 if not found
         template_lines[1] = '{:8.3f}{:8.3f}'.format(self.albedo, hydgrp_conv) + template_lines[1][16:]
-        template_lines[2] = '{:8.3f}'.format(10) + template_lines[2][8:]
+        template_lines[2] = '{:8.3f}'.format(self.num_layers_after_split) + template_lines[2][8:]
         
         columns_order = [
             'Layer_depth', 'Bulk_Density', 'Wilting_capacity', 'Field_Capacity',

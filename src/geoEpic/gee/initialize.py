@@ -36,7 +36,7 @@ def ee_Initialize():
     
     pool = WorkerPool(f'gee_global_lock_{project_name}')
     if pool.queue_len() is None: pool.open(40)
-    return project_name
+    return pool
 
 
 def ee_ReInitialize():
