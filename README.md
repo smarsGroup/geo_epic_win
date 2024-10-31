@@ -22,6 +22,6 @@ Setup a Virtual environment. (conda Recommended)
 >> conda activate epic_env
 
 Install the Geo-Epic Toolkit
->> pip install git+https://github.com/smarsGroup/geo_epic_pre.git
+>> pip install git+https://github.com/smarsGroup/geo_epic_win.git
 ```
 Refer to the user guide and quick start tutorials to understand the Geo-EPIC simulation workflow.
