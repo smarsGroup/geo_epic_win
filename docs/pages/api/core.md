@@ -1,2 +1,2 @@
-## Core package
+# Core Module
 :::core

@@ -1,7 +1,7 @@
 import ee
 import json
 import os
-from geoEpic.utils.workerpool import WorkerPool
+from geoEpic.utils.redis import WorkerPool
 
 def ee_Initialize():
     # Get the directory where the script is located

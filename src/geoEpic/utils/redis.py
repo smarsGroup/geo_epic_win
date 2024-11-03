@@ -4,8 +4,9 @@ import redis
 import shortuuid
 import time
 import subprocess
+import platform
 
-def connect_to_redis(host='localhost', port=6379, db=0):
+def connect_to_redis(host='localhost', port=56379, db=0):
     """
     Establish connection to Redis, attempting to start the Redis server if needed.
     
@@ -26,21 +27,26 @@ def connect_to_redis(host='localhost', port=6379, db=0):
         # If the connection fails, try to start the Redis server
         print("Redis server not running. Attempting to start...")
         try:
-            subprocess.Popen(["redis-server"])  # Start Redis in the background
-            print("Redis server started.")
+            if platform.system() == 'Windows':  # Windows
+                metadata_dir = os.path.join(os.path.expanduser("~"), 'GeoEPIC')
+                redis_server = os.path.join(metadata_dir, 'redis-server.exe')
+                redis_conf = os.path.join(metadata_dir, 'redis.conf')
+                subprocess.Popen([redis_server, redis_conf])
+            else:  # Unix-like systems
+                subprocess.Popen(['redis-server', '--port', '56379'])  # Start Redis in the background
             # Wait briefly for the Redis server to start up
-            time.sleep(2)
+            time.sleep(1)
             # Re-check the connection after starting the server
             client.ping()
-            print("Connected to Redis server.")
+            print("Redis server started.")
         except Exception as e:
-            raise Exception(f"Failed to start Redis server: {str(e)}")
+            raise Exception(f"Failed to start Redis server: {str(e)}\n Please try: \"geo_epic init\" in command line.")
 
     return client
 
 
 class WorkerPool:
-    def __init__(self, pool_key=None, base_dir=None, host='localhost', port=6379, db=0):
+    def __init__(self, pool_key=None, base_dir=None, host='localhost', port=56379, db=0):
         self.redis = connect_to_redis(host=host, port=port, db=db)
         self.pool_key = pool_key or f"worker_pool_{shortuuid.uuid()}"
 

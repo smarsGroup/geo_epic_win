@@ -1,3 +1,3 @@
-## Weather package
+# Weather Module
 
 ::: weather

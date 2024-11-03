@@ -51,7 +51,7 @@ theme:
     code: Roboto Mono
   favicon: assets/logo.png
   icon:
-    logo: assets/logo
+    logo: 
     repo: fontawesome/brands/github
 
 # Plugins
@@ -86,7 +86,7 @@ nav:
   - EPIC Model:
     - Environmental Policy Integrated Climate Model: pages/epic.md
   - Getting Started:
-    - Weather Module: pages/Weather.md
+    - Weather Module: pages/weather.md
     - Soil Module: pages/Soil.md
     - Crop Management: pages/OPC.md
     - Earth Engine Utility: pages/gee.md
@@ -101,5 +101,6 @@ nav:
     - geoEpic.weather: pages/api/weather.md
     - geoEpic.soil: pages/api/soil.md
     - geoEpic.gee: pages/api/gee.md
+    - geoEpic.utils: pages/api/utils.md
     - Command Line Interface: pages/api/api.md
     # - utility: pages/api/utils.md

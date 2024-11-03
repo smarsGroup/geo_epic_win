@@ -1,4 +1,4 @@
-## Gee package
+# GEE Module
 :::gee
     options:
       members:
