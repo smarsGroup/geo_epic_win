@@ -10,3 +10,6 @@ site
 
 **/__pycache__
 trial
+
+test
+tests/sample_ws

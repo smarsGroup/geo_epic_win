@@ -328,11 +328,11 @@ class EPICModel:
             ofile.write(fmt)
 
         with open(self.file_names['FSITE'], 'w') as ofile:
-            fmt = '1    "%s"\n' % (site.sit_path)
+            fmt = '1    "./%s"\n' % (os.path.basename(site.sit_path))
             ofile.write(fmt)
 
         with open(self.file_names['FSOIL'], 'w') as ofile:
-            fmt = '1    "%s"\n' % (site.sol_path)
+            fmt = '1    "./%s"\n' % (os.path.basename(site.sol_path))
             ofile.write(fmt)
 
         with open(self.file_names['FWLST'], 'w') as ofile:
@@ -347,7 +347,7 @@ class EPICModel:
             ofile.write(fmt)
             
         with open(self.file_names['FOPSC'], 'w') as ofile:
-            fmt = '1    "%s"\n' % (site.opc_path)
+            fmt = '1    "./%s"\n' % (os.path.basename(site.opc_path))
             ofile.write(fmt)
     
 
