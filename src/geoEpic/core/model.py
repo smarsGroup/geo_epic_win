@@ -284,7 +284,7 @@ class EPICModel:
         if os.path.exists(new_dir):
             shutil.rmtree(new_dir)
 
-        shutil.copytree(self.model_dir, new_dir)
+        shutil.copytree(self.model_dir, new_dir, ignore=lambda _, files: ['.lock'])
         os.chdir(new_dir)
         
         try:
