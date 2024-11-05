@@ -339,7 +339,7 @@ class EPICModel:
             ofile.write('1    1.DLY\n')
 
         with open(self.file_names['FWPM1'], 'w') as ofile:
-            fmt = '1    2.WP1   %.2f   %.2f    %.2f\n' % (site.latitude, site.longitude, site.elevation)
+            fmt = '1    1.WP1   %.2f   %.2f    %.2f\n' % (site.latitude, site.longitude, site.elevation)
             ofile.write(fmt)
         
         with open(self.file_names['FWIND'], 'w') as ofile:
