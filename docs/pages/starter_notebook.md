@@ -34,8 +34,7 @@ site = Site(opc = './opc/files/umstead.OPC',
             sit = './sites/umstead.SIT')
 print(site.site_id)
 ```
-
-    umstead
+umstead
     
 
 #### Define the EPICModel class
