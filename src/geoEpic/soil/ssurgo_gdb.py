@@ -122,7 +122,7 @@ def write_soil(row):
         # Generate first three lines of the file
         template[0] = f"ID: {row['mukey']}\n"
         template[1] = '{:8.3f}{:8.3f}'.format(row['albedo'], row['hydgrp_conv']) + template[1][16:]
-        template[2] = '{:8.3f}'.format(len_cols + 1) + template[2][8:]
+        template[2] = '{:8.3f}'.format(10) + template[2][8:]
         
         # Generate lines for each row in soil_layer_key dataframe
         vals = (soil_layer_key.iloc[:, 2:21].values).T

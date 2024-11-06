@@ -21,6 +21,9 @@ script_paths = {
         "process_gdb": "soil/ssurgo_gdb.py",
         "usda": "soil/fetch_usda.py"
     },
+    "opc": {
+        "generate": "opc/generate_opc.py"
+    },
     "sites": {
         "generate": "sites/generate.py"
     },
@@ -38,6 +41,7 @@ default_functions = {
     "sites": "generate",
     "workspace": "new",
     "init": "init",
+    "opc": "generate",
 }
 
 class DispatchError(Exception):

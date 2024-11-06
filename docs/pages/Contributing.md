@@ -1,23 +1,24 @@
 # Contributing to GeoEPIC
-
-This document outlines how you can contribute to the project, whether it's through code contributions, bug reports, feature requests, or other forms of collaboration.
+This document outlines how to contribute to GeoEPIC through code changes, bug reports, feature requests, and other helpful contributions.
 
 ### Reporting Bugs
-
-1. Check if the bug has already been reported in the [Issues](https://github.com/smarsGroup/geo_epic_win/issues) section.
-2. If not, create a new issue, providing a clear title and description of the bug, along with steps to reproduce it.
+- Please review the [Issues](https://github.com/smarsGroup/geo_epic_win/issues) page to check if a similar problem has already been reported.
+- If you do not find an existing report, create a new issue with the following information:
+    - A clear title that summarizes the problem
+    - A detailed description of the bug, outlining what went wrong
+    - Steps to reproduce the bug.
 
 ### Feature Requests
-1. Open a new issue in the [Issues](https://github.com/smarsGroup/geo_epic_win/issues) section.
-3. Clearly describe the feature and its potential benefits.
+- To propose a new feature, submit your request via the [Issues](https://github.com/smarsGroup/geo_epic_win/issues) page.
+- Make sure to include:
+    - A comprehensive description of the feature you are suggesting
+    - The expected benefits of this feature will enhance the project
 
 ### Code Contributions
-- Contact the maintainers directly for more specific inquiries or potential collaborations.
+- Contact the maintainers directly for any contributions or potential collaborations.
 
-### Questions or Need Help?
-
-If you have questions or need help:
-
-- Open an issue for general questions or contact the maintainers directly.
+### Questions & Support
+- Open an issue for general questions
+- Or you can reach out to the maintainers directly
 
 Thank you for your interest in contributing to GeoEPIC!

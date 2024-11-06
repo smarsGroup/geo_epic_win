@@ -160,3 +160,90 @@ def check_disk_space(output_dir, est, safety_margin=0.1):
         message = (f"Insufficient disk space in '{output_dir}'. Estimated required: {est} GiB, "
                    f"Available: {free_gib} GiB. Consider logging only required data.")
         raise Exception(message)
+    
+    
+def copy_file(src, dest, symlink = False):
+    """
+    Copy a file from source to destination, optionally creating a symbolic link instead.
+
+    Args:
+        src (str): Path to the source file
+        dest (str): Path to the destination file/link
+        symlink (bool, optional): Whether to create a symbolic link instead of copying. 
+            Defaults to False.
+
+    Returns:
+        str | None: Path to the destination file if successful, None if source doesn't exist
+
+    Note:
+        If symlink is True and the destination already exists, it will be removed first.
+    """
+    if not src: return None
+
+    if symlink:
+        if os.path.exists(dest):
+            os.remove(dest)
+        os.symlink(src, dest)
+    else:
+        shutil.copy2(src, dest)
+    
+    return dest
+
+
+import platform
+IS_WINDOWS = platform.system() == 'Windows'
+
+if IS_WINDOWS:
+    import msvcrt
+else:
+    import fcntl
+
+class FileLockHandle:
+    """A class to handle file locking across different platforms."""
+
+    def __init__(self, file_path):
+        """Initialize with file path."""
+        self.file_path = file_path
+        self.file_handle = None
+        if os.path.isdir(file_path):
+            self.lock_file = os.path.join(file_path, '.lock')
+        else:
+            self.lock_file = file_path
+
+    def acquire(self, mode='a+'):
+        """Acquire a lock on the file."""
+        try:
+            # Open file in specified mode (default append mode) to preserve contents if it exists
+            self.file_handle = open(self.lock_file, mode)
+            if IS_WINDOWS:
+                msvcrt.locking(self.file_handle.fileno(), msvcrt.LK_NBLCK, 1)
+            else:
+                fcntl.flock(self.file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return self.file_handle
+        except (IOError, OSError):
+            # Clean up if lock acquisition failed
+            if self.file_handle:
+                self.file_handle.close()
+            raise RuntimeError(f" \"{self.file_path}\" is in use by another process")
+        
+    def release(self):
+        """Release the lock on the file."""
+        try:
+            if self.file_handle:
+                if IS_WINDOWS:
+                    msvcrt.locking(self.file_handle.fileno(), msvcrt.LK_UNLCK, 1)
+                else:
+                    fcntl.flock(self.file_handle, fcntl.LOCK_UN)
+                self.file_handle.close()
+                self.file_handle = None
+        except (IOError, OSError):
+            pass  # File may already be unlocked or removed
+
+    def __enter__(self):
+        """Context manager entry."""
+        self.acquire()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Context manager exit."""
+        self.release()

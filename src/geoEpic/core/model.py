@@ -6,9 +6,9 @@ import subprocess
 import numpy as np
 from geoEpic.io import ConfigParser
 import platform
-import atexit
-import signal     
+from geoEpic.utils import FileLockHandle
 from datetime import datetime
+from weakref import finalize
 
 class EPICModel:
     """
@@ -59,43 +59,25 @@ class EPICModel:
 
         # Define the path to the RAM-backed filesystem
         self.cache_path = os.path.join(self.base_dir, '.cache')#'/dev/shm'  # On Linux systems
-
-        # Define the path to the lock file
-        self.lock_file = os.path.join(self._model_dir, '.model_lock')
-        # Automatically acquire the lock when the instance is created
-        self.acquire_lock()
+        # Delete Site Simulation folder in cache after runs
         self.delete_after_run = True
-
-        # register close to release it when the instance is deleted
-        atexit.register(self.close)
-        signal.signal(signal.SIGINT, self._signal_handler)
-        signal.signal(signal.SIGTERM, self._signal_handler)
         
-    def _signal_handler(self, signum, frame):
-        '''Release lock on exit'''
-        self.close()
-
-    def acquire_lock(self):
-        """Acquire a lock on the model's directory by creating a lock file."""
-        if os.path.exists(self.lock_file):
-            raise RuntimeError(f"The model folder is currently in use by other process.")
-    
-        with open(self.lock_file, 'w') as f:
-            f.write(f"Locked by process with PID {os.getpid()}")
-
+        # Automatically acquire the lock when the instance is created
+        self._model_lock = FileLockHandle(self._model_dir)
+        self._model_lock.acquire()
+        
+        # Use weakref finalizer instead of __del__
+        self._finalizer = finalize(self, self.close)
+        
     def close(self):
         """Release the lock on the model's directory by deleting the lock file."""
-        if os.path.exists(self.lock_file):
-            os.remove(self.lock_file)
+        self._model_lock.release()
         self._model_dir = None
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self.close()
-    
-    def __del__(self):
         self.close()
 
     @property
@@ -302,25 +284,29 @@ class EPICModel:
         if os.path.exists(new_dir):
             shutil.rmtree(new_dir)
 
-        shutil.copytree(self.model_dir, new_dir)
+        shutil.copytree(self.model_dir, new_dir, ignore=lambda _, files: ['.lock'])
         os.chdir(new_dir)
         
         try:
             # Prepare weather data
             dly.save(1)
             dly.to_monthly(1)
-            # Write configuration files
-            self._writeDATFiles(site)
+            # copy virtual links and Write configuration files
+            self._writeDATFiles(site.copy('./'))
             # Run EPIC executable
-            log_file = f"{fid}.out"
+            log_file = f"{fid}.log"
             with open(log_file, 'w') as log:
-                subprocess.run([self.executable_name], stdout=log, stderr=log)
+                process = subprocess.Popen([self.executable_name], stdin=subprocess.PIPE, stdout=log, stderr=log)
+                # Work Around for pause when error occurs.
+                while process.poll() is None:
+                    process.communicate(input=b'\n')
             # Process output files
             for out_type in self._output_types:
                 out_path = f'{fid}.{out_type}'
                 if not os.path.exists(out_path) or os.path.getsize(out_path) == 0:
-                    shutil.move(log_file, os.path.join(self.log_dir, f"{fid}.out"))
-                    raise FileNotFoundError(f"Output file ({out_type}) not found or empty. Check {log_file} for details")
+                    log_file_dst = os.path.join(self.log_dir, f"{fid}.log")
+                    shutil.move(log_file, log_file_dst)
+                    raise FileNotFoundError(f"Output file ({out_type}) not found or empty. \n Check {log_file_dst} for details")
                 dst = os.path.join(self.output_dir if dest is None else os.path.dirname(new_dir), out_path)
                 shutil.move(out_path, dst)
                 site.outputs[out_type] = dst
@@ -342,26 +328,26 @@ class EPICModel:
             ofile.write(fmt)
 
         with open(self.file_names['FSITE'], 'w') as ofile:
-            fmt = '1    "%s"\n' % (site.sit_path)
+            fmt = '1    "./%s"\n' % (os.path.basename(site.sit_path))
             ofile.write(fmt)
 
         with open(self.file_names['FSOIL'], 'w') as ofile:
-            fmt = '1    "%s"\n' % (site.sol_path)
+            fmt = '1    "./%s"\n' % (os.path.basename(site.sol_path))
             ofile.write(fmt)
 
         with open(self.file_names['FWLST'], 'w') as ofile:
             ofile.write('1    1.DLY\n')
 
         with open(self.file_names['FWPM1'], 'w') as ofile:
-            fmt = '1    2.WP1   %.2f   %.2f    %.2f\n' % (site.lat, site.lon, site.ele)
+            fmt = '1    1.WP1   %.2f   %.2f    %.2f\n' % (site.latitude, site.longitude, site.elevation)
             ofile.write(fmt)
         
         with open(self.file_names['FWIND'], 'w') as ofile:
-            fmt = '1    1.WND   %.2f   %.2f    %.2f\n' % (site.lat, site.lon, site.ele)
+            fmt = '1    1.WND   %.2f   %.2f    %.2f\n' % (site.latitude, site.longitude, site.elevation)
             ofile.write(fmt)
-        
+            
         with open(self.file_names['FOPSC'], 'w') as ofile:
-            fmt = '1    "%s"\n' % (site.opc_path)
+            fmt = '1    "./%s"\n' % (os.path.basename(site.opc_path))
             ofile.write(fmt)
     
 

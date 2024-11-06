@@ -1,6 +1,7 @@
 
 import numpy as np
 import pandas as pd
+import os
 
 class DLY(pd.DataFrame):
     @classmethod
@@ -12,7 +13,9 @@ class DLY(pd.DataFrame):
         if not path.endswith('.DLY'): path += '.DLY'
         data = pd.read_fwf(path, widths=[6, 4, 4, 6, 6, 6, 6, 6, 6], header=None)
         data.columns = ['year', 'month', 'day', 'srad', 'tmax', 'tmin', 'prcp', 'rh', 'ws']
-        return cls(data)
+        df = cls(data)
+        setattr(df, 'basename', os.path.splitext(os.path.basename(path))[0])
+        return df
 
     def validate(self, start_date, end_date):
         """
@@ -39,24 +42,35 @@ class DLY(pd.DataFrame):
             return False
         return True
 
-    def save(self, path):
+    def save(self, path=None):
         """
         Save DataFrame into a DLY file.
         """
-        path = str(path)
+        if path is None:
+            basename = "1" if not hasattr(self, 'basename') else self.basename
+            path = f"./{basename}.DLY"
+        else:
+            path = str(path)
+            if not path.endswith('.DLY'): path += '.DLY'
+            
         # Remove duplicate rows from the DataFrame
         self.drop_duplicates(subset=['year', 'month', 'day'], inplace=True)
-        if not path.endswith('.DLY'): path += '.DLY'
         columns = ['year', 'month', 'day', 'srad', 'tmax', 'tmin', 'prcp', 'rh', 'ws']
         with open(path, 'w') as ofile:
             fmt = '%6d%4d%4d%6.2f%6.2f%6.2f%6.2f%6.2f%6.2f'
             np.savetxt(ofile, self[columns].values, fmt = fmt)
     
     
-    def to_monthly(self, path):
+    def to_monthly(self, path=None):
         """
         Save as monthly file
         """
+        basename = "1" if not hasattr(self, 'basename') else self.basename
+        if path is None: path = f"./{basename}.WP1"
+        else:
+            path = str(path)
+            if not path.endswith('.WP1'): path += '.WP1'
+
         # Remove duplicate rows from the DataFrame
         self.drop_duplicates(subset=['year', 'month', 'day'], inplace=True)
         grouped = self.groupby('month')
@@ -69,10 +83,9 @@ class DLY(pd.DataFrame):
         ss['sdtmn'] = grouped['tmin'].std()
         ss['sdrf'] = grouped['prcp'].std()
         # Additional calculations
-        ss['dayp'] = grouped.apply(lambda x: (x['prcp'] > 0.5).sum() / len(x))
+        ss['dayp'] = grouped.apply(lambda x: (x['prcp'] > 0.5).sum())
         ss['skrf'] = 3 * abs(ss['prcp'] - ss['prcp'].median()) / ss['sdrf']
         ss['prw1'] = grouped.apply(lambda x: np.sum(np.diff(x['prcp'] > 0.5) == -1) / len(x))
-        # ss['prw2'] = grouped.apply(lambda x: np.sum((x['prcp'] > 0.5).shift().fillna(False) & (x['prcp'] > 0.5)) / len(x))
         ss['prw2'] = grouped.apply(lambda x: np.sum((x['prcp'].fillna(0) > 0.5).shift(fill_value=False) & (x['prcp'].fillna(0) > 0.5)) / len(x))
         ss['wi'] = 0
         # Reorder columns
@@ -82,14 +95,12 @@ class DLY(pd.DataFrame):
         ss = ss[ss.columns[order]]
         values = np.float64(ss.T.values)
         
-        lines = ['Monthly Weather', 'Statistics']
+        lines = [f'Monthly Weather Statistics : {basename}',  "     .00     .00"]
         fmt = "%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%8s"
         for i, row in enumerate(values):
             line = fmt % tuple(row.tolist() + [str(ss.columns[i])])
             lines.append(line)
         
-        path = str(path)
-        if not path.endswith('.WP1'): path += '.WP1'
         with open(path, 'w') as ofile:
             ofile.write('\n'.join(lines))
             
@@ -97,7 +108,7 @@ class DLY(pd.DataFrame):
         wnd_path = path.replace('.WP1', '.WND')
         with open(wnd_path, 'w') as wnd_file:
             # Write station name (placeholder)
-            wnd_file.write("Monthly Wind Statistics\n")
+            wnd_file.write(f"Monthly Wind Statistics : {basename}\n")
             # Write two placeholder values
             wnd_file.write("     .00     .00\n")
             # Write last row of values (UAVO - wind speed)

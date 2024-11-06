@@ -1,5 +1,5 @@
-## Gee package
-(Summary about gee package and what does it have)
+# GEE Module
 :::gee
-
-:::gee.fetch.fetch_list
+    options:
+      members:
+      - CompositeCollection

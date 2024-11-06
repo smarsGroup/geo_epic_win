@@ -12,7 +12,7 @@ from glob import glob
 # from geoEpic.utils.redis import WorkerPool
 from shortuuid import uuid 
 import signal
-import atexit
+from weakref import finalize
 # import subprocess
 # import platform
 
@@ -76,9 +76,10 @@ class Workspace:
             warnings.warn(warning_msg, RuntimeWarning)
         
         # Capture exit signals and clean up cache
-        atexit.register(self.cache_cleanup)
+        self._finalizer = finalize(self, self.cleanup)
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
+        signal.signal(signal.SIGBREAK, self._signal_handler)
 
     def _signal_handler(self, signum, frame):
         '''Clean up cache while exiting'''

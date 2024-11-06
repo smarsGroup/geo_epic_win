@@ -28,7 +28,7 @@ def fetch_data(config_file, input_data, output_path):
     # Example print to simulate output file path
     print(f"Data will be saved to: {output_path}")
 
-def main():
+def _main():
     parser = argparse.ArgumentParser(description="Fetch and output data from GEE")
     parser.add_argument('config_file', help='Path to the configuration file')
     parser.add_argument('--fetch', metavar=('INPUT'), help='Fetch data for latitude and longitude, or a file path')
@@ -43,4 +43,4 @@ def main():
         parser.print_help()
 
 if __name__ == '__main__':
-    main()
+    _main()

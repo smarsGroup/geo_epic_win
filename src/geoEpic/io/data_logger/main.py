@@ -3,7 +3,7 @@ import platform
 from shortuuid import uuid 
 from .sql_writer import SQLTableWriter
 from .csv_writer import CSVWriter
-from .lmdb_writer import LMDBWriter
+from .redis_writer import RedisWriter
 
 
 class DataLogger:
@@ -13,18 +13,18 @@ class DataLogger:
 
     Attributes:
         output_folder (str): Directory where files are stored (if applicable).
-        delete_after_use (bool): Whether to delete the data after retrieving it.
+        delete_on_read (bool): Whether to delete the data after retrieving it.
         backend (str): The backend to use ('redis', 'csv', 'sql').
     """
 
-    def __init__(self, output_folder=None, delete_after_use=True, backend='sql', **kwargs):
+    def __init__(self, output_folder=None, delete_on_read=True, backend='redis', **kwargs):
         """
         Initialize the DataLogger with a specified output folder and backend.
 
         Args:
             output_folder (str, optional): Directory to store the files. Defaults to current directory.
-            delete_after_use (bool): Whether to delete the data after retrieval. Defaults to True.
-            backend (str): The backend to use ('lmdb', 'sql', 'csv'). Defaults to 'lmdb'.
+            delete_on_read (bool): Whether to delete the data after retrieval. Defaults to True.
+            backend (str): The backend to use ('redis', 'sql', 'csv'). Defaults to 'lmdb'.
             **kwargs: Additional parameters for backend configuration.
 
         Raises:
@@ -32,13 +32,13 @@ class DataLogger:
         """
         self.output_folder = output_folder or os.getcwd()
         self.backend = backend.lower()
-        self.delete_after_use = delete_after_use
+        self.delete_on_read = delete_on_read
         self.backend_kwargs = kwargs
         self.uuid = uuid()
 
         os.makedirs(self.output_folder, exist_ok=True)
 
-        if self.backend not in ['lmdb', 'sql', 'csv']:
+        if self.backend not in ['redis', 'sql', 'csv']:
             raise ValueError(f"Unsupported backend: {self.backend}")
 
     def get_writer(self, func_name):
@@ -56,7 +56,7 @@ class DataLogger:
         """
         filename = os.path.join(self.output_folder, f"{self.uuid}_{func_name}")
         writer_classes = {
-            'lmdb': LMDBWriter,
+            'redis': RedisWriter,
             'sql': SQLTableWriter,
             'csv': CSVWriter
         }
@@ -94,6 +94,6 @@ class DataLogger:
         """
         with self.get_writer(func_name) as writer:
             df = writer.query_rows()
-            if self.delete_after_use:
+            if self.delete_on_read:
                 writer.delete_table()
         return df

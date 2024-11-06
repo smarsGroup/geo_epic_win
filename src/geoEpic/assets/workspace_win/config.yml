@@ -7,8 +7,8 @@ Area_of_Interest: ./NE_site/NE_site.shp
 
 # Model configuration
 EPICModel: ./model/EPIC1102.exe
-start_date: '1995-01-01'
-duration: 25
+start_date: '2000-01-01'
+duration: 6
 output_types:
   - ACY  # Annual Crop data file
   - DGN  # Daily general output file
@@ -37,7 +37,7 @@ site:
   slope_length: ./soil/NE_slopelen.csv
 
 # OPC directory
-opc_dir: ./opc
+opc_dir: ./opc/files
 
 
 # Workspace Run Options

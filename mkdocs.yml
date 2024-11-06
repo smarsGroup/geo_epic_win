@@ -5,6 +5,7 @@ site_description: Python toolkit to run EPIC model
 site_url: https://smarsgroup.github.io/geo_epic_win/
 
 repo_url: https://github.com/smarsGroup/geo_epic_win
+edit_uri: edit/main/docs/
 
 # site_dir: './site'
 ### Build settings ###
@@ -18,13 +19,15 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
 
+extra_css:
+- extra.css
 
 theme:
   name: material
   # custom_dir: custom
   features:
     - announce.dismiss
-    # - content.action.edit
+    - content.action.edit
     # - content.action.view
     - content.code.annotate
     - content.code.copy
@@ -40,9 +43,6 @@ theme:
     - search.suggest
     - toc.follow
   
-  extra_css:
-  - extra.css
-
   palette:
     primary: black
     
@@ -51,7 +51,7 @@ theme:
     code: Roboto Mono
   favicon: assets/logo.png
   icon:
-    logo: logo
+    logo: 
     repo: fontawesome/brands/github
 
 # Plugins
@@ -61,16 +61,15 @@ plugins:
       handlers:
         python:
           options:
-            # docstring_style: numpy
             show_root_heading: true
             show_source: false
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            show_root_toc_entry: true
             summary:
               classes: true
-              # attributes: true
-              # functions: true
-              # modules: true
+              functions: true
             show_docstring_modules: false
-            parameter_headings: true
             filters:
               - "!^_"
           paths:
@@ -79,7 +78,7 @@ plugins:
       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
 
 nav:
-  - Home:
+  - Overview:
     - Overview: index.md
     - Installation: pages/installation.md
     - License: pages/LICENSE.md
@@ -97,9 +96,11 @@ nav:
     - Creating Input Files: pages/runepic.md
     - Running an Experiment: pages/runepic.md
   - API: 
-    - Command Line Interface: pages/api/api.md
     - geoEpic.core: pages/api/core.md
     - geoEpic.io: pages/api/io.md
     - geoEpic.weather: pages/api/weather.md
     - geoEpic.soil: pages/api/soil.md
+    - geoEpic.gee: pages/api/gee.md
+    - geoEpic.utils: pages/api/utils.md
+    - Command Line Interface: pages/api/api.md
     # - utility: pages/api/utils.md

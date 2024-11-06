@@ -1,5 +1,4 @@
-## IO package
-(Summary about io package and what does it have)
+# IO Module
 :::io
     options:
         show_submodules: true
