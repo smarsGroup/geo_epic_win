@@ -7,7 +7,7 @@
 <img src="./pages/assets/Yield_MD.png" alt="Maryland_Yield" width="90%"/> 
 <!-- ### <strong>Overview</strong> -->
 
-This package expands the capabilities of the **EPIC crop simulation model**, to simulate crop growth and development across large geographies, such as entire states or counties by leveraging openly availabe remote sensing products and geospatial databases. Additionally, the toolkit features a unique calibration module that allows fine-tuning of model parameters to reflect specific local conditions or experimental results. This toolkit allows researchers to assess crop production potential, management scenarios and risks at broader scales, informing decision-making for sustainable agricultural practices.
+GeoEPIC package expands the capabilities of Environmental Policy Integrated Climate (EPIC) field scale agroecosystem model to simulate crop growth, yields, water use and other agricultural system responses across large geographies, such as entire states or counties. This package allows users to process remote sensing products and geospatial databases to create model inputs. It also features a unique calibration module that allows fine-tuning of model parameters to reflect specific local conditions or experimental results. This toolkit helps researchers to assess crop production potential, management scenarios and risks at broader scales, informing decision-making for sustainable agricultural practices.
 
 
 
