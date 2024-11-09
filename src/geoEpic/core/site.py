@@ -4,7 +4,7 @@ from geoEpic.utils import copy_file
 
 class Site:
     """
-    Represents a simulation site with paths to relevant operational files and site details.
+    Represents a site (ex: agricultural field) with paths to it's corresponding EPIC input files.
 
     Attributes:
         opc_path (str): Path to the operational practice code file.

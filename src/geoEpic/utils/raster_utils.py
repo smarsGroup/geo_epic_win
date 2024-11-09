@@ -162,6 +162,27 @@ def reproject_crop_raster(src, dst, out_epsg, min_coords, max_coords):
     
 
 class GeoInterface:
+    """
+    A class that provides a unified interface for working with geospatial data from various sources.
+
+    This class can load and process data from raster files (.tif/.tiff), CSV files, shapefiles, or pandas DataFrames.
+    It provides methods for finding nearest neighbors using haversine distances between geographic coordinates.
+
+    Attributes:
+        df (pandas.DataFrame): The loaded data, containing at minimum 'lat' and 'lon' columns.
+        points_rad (numpy.ndarray): The latitude/longitude points converted to radians.
+        tree (sklearn.neighbors.BallTree): A BallTree structure for efficient nearest neighbor queries.
+
+    Args:
+        data_source (str or pandas.DataFrame): The input data source. Can be:
+            - Path to a raster file (.tif/.tiff)
+            - Path to a CSV file (.csv)
+            - Path to a shapefile (.shp)
+            - A pandas DataFrame with 'lat' and 'lon' columns
+
+    Raises:
+        ValueError: If the data source format is unsupported or required columns are missing.
+    """
     def __init__(self, data_source):
         """Initialize the interface by loading the data source."""
         if isinstance(data_source, str):
