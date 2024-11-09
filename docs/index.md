@@ -28,22 +28,8 @@ pip install git+https://github.com/smarsGroup/geo_epic_win.git
 
 ### <strong>Contributors</strong>
 
-- [Bharath Irigireddy](https://github.com/Bharath2), [Varaprasad Bandaru](https://www.ars.usda.gov/pacific-west-area/maricopa-arizona/us-arid-land-agricultural-research-center/plant-physiology-and-genetics-research/people/prasad-bandaru/), [Sachin Velmurgan](https://github.com/SachinVel), [SMaRS Group](https://www.smarsgroup.org/), Contact:prasad.bandaru@usda.gov
+- [Bharath Irigireddy](https://github.com/Bharath2), [Varaprasad Bandaru](https://www.ars.usda.gov/pacific-west-area/maricopa-arizona/us-arid-land-agricultural-research-center/plant-physiology-and-genetics-research/people/prasad-bandaru/), [Sachin Velmurgan](https://github.com/SachinVel), [SMaRS Group](https://www.smarsgroup.org/), Contact : prasad.bandaru@usda.gov
 
-
-
-<!-- 
-### <strong>Getting Started</strong>
-
-To begin using GeoEPIC:
-
-1. **Installation**: Follow the [installation guide](installation.md) to set up the toolkit in your Python environment.
-2. **Data Preparation**: Prepare your geospatial datasets, including soil, weather, and crop management data.
-3. **Running Simulations**: Use the provided modules to set up and execute your EPIC model simulations.
-4. **Result Analysis**: Analyze simulation outputs with built-in tools or export data for external analysis.
-
-For detailed instructions, visit the [Getting Started](index.md) section. 
--->
 
 <!-- 
 ### <strong>Use Cases</strong>
