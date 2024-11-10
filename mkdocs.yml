@@ -79,13 +79,13 @@ plugins:
 
 nav:
   - Overview:
-    - Overview: index.md
+    - Introduction: index.md
+    - The EPIC Model: pages/epic.md
     - Installation: pages/installation.md
     - License: pages/LICENSE.md
     - Contributing: pages/Contributing.md
-  - EPIC Model:
-    - Environmental Policy Integrated Climate Model: pages/epic.md
   - Getting Started:
+    - Overview: pages/overview.md
     - Weather Module: pages/Weather.md
     - Soil Module: pages/Soil.md
     - Crop Management: pages/OPC.md
