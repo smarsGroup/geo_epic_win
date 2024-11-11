@@ -1,4 +1,4 @@
-## Environmental Policy Integrated Climate Model
+# Environmental Policy Integrated Climate Model
 
 The Environmental Policy Integrated Climate **(EPIC)** model, originally known as the Erosion/Productivity Impact Calculator, is **designed to simulate a field, farm or small watershed**, that is homogenous in terms of climate, soil, land use, and topography. The model simulates biophysical and biogeochemical processes as influenced by climate, landscape, soil and management conditions.Processes simulated include plant growth and yield, water and wind erosion, and water, carbon and nutrient cycling. EPIC is capable of **simulating around hundred crops** including annual, perennial and woody cropping systems grown as monocultures or polycultures. Model has been validated for multiple crops and in over 30 countries and regions and it has been used to assess productivity, environmental impacts, sustainability and climate change impacts and mitigation. EPIC has regularly been used by federal programs to investigate potential impacts of agricultural policies.
 
