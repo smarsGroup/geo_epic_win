@@ -78,8 +78,8 @@ plugins:
       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
 
 nav:
-  - Overview:
-    - Introduction: index.md
+  - Home:
+    - Home: index.md
     - EPIC Model: pages/epic.md
     - Installation: pages/installation.md
     - License: pages/LICENSE.md
@@ -95,7 +95,7 @@ nav:
     - Model Calibration: pages/opt.md
     - Creating Input Files: pages/runepic.md
     - Running an Experiment: pages/runepic.md
-  - API: 
+  - API Reference: 
     - geoEpic.core: pages/api/core.md
     - geoEpic.io: pages/api/io.md
     - geoEpic.weather: pages/api/weather.md
