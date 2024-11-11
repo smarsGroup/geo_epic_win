@@ -26,10 +26,12 @@ conda activate epic_env
 pip install git+https://github.com/smarsGroup/geo_epic_win.git
 ```
 
-### <strong>Contributors</strong> -->
+-->
+
+### <strong>Contributors</strong> 
 
 - [Bharath Irigireddy](https://github.com/Bharath2), [Varaprasad Bandaru](https://www.ars.usda.gov/pacific-west-area/maricopa-arizona/us-arid-land-agricultural-research-center/plant-physiology-and-genetics-research/people/prasad-bandaru/), [Sachin Velmurgan](https://github.com/SachinVel), [SMaRS Group](https://www.smarsgroup.org/)
-- Contact : prasad.bandaru@usda.gov
+- Contact: prasad.bandaru@usda.gov
 
 
 <!-- 

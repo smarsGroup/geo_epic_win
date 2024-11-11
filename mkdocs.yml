@@ -80,7 +80,7 @@ plugins:
 nav:
   - Overview:
     - Introduction: index.md
-    - The EPIC Model: pages/epic.md
+    - EPIC Model: pages/epic.md
     - Installation: pages/installation.md
     - License: pages/LICENSE.md
     - Contributing: pages/Contributing.md
