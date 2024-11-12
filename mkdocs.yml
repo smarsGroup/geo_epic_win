@@ -86,7 +86,7 @@ nav:
     - Contributing: pages/Contributing.md
   - Getting Started:
     # - Overview: pages/overview.md
-    - Weather Module: pages/weather.md
+    - Weather Module: pages/Weather.md
     - Soil Module: pages/Soil.md
     - Crop Management: pages/OPC.md
     - EPIC Python Interface: pages/EPICModel.md
