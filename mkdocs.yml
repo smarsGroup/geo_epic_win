@@ -90,7 +90,7 @@ nav:
     - Soil Module: pages/Soil.md
     - Crop Management: pages/OPC.md
     - EPIC Python Interface: pages/EPICModel.md
-    - Model Module: pages/calibration.md
+    - Calibration Module: pages/calibration.md
     - Earth Engine Utility: pages/gee.md
   - Tutorials:
     - Site Simulation: pages/starter_notebook.md
