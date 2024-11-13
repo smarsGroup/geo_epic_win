@@ -51,7 +51,7 @@ theme:
     code: Roboto Mono
   favicon: assets/logo.png
   icon:
-    logo: 
+    logo: logo
     repo: fontawesome/brands/github
 
 # Plugins
@@ -78,24 +78,27 @@ plugins:
       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
 
 nav:
-  - Overview:
-    - Overview: index.md
+  - Home:
+    - Home: index.md
+    - EPIC Model: pages/epic.md
     - Installation: pages/installation.md
     - License: pages/LICENSE.md
     - Contributing: pages/Contributing.md
-  - EPIC Model:
-    - Environmental Policy Integrated Climate Model: pages/epic.md
   - Getting Started:
+    # - Overview: pages/overview.md
     - Weather Module: pages/Weather.md
     - Soil Module: pages/Soil.md
     - Crop Management: pages/OPC.md
+    - EPIC Python Interface: pages/EPICModel.md
+    - Calibration Module: pages/calibration.md
     - Earth Engine Utility: pages/gee.md
   - Tutorials:
     - Site Simulation: pages/starter_notebook.md
-    - Model Calibration: pages/opt.md
-    - Creating Input Files: pages/runepic.md
-    - Running an Experiment: pages/runepic.md
-  - API: 
+    - Calibration Example: pages/opt.md
+    - Creating Site Input Files: pages/runepic.md
+    - Spatial Crop Simulations: pages/runepic.md
+    - Querying USDA Soil Data Access: pages/runepic.md
+  - API Reference: 
     - geoEpic.core: pages/api/core.md
     - geoEpic.io: pages/api/io.md
     - geoEpic.weather: pages/api/weather.md
