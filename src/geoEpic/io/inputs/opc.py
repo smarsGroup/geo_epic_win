@@ -77,6 +77,28 @@ class OPC(pd.DataFrame):
             np.savetxt(ofile, final_data[columns].values, fmt=fmt)
 
     @property
+    def LUN(self):
+        """
+        Get the land use number from the OPC file header.
+
+        Returns:
+            int: The land use number from the first 4 characters of header line 2
+        """
+        lun_value = int(self.header[1][:4].strip())
+        return lun_value
+
+    @LUN.setter
+    def LUN(self, value):
+        """
+        Set the land use number in the OPC file header.
+
+        Parameters:
+            value (int): The land use number to set in the first 4 characters of header line 2
+        """
+        iaui = self.header[1][4:].strip()
+        self.header[1] = f'{value:4d}' + iaui + '\n'
+
+    @property
     def IAUI(self):
         """
         Get the auto-irrigation implement ID from the OPC file header.
@@ -108,10 +130,8 @@ class OPC(pd.DataFrame):
                 - opID: Operation ID (required)
                 - cropID: Crop ID (required)
                 - date: Operation date as string 'YYYY-MM-DD' (required)
-                - OPV1: Operation value 1 (required, e.g. fertilizer rate)
-                - fertID: Fertilizer ID (optional, default 0)
-                - XMTU: Machine type (optional, default 0) 
-                - OPV2-OPV8: Additional operation values (optional, default 0)
+                - XMTU/LYR/pestID/fertID: Machine type/years/pesticide ID/fertilizer ID (optional, default 0)
+                - OPV1-OPV8: Additional operation values (optional, default 0)
         """
         # Parse the date
         date = pd.to_datetime(operation['date'])
@@ -123,10 +143,10 @@ class OPC(pd.DataFrame):
             'Mn': date.month,
             'Dy': date.day,
             'CODE': operation['opID'],
-            'TRAC': operation.get('fertID', 0),
+            'TRAC': operation.get('TRAC', 0),
             'CRP': operation['cropID'],
-            'XMTU': operation.get('XMTU', 0),
-            'OPV1': operation['OPV1'],
+            'XMTU': operation.get('XMTU', operation.get('LYR', operation.get('pestID', operation.get('fertID', 0)))),
+            'OPV1': operation.get('OPV1', 0),
             'OPV2': operation.get('OPV2', 0),
             'OPV3': operation.get('OPV3', 0),
             'OPV4': operation.get('OPV4', 0),
@@ -152,30 +172,27 @@ class OPC(pd.DataFrame):
             opID (int, optional): Operation ID to match
             date (str, optional): Date to match in format 'YYYY-MM-DD'
             cropID (int, optional): Crop ID to match
-            XMTU (int, optional): Machine type to match
-            fertID (int, optional): Fertilizer ID to match
+            XMTU/LYR/pestID/fertID (int, optional): Machine type/layer/pesticide ID/fertilizer ID to match
         """
-        # Build filter conditions dictionary
-        conditions = {}
+        mask = pd.Series([True] * len(self))
         
         if date is not None:
             date = pd.to_datetime(date)
-            conditions.update({
-                'Yid': date.year - self.start_year + 1,
-                'Mn': date.month,
-                'Dy': date.day
-            })
+            mask &= (self['Yid'] == date.year - self.start_year + 1)
+            mask &= (self['Mn'] == date.month)
+            mask &= (self['Dy'] == date.day)
         
-        # Add other conditions if provided
-        if opID is not None: conditions['CODE'] = opID
-        if cropID is not None: conditions['CRP'] = cropID
-        if XMTU is not None: conditions['XMTU'] = XMTU
-        if fertID is not None: conditions['TRAC'] = fertID
-        
-        # Query once using all conditions
-        if conditions:
-            self.drop(self.query(' and '.join(f'{k}=={v}' for k,v in conditions.items())).index, inplace=True)
-            self.reset_index(drop=True, inplace=True)
+        if opID is not None:
+            mask &= (self['CODE'] == opID)
+        if cropID is not None:
+            mask &= (self['CRP'] == cropID)
+        if XMTU is not None:
+            mask &= (self['XMTU'] == XMTU)
+        elif fertID is not None:  # Only check fertID if XMTU not provided
+            mask &= (self['XMTU'] == fertID)
+            
+        self.drop(self[mask].index, inplace=True)
+        self.reset_index(drop=True, inplace=True)
 
     def edit_fertilizer_rate(self, rate, year=2020, month=None, day=None):
         """
