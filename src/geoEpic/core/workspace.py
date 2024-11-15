@@ -15,6 +15,7 @@ import signal
 from weakref import finalize
 # import subprocess
 # import platform
+from .calibration import PygmoProblem
 
 class Workspace:
     """
@@ -109,6 +110,23 @@ class Workspace:
                 raise ValueError(f"{func.__name__} must return a dictionary.")
             self.data_logger.log_dict(func.__name__, {'SiteID': site.site_id, **result})
             return result
+
+        self.routines[func.__name__] = wrapper
+        return wrapper
+
+    def routine(self, func):
+        """
+        Decorator to add a function as a routine without logging or returning values.
+
+        Args:
+            func (callable): The function to be decorated.
+
+        Returns:
+            callable: The decorated function that executes without logging.
+        """
+        @wraps(func)
+        def wrapper(site):
+            func(site)
 
         self.routines[func.__name__] = wrapper
         return wrapper
@@ -254,6 +272,9 @@ class Workspace:
         if output_dir and os.path.exists(output_dir):
             shutil.rmtree(output_dir)
             os.makedirs(output_dir)
+    
+    def make_problem(self, *dfs):
+        return PygmoProblem(self, *dfs)
     
 
     def _process_run_info(self, file_path):

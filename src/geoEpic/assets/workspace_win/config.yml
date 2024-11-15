@@ -1,9 +1,7 @@
 # Experiment details
-EXPName: Nebraska Mead Site
-Region: Nebraska
-code: NE
-Area_of_Interest: ./NE_site/NE_site.shp
-
+EXPName: umstead Site
+Region: 
+Area_of_Interest: 
 
 # Model configuration
 EPICModel: ./model/EPIC1102.exe
@@ -16,33 +14,16 @@ log_dir: ./log
 output_dir: ./output
 
 
-# Weather configuration
-weather:
-  dir: ./weather
-  start_date: 1981-01-01
-  end_date: 2020-12-31
-  offline: false  # if true, weather info is downloaded and saved before runs (To save space leave it false).
-  source: daymet  # Default is daymet or edit to custom weather config file path  
-
-# Soil details
-soil:
-  soil_map: /home/chandrab/GeoEPIC_metadata/SSURGO.tif
-  files_dir: ./soil/files
-
-# Info for Sit files
-site:
-  dir: ./sites
-  slope: /home/chandrab/GeoEPIC_metadata/slope_us.tif
-  elevation: /home/chandrab/GeoEPIC_metadata/SRTM_1km_US_project.tif
-  slope_length: ./soil/NE_slopelen.csv
-
-# OPC directory
+# Path to folders containing input files
+weather_dir: ./weather
+soil_dir: ./soil/files
+site_dir: ./sites
 opc_dir: ./opc/files
 
 
 # Workspace Run Options
-# Path to CSV or SHP file with columns ('SiteID', 'soil', 'opc', 'dly'). 
-run_info: ./info.csv  # CSV file must include ('lat', 'lon') columns.
+# Path to CSV file with columns ('SiteID', 'soil', 'opc', 'dly'). 
+sites_info: ./info.csv 
 # option for selecting specific sites from above info file. Ex: Range(0.35, 0.8), Random(0.1), "CNTYFIPS == 8"; "Shape_Area > 6"
 select: Random(0.1)
 # Number of parallel processes to run. Recommended to be less than the number of CPU cores.

@@ -19,6 +19,7 @@ class CropCom:
         if not path.endswith('.DAT'): 
           path = os.path.join(path, 'CROPCOM.DAT')
         self.data = pd.read_fwf(path, widths=wd, skiprows=1)
+        self.path = path
         with open(path, 'r') as file:
             self.header = [file.readline() for _ in range(2)]
         self.name = 'CROPCOM'
@@ -84,36 +85,41 @@ class CropCom:
         for i, id in enumerate(self.crops):
             self.data.loc[self.data['#'] == id, cols] = values_split[i]
 
-    def set_sensitive(self, df_paths, crop_codes, all = False):
+    def set_sensitive(self, parms_input, crop_codes, all = False):
         """
-        Sets sensitive parameters based on a list of CSV paths or a single CSV path.
+        Sets sensitive parameters based on a CSV path or list of parameter names.
         If `all` is True, all parameters are considered sensitive.
 
         Args:
-            df_paths (list or str): A list of CSV file paths or a single CSV file path.
-            all (bool): If True, all parameters are considered sensitive regardless of the CSV contents.
+            parms_input (str or list): Either a CSV file path or list of parameter names to select
+            crop_codes (list): List of crop codes to apply parameters to
+            all (bool): If True, all parameters are considered sensitive regardless of input
 
         """
-        if isinstance(df_paths, str):
-            df_paths = [df_paths]  # Convert a single path into a list for uniform processing
+        # Get path to CROPCOM.sens in same folder as CROPCOM.DAT
+        sens_path = os.path.join(os.path.dirname(self.path), 'CROPCOM.sens')
+        
         if all:
-            prms = pd.read_csv(df_paths[0])
+            prms = pd.read_csv(sens_path)
             prms['Select'] = 1
             prms['Range'] = prms.apply(lambda x: (x['Min'], x['Max']), axis=1)
         else:
-            prms = pd.read_csv(df_paths[0])
-            prms['Select'] = prms.get('Select', False)  # Ensure 'Select' column exists
-            for sl in df_paths[1:]:
-                df_temp = pd.read_csv(sl)
-                df_temp['Select'] = df_temp.get('Select', False)  # Ensure 'Select' column exists
-                prms['Select'] |= df_temp['Select']  # Combine selections with logical OR
-            # Filter parameters where 'Select' is True
-            prms = prms[prms['Select'] == 1]
+            if isinstance(parms_input, str):
+                # Single CSV path provided
+                prms = pd.read_csv(parms_input)
+                prms['Select'] = prms.get('Select', False)
+                prms = prms[prms['Select'] == 1]
+            else:
+                # List of parameter names provided
+                prms = pd.read_csv(sens_path)
+                prms['Select'] = prms['Parm'].isin(parms_input)
+                prms = prms[prms['Select'] == 1]
             prms['Range'] = prms.apply(lambda x: (x['Min'], x['Max']), axis=1)
+            
         self.prms = prms.copy()
         self.crops = crop_codes
         self.split = np.cumsum([len(self.prms)]*len(crop_codes))
-    
+        
     def constraints(self):
         """
         Returns the constraints (min, max ranges) for the parameters.

@@ -37,6 +37,22 @@ class PygmoProblem:
         self.bounds = np.array(cons)
         self.lens = np.cumsum(lens)
 
+    def apply_solution(self, x):
+        """
+        Apply a solution vector to update parameters in all dataframes.
+
+        Args:
+            x (np.array): A solution vector containing parameter values for all data frames.
+        """
+        # Split the parameters according to self.lens, excluding the last cumulative length
+        split_x = np.split(x, self.lens[:-1])
+        
+        # Update parameters in each dataframe and save
+        for df, vals in zip(self.dfs, split_x):
+            df.edit(vals)
+            if hasattr(df, 'save'):
+                df.save(self.workspace.model.path)
+
     def fitness(self, x):
         """
         Evaluate the fitness of a solution vector 'x'.
@@ -47,15 +63,7 @@ class PygmoProblem:
         Returns:
             float: The fitness value as determined by the workspace's fitness function.
         """
-        # Split the parameters according to self.lens, excluding the last cumulative length
-        split_x = np.split(x, self.lens[:-1])
-        
-        # Update parameters in each dataframe and save
-        for df, vals in zip(self.dfs, split_x):
-            df.edit(vals)
-            df.save(self.workspace.model.path)
-
-        # Execute the model and return the fitness value
+        self.apply_solution(x)
         return self.workspace.run(progress_bar = False)
     
     @property
@@ -70,6 +78,13 @@ class PygmoProblem:
     
     @property
     def var_names(self):
+        """
+        Get the variable names from all data frames.
+
+        Returns:
+            list: A list of variable names concatenated from all data frames. Each data frame's 
+                 var_names() method is called and the results are combined into a single list.
+        """
         names = []
         for df in self.dfs:
             names.extend(df.var_names())

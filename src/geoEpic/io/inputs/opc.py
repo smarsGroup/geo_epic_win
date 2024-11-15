@@ -76,23 +76,106 @@ class OPC(pd.DataFrame):
             fmt = '%3d%3d%3d%5d%5d%5d%5d%8.3f%8.2f%8.2f%8.3f%8.2f%8.2f%8.2f%8.2f'
             np.savetxt(ofile, final_data[columns].values, fmt=fmt)
 
-    def auto_irrigation(self, on=True):
+    @property
+    def IAUI(self):
         """
-        Set or unset auto-irrigation in the OPC file header.
+        Get the auto-irrigation implement ID from the OPC file header.
 
-        This method modifies the second line of the header to enable or disable
-        auto-irrigation based on the input parameter.
+        Returns:
+            bool: True if auto-irrigation is enabled (72), False if disabled (0)
+        """
+        iaui_value = int(self.header[1][4:].strip())
+        return iaui_value
+
+    @IAUI.setter 
+    def IAUI(self, value):
+        """
+        Set auto-irrigation in the OPC file header.
 
         Parameters:
-        on (bool): If True, sets auto-irrigation to 72 (enabled).
-                   If False, sets auto-irrigation to 0 (disabled).
-                   Defaults to True.
+            value (int): The auto-irrigation implement ID to set in the header.
+                        Common values are 72 (enabled) and 0 (disabled).
         """
-        luc, _ = self.header[1][:4], self.header[1][4:]
-        if on:
-            self.header[1] = luc + '  72' + '\n'
-        else: 
-            self.header[1] = luc + '   0' + '\n'
+        luc = self.header[1][:4]
+        self.header[1] = luc + f'{value:4d}' + '\n'
+        
+    def update(self, operation):
+        """
+        Add or update an operation in the OPC file.
+
+        Parameters:
+            operation (dict): Dictionary containing operation details with keys:
+                - opID: Operation ID (required)
+                - cropID: Crop ID (required)
+                - date: Operation date as string 'YYYY-MM-DD' (required)
+                - OPV1: Operation value 1 (required, e.g. fertilizer rate)
+                - fertID: Fertilizer ID (optional, default 0)
+                - XMTU: Machine type (optional, default 0) 
+                - OPV2-OPV8: Additional operation values (optional, default 0)
+        """
+        # Parse the date
+        date = pd.to_datetime(operation['date'])
+        year = date.year - self.start_year + 1
+        
+        # Create new row with operation details and defaults
+        new_row = pd.Series({
+            'Yid': year,
+            'Mn': date.month,
+            'Dy': date.day,
+            'CODE': operation['opID'],
+            'TRAC': operation.get('fertID', 0),
+            'CRP': operation['cropID'],
+            'XMTU': operation.get('XMTU', 0),
+            'OPV1': operation['OPV1'],
+            'OPV2': operation.get('OPV2', 0),
+            'OPV3': operation.get('OPV3', 0),
+            'OPV4': operation.get('OPV4', 0),
+            'OPV5': operation.get('OPV5', 0),
+            'OPV6': operation.get('OPV6', 0),
+            'OPV7': operation.get('OPV7', 0),
+            'OPV8': operation.get('OPV8', 0)
+        })
+
+        # Remove any existing operations on same date if they exist
+        self.remove(opID=operation['opID'], date=operation['date'])
+        # Add new operation
+        self.loc[len(self)] = new_row
+        # Sort by date
+        self.sort_values(['Yid', 'Mn', 'Dy'], inplace=True)
+        self.reset_index(drop=True, inplace=True)
+
+    def remove(self, opID=None, date=None, cropID=None, XMTU=None, fertID=None):
+        """
+        Remove operation(s) from the OPC file that match all provided criteria.
+
+        Parameters:
+            opID (int, optional): Operation ID to match
+            date (str, optional): Date to match in format 'YYYY-MM-DD'
+            cropID (int, optional): Crop ID to match
+            XMTU (int, optional): Machine type to match
+            fertID (int, optional): Fertilizer ID to match
+        """
+        # Build filter conditions dictionary
+        conditions = {}
+        
+        if date is not None:
+            date = pd.to_datetime(date)
+            conditions.update({
+                'Yid': date.year - self.start_year + 1,
+                'Mn': date.month,
+                'Dy': date.day
+            })
+        
+        # Add other conditions if provided
+        if opID is not None: conditions['CODE'] = opID
+        if cropID is not None: conditions['CRP'] = cropID
+        if XMTU is not None: conditions['XMTU'] = XMTU
+        if fertID is not None: conditions['TRAC'] = fertID
+        
+        # Query once using all conditions
+        if conditions:
+            self.drop(self.query(' and '.join(f'{k}=={v}' for k,v in conditions.items())).index, inplace=True)
+            self.reset_index(drop=True, inplace=True)
 
     def edit_fertilizer_rate(self, rate, year=2020, month=None, day=None):
         """
@@ -112,8 +195,6 @@ class OPC(pd.DataFrame):
         if not matching_rows.empty:
             last_index = matching_rows.index[-1]
             self.at[last_index, 'OPV1'] = 0.2 if rate == 0 else rate
-
-
 
     def update_phu(self, dly, cropcom):
         """

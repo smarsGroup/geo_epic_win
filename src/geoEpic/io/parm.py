@@ -11,10 +11,11 @@ class Parm:
         Load data from an ieParm file into DataFrame.
         """
         if not path.endswith('.DAT'): 
-            path = os.path.join(path, 'ieParm.DAT')
+            path = os.path.join(path, 'PARM.DAT')
         
         self.data = self.read_parm(path)
-        self.name = 'ieParm'
+        self.path = path
+        self.name = 'PARM'
         self.prms = None
 
     def read_parm(self, file_name):
@@ -88,33 +89,37 @@ class Parm:
         cols = self.prms['Parm'].values
         return self.data.loc[0, cols]
 
-    def set_sensitive(self, df_paths, all=False):
+    def set_sensitive(self, parms_input, all=False):
         """
-        Sets sensitive parameters based on a list of CSV paths or a single CSV path.
+        Sets sensitive parameters based on a CSV path or list of parameter names.
         If `all` is True, all parameters are considered sensitive.
 
         Args:
-            df_paths (list or str): A list of CSV file paths or a single CSV file path.
-            all (bool): If True, all parameters are considered sensitive regardless of the CSV contents.
+            parms_input (str or list): Either a CSV file path or list of parameter names to select
+            all (bool): If True, all parameters are considered sensitive regardless of input
 
         """
-        if isinstance(df_paths, str):
-            df_paths = [df_paths]  # Convert a single path into a list for uniform processing
+        # Get path to PARM.sens in same folder as PARM.DAT
+        sens_path = os.path.join(os.path.dirname(self.path), 'PARM.sens')
+        
         if all:
-            prms = pd.read_csv(df_paths[0])
+            prms = pd.read_csv(parms_input if isinstance(parms_input, str) else sens_path)
             prms['Select'] = 1
             prms['Range'] = prms.apply(lambda x: (x['Min'], x['Max']), axis=1)
         else:
-            prms = pd.read_csv(df_paths[0])
-            prms['Select'] = prms.get('Select', False)  # Ensure 'Select' column exists
-            for sl in df_paths[1:]:
-                df_temp = pd.read_csv(sl)
-                df_temp['Select'] = df_temp.get('Select', False)  # Ensure 'Select' column exists
-                prms['Select'] |= df_temp['Select']  # Combine selections with logical OR
-            # Filter parameters where 'Select' is True
-            prms = prms[prms['Select'] == 1]
+            if isinstance(parms_input, str):
+                # Single CSV path provided
+                prms = pd.read_csv(parms_input)
+                prms['Select'] = prms.get('Select', False)
+                prms = prms[prms['Select'] == 1]
+            else:
+                # List of parameter names provided
+                prms = pd.read_csv(sens_path)
+                prms['Select'] = prms['Parm'].isin(parms_input)
+                prms = prms[prms['Select'] == 1]
             prms['Range'] = prms.apply(lambda x: (x['Min'], x['Max']), axis=1)
-        self.prms = prms.copy() 
+            
+        self.prms = prms.copy()
         
     def constraints(self):
         """
