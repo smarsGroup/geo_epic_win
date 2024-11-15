@@ -52,7 +52,7 @@ exp.clear_outputs()
 cropcom = CropCom('./calibration_files/defaults')
 
 # Set few parameters as sensitive for calibration.
-cropcom.set_sensitive(['./calibration_files/sensitivity/cropcom_yld.csv'], [2]) # here 2 is the crop code for corn
+cropcom.set_sensitive(['WA', 'HI', 'WSYF'], [2]) # here 2 is the crop code for corn
 
 # save the loaded cropcom.DAT to model folder
 cropcom.save(f'./model')
