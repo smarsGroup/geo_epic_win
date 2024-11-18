@@ -61,7 +61,7 @@ class Workspace:
         self.model.cache_path = self.cache
 
         # Process run info
-        self._process_run_info(self.config['run_info'])
+        self._process_run_info(self.config['sites_info'])
 
         # Initialise DataLogger
         self.data_logger = DataLogger(self.cache)
