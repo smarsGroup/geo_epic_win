@@ -1,4 +1,4 @@
-SOIL_SERIES_NAME_HERE    SOIL_ORDER_HERE
+SOIL_SERIES_NAME_HERE    SOIL_ORDER_HERE : SOIL_UniqueID 
     0.21    2.00    0.56   50.00  100.00   75.00   25.00   50.00    0.00    0.00
    10.00    3.00  100.00    1.00    0.10    0.10    1.00    0.04    0.50    0.00
     0.18    0.28    0.52    0.77    1.01    1.26

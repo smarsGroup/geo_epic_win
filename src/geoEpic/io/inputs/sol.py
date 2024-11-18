@@ -107,7 +107,10 @@ class SOL:
         with open(filepath, 'r') as file:
             lines = file.readlines()
         
-        soil_id = int(lines[0].strip().split(":")[1].strip())
+        try:
+            soil_id = int(lines[0].strip().split(":")[1].strip())
+        except (IndexError, ValueError):
+            soil_id = ""
         
         albedo = float(lines[1][0:8].strip())
         hydgrp_conv = float(lines[1][8:16].strip())

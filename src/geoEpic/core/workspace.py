@@ -76,7 +76,7 @@ class Workspace:
             warnings.warn(warning_msg, RuntimeWarning)
         
         # Capture exit signals and clean up cache
-        self._finalizer = finalize(self, self.cleanup)
+        self._finalizer = finalize(self, self.cache_cleanup)
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
         signal.signal(signal.SIGBREAK, self._signal_handler)
