@@ -57,8 +57,8 @@ class Site:
         # Define file configurations
         file_configs = {
             'opc': {'dir': config['opc_dir'], 'ext': '.OPC'},
-            'dly': {'dir': config['weather']['dir'], 'ext': '.DLY'},
-            'soil': {'dir': config['soil']['files_dir'], 'ext': '.SOL'},
+            'dly': {'dir': config['weather_dir'], 'ext': '.DLY'},
+            'soil': {'dir': config['soil_dir'], 'ext': '.SOL'},
         }
 
         paths = {}
@@ -69,7 +69,7 @@ class Site:
             paths[key] = os.path.join(cfg['dir'], name)
 
         # Handle 'sit' separately
-        sit_path = os.path.join(config['site']['dir'], f"{site_id}.SIT")
+        sit_path = os.path.join(config['site_dir'], f"{site_id}.SIT")
         paths['sit'] = sit_path
 
         # Check for missing files
