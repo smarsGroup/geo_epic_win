@@ -1,6 +1,11 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: Welcome message
+echo ===================================================
+echo                Setting up GeoEPIC
+echo ===================================================
+
 :: Environment name
 set ENV_NAME=epic_env
 set ANACONDA_INSTALLER=Anaconda3-2023.09-0-Windows-x86_64.exe
