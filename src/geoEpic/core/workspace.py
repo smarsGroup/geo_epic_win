@@ -274,7 +274,40 @@ class Workspace:
             os.makedirs(output_dir)
     
     def make_problem(self, *dfs):
-        return PygmoProblem(self, *dfs)
+        """
+        Create a PygmoProblem instance after validating inputs.
+
+        Args:
+            *dfs: Variable number of dataframes to pass to PygmoProblem
+
+        Returns:
+            PygmoProblem: A configured optimization problem instance
+
+        Raises:
+            ValueError: If no dataframes provided or if any dataframe lacks constraints
+        """
+        if self.objective_function is None:
+            raise ValueError("Objective function not defined")
+            
+        if len(dfs) == 0:
+            raise ValueError("At least one parameter object must be provided")
+            
+        for df in dfs:
+            if not hasattr(df, 'constraints') or len(df.constraints()) == 0:
+                raise ValueError("All parameter objects must have at least one sensitive variable")
+        
+        import pygmo as pg
+        
+        # Temporarily disable model lock to allow problem creation
+        temp = self.model._model_lock
+        self.model._model_lock = None
+        # Create pygmo problem instance
+        prob = pg.problem(PygmoProblem(self, *dfs))
+        # Restore original model lock
+        self.model._model_lock = temp
+        # Return the problem instance, not the lock
+        return prob
+        
     
 
     def _process_run_info(self, file_path):
