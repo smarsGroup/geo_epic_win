@@ -56,7 +56,8 @@ call %UserProfile%\Anaconda3\Scripts\activate.bat
 
 :: Initialize Conda for future shell sessions
 call conda init
-echo Anaconda installation complete. Please restart your command prompt.
+echo Anaconda installation complete. Please restart your command prompt
+echo Please call epic_setup.bat after restarting. GeoEPIC is not setup.
 exit /b 0
 
 :check_env_exists
