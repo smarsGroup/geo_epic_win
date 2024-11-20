@@ -44,6 +44,7 @@ class EPICModel:
         self.base_dir = os.path.abspath(os.getcwd())
         self.executable = os.path.abspath(path_to_executable)
         self._model_dir = os.path.dirname(self.executable)
+        self.path = os.path.dirname(self.executable)
         self.executable_name = os.path.basename(self.executable)
         self._start_date = None
         self._duration = None
