@@ -5,6 +5,7 @@ channels:
 dependencies:
   - python=3.11
   - gdal=3.7
+  - pygmo
   - pip  
   - pip:
     - git+https://github.com/smarsGroup/geo_epic_win.git
