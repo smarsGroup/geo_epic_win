@@ -1,38 +1,32 @@
-import signal
 from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
+import threading
 
-def _run_with_timeout(func, timeout, *args, **kwargs):
+def _run_with_timeout_windows(func, timeout, *args, **kwargs):
     """
-    Executes a function with a timeout using signals (not recommended).
-
-    Args:
-      func: The function to execute.
-      timeout: The maximum execution time in seconds.
-      *args: Arguments to pass to the function.
-      **kwargs: Keyword arguments to pass to the function.
-
-    Returns:
-      The result of the function if it finishes within the timeout.
-
-    Raises:
-      TimeoutError: If the function execution exceeds the timeout.
+    Windows-compatible timeout execution using threading.
     """
-    def handler(signum, frame):
+    result = []
+    error = []
+    
+    def worker():
+        try:
+            result.append(func(*args, **kwargs))
+        except Exception as e:
+            error.append(e)
+    
+    thread = threading.Thread(target=worker)
+    thread.daemon = True
+    thread.start()
+    thread.join(timeout)
+    
+    if thread.is_alive():
+        thread.join(0)  # Clean up the thread
         raise TimeoutError("Execution timed out")
+    if error:
+        raise error[0]
+    return result[0] if result else None
 
-    original_signal = signal.signal(signal.SIGALRM, handler)
-    signal.alarm(timeout)
-
-    try:
-        result = func(*args, **kwargs)
-    finally:
-        signal.signal(signal.SIGALRM, original_signal)
-        signal.alarm(0)  # Cancel any pending alarms
-
-    return result
-    
-    
 def parallel_executor(func, args, method='Process', max_workers=10, return_value=False, bar=True, timeout=None, verbose_errors=False):
     """
     Executes a function across multiple processes and collects the results.
@@ -64,10 +58,7 @@ def parallel_executor(func, args, method='Process', max_workers=10, return_value
             else:
                 pbar = tqdm(total=len(args))
 
-        if method == 'Process' and timeout is not None:
-            futures = {executor.submit(_run_with_timeout, func, timeout, arg): i for i, arg in enumerate(args)}
-        else:
-            futures = {executor.submit(func, arg): i for i, arg in enumerate(args)}
+        futures = {executor.submit(_run_with_timeout_windows, func, timeout, arg): i for i, arg in enumerate(args)}
         
         try:
             import traceback

@@ -16,6 +16,7 @@ from weakref import finalize
 # import subprocess
 # import platform
 from .calibration import PygmoProblem
+import time
 
 class Workspace:
     """
@@ -219,15 +220,27 @@ class Workspace:
 
         # Run first simulation for error check, if progress bar is enabled
         if progress_bar: self.run_simulation(info_ls.pop(0))
+        temp = self.model._model_lock
+        self.model._model_lock = None
         # Execute simulations in parallel
-        parallel_executor(
-            self.run_simulation, 
-            info_ls, 
-            method='Process',
-            max_workers=self.config["num_of_workers"],
-            timeout=self.config["timeout"],
-            bar=int(progress_bar)
-        )
+        # if __name__ == '__main__':
+        # parallel_executor(
+        #     self.run_simulation, 
+        #     info_ls, 
+        #     method='Thread',
+        #     max_workers=self.config["num_of_workers"],
+        #     timeout=self.config["timeout"],
+        #     bar=int(progress_bar),
+        # )
+        # Sequential execution as fallback
+        for info in info_ls:
+            start_time = time.time()
+            if self.config["timeout"]:
+                if time.time() - start_time > self.config["timeout"]:
+                    print(f"Timeout for {info}")
+                    continue
+            self.run_simulation(info)
+        self.model._model_lock = temp
 
         # Return result of objective function if defined, else None
         return self.objective_function() if self.objective_function else None

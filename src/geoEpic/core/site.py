@@ -59,6 +59,7 @@ class Site:
             'opc': {'dir': config['opc_dir'], 'ext': '.OPC'},
             'dly': {'dir': config['weather_dir'], 'ext': '.DLY'},
             'soil': {'dir': config['soil_dir'], 'ext': '.SOL'},
+            'sit': {'dir': config['site_dir'], 'ext': '.SIT'},
         }
 
         paths = {}
@@ -68,9 +69,9 @@ class Site:
                 name += cfg['ext']
             paths[key] = os.path.join(cfg['dir'], name)
 
-        # Handle 'sit' separately
-        sit_path = os.path.join(config['site_dir'], f"{site_id}.SIT")
-        paths['sit'] = sit_path
+        # # Handle 'sit' separately
+        # sit_path = os.path.join(config['site_dir'], f"{site_id}.SIT")
+        # paths['sit'] = sit_path
 
         # Check for missing files
         missing_files = [f"{key.upper()} file not found: {path}" for key, path in paths.items() if not os.path.exists(path)]
