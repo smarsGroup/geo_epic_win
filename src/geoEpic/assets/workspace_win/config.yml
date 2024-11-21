@@ -26,7 +26,5 @@ opc_dir: ./opc/files
 sites_info: ./info.csv 
 # option for selecting specific sites from above info file. Ex: Range(0.35, 0.8), Random(0.1), "CNTYFIPS == 8"; "Shape_Area > 6"
 select: Range(0, 1)
-# Number of parallel processes to run. Recommended to be less than the number of CPU cores.
-num_of_workers: 4
 # Timeout for each simulation run in seconds. Execution is terminated after this timeout.
 timeout: 30
