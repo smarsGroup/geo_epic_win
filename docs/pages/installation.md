@@ -43,4 +43,4 @@ Before starting the setup, ensure you have [`conda`](https://docs.conda.io/proje
    geo_epic init
    ```
 
-Now, the GeoEPIC toolkit is sucessfully installed on the **epic_env** conda environment. All the commands and python API can be accessed via that conda environment. Happy coding!
+All the commands and python API can be accessed via **epic_env** conda environment. Happy coding!
