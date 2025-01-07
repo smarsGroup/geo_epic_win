@@ -7,7 +7,7 @@ Before starting the setup, ensure you have [`conda`](https://docs.conda.io/proje
    ```
    call epic_setup.bat
    ```
-### Setting Up the GeoEPIC manually
+### Setting up GeoEPIC manually
 
 1. **Create a virtual environment in conda**
     ```bash
