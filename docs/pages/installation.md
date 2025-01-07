@@ -24,21 +24,21 @@ Before starting the setup, ensure you have [`conda`](https://docs.conda.io/proje
    There are two options for installing the GeoEPIC Toolkit:
 
     **Option 1: Install Directly from GitHub**
-        ```bash
-        pip install git+https://github.com/smarsGroup/geo_epic_win.git
-        ```
+     ```bash
+     pip install git+https://github.com/smarsGroup/geo_epic_win.git
+     ```
    
     **Option 2: Install locally**
-        This option is advisable only for developers.
-        ```bash
-        git clone https://github.com/smarsGroup/geo_epic_win.git
-        ```
-        ```bash
-        cd geo_epic_win
-        ```
-        ```bash
-        pip install .
-        ```
+     This option is advisable only for developers.
+     ```bash
+     git clone https://github.com/smarsGroup/geo_epic_win.git
+     ```
+     ```bash
+     cd geo_epic_win
+     ```
+     ```bash
+     pip install .
+     ```
 
 ### Verify installation
    ```
