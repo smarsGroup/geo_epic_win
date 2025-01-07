@@ -1,7 +1,7 @@
 <!-- ## <strong>Installation</strong> -->
 Before starting the setup, ensure you have [`conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html) installed. <br> Follow the links for corresponding installation guides.
 
-### Setting Up the GeoEPIC Toolkit using installation script (Recommended)
+### GeoEPIC Toolkit Installation (Recommended)
 1. Download [`epic_setup.bat`](https://smarsgroup.github.io/geo_epic_win/epic_setup.bat)
 2. Install with the following command
    ```
