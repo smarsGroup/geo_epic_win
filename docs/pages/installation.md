@@ -7,6 +7,7 @@ Before starting the setup, ensure you have [`conda`](https://docs.conda.io/proje
    ```
    call epic_setup.bat
    ```
+   
 ### Setting up GeoEPIC manually
 
 1. **Create a virtual environment in conda**
@@ -22,11 +23,12 @@ Before starting the setup, ensure you have [`conda`](https://docs.conda.io/proje
 3. **Install the GeoEPIC Toolkit**  
    There are two options for installing the GeoEPIC Toolkit:
 
-    i. **Option 1: Install Directly from GitHub**
+    **Option 1: Install Directly from GitHub**
         ```bash
         pip install git+https://github.com/smarsGroup/geo_epic_win.git
         ```
-    i. **Option 2: Install locally**
+   
+    **Option 2: Install locally**
         This option is advisable only for developers.
         ```bash
         git clone https://github.com/smarsGroup/geo_epic_win.git
@@ -37,6 +39,7 @@ Before starting the setup, ensure you have [`conda`](https://docs.conda.io/proje
         ```bash
         pip install .
         ```
+
 ### Verify installation
    ```
    conda activate epic_env
