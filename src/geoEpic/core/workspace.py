@@ -72,9 +72,10 @@ class Workspace:
         # WorkerPool(self.uuid, epicruns_dir).open(self.config["num_of_workers"]*2)
         
         # Warning while use more workers
-        if self.config["num_of_workers"] > os.cpu_count():
-            warning_msg = (f"Workers greater than number of CPU cores ({os.cpu_count()}).")
-            warnings.warn(warning_msg, RuntimeWarning)
+        # if self.config["num_of_workers"] > os.cpu_count():
+        #     warning_msg = (f"Workers greater than number of CPU cores ({os.cpu_count()}).")
+        #     warnings.warn(warning_msg, RuntimeWarning)
+        self.num_of_workers = 4
         
         # Capture exit signals and clean up cache
         self._finalizer = finalize(self, self.cache_cleanup)
@@ -176,15 +177,8 @@ class Workspace:
         else:
             raise ValueError("Input must be a Site object or a dictionary containing site information.")
 
-        # Acquire a worker from the model pool
-        # model_pool = WorkerPool(self.uuid)
-        # dst_dir = model_pool.acquire()
-        # try:
-            # Run the model and routines for the site
         self.model.run(site)
-        # finally:
-            # Release the worker back to the model pool
-            # model_pool.release(dst_dir)
+
         # Post Process Simulation outcomes
         results = self.post_process(site)
         # Handle output files
@@ -223,23 +217,18 @@ class Workspace:
         temp = self.model._model_lock
         self.model._model_lock = None
         # Execute simulations in parallel
-        # if __name__ == '__main__':
-        # parallel_executor(
-        #     self.run_simulation, 
-        #     info_ls, 
-        #     method='Thread',
-        #     max_workers=self.config["num_of_workers"],
-        #     timeout=self.config["timeout"],
-        #     bar=int(progress_bar),
-        # )
-        # Sequential execution as fallback
-        for info in info_ls:
-            start_time = time.time()
-            if self.config["timeout"]:
-                if time.time() - start_time > self.config["timeout"]:
-                    print(f"Timeout for {info}")
-                    continue
-            self.run_simulation(info)
+
+        parallel_executor(
+            self.run_simulation, 
+            info_ls, 
+            method='Process',
+            max_workers=self.num_of_workers,
+            timeout=self.config["timeout"],
+            bar=int(progress_bar),
+        )
+        # # Sequential execution as fallback
+        # for info in info_ls:
+        #     self.run_simulation(info)
         self.model._model_lock = temp
 
         # Return result of objective function if defined, else None

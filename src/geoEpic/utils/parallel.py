@@ -1,31 +1,6 @@
 from tqdm import tqdm
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
-import threading
-
-def _run_with_timeout_windows(func, timeout, *args, **kwargs):
-    """
-    Windows-compatible timeout execution using threading.
-    """
-    result = []
-    error = []
-    
-    def worker():
-        try:
-            result.append(func(*args, **kwargs))
-        except Exception as e:
-            error.append(e)
-    
-    thread = threading.Thread(target=worker)
-    thread.daemon = True
-    thread.start()
-    thread.join(timeout)
-    
-    if thread.is_alive():
-        thread.join(0)  # Clean up the thread
-        raise TimeoutError("Execution timed out")
-    if error:
-        raise error[0]
-    return result[0] if result else None
+from pebble import ProcessPool, ThreadPool
+from concurrent.futures import TimeoutError
 
 def parallel_executor(func, args, method='Process', max_workers=10, return_value=False, bar=True, timeout=None, verbose_errors=False):
     """
@@ -42,31 +17,41 @@ def parallel_executor(func, args, method='Process', max_workers=10, return_value
 
     Returns:
         results: If return_value is True, a list of results from the function executions sorted according to 
-                 If return_value is False, an empty list is returned.
+                If return_value is False, an empty list is returned.
         failed_indices: A list of indices of arguments for which the function execution failed.
     """
-
     failed_indices = []
     results = [None] * len(args) if return_value else []
-    PoolExecutor = {'Process': ProcessPoolExecutor, 'Thread': ThreadPoolExecutor}[method]
-    
-    with PoolExecutor(max_workers=max_workers) as executor:
-        if bar: 
+    Pool = ProcessPool if method == 'Process' else ThreadPool
+
+    with Pool(max_workers=max_workers) as pool:
+        if bar:
             if isinstance(bar, int):
                 pbar = tqdm(total=len(args) + bar)
                 pbar.update(bar)
             else:
                 pbar = tqdm(total=len(args))
 
-        futures = {executor.submit(_run_with_timeout_windows, func, timeout, arg): i for i, arg in enumerate(args)}
+        futures = {}
+        for i, arg in enumerate(args):
+            if method == 'Process':
+                future = pool.schedule(func, args=(arg,), timeout=timeout)
+            else:
+                future = pool.schedule(func, args=(arg,))
+            futures[future] = i
         
         try:
             import traceback
 
-            for future in as_completed(futures):
+            for future in futures:
                 ind = futures[future]
-                exc = future.exception()
-                if exc is not None:
+                try:
+                    if return_value:
+                        results[ind] = future.result()
+                except TimeoutError:
+                    print(f'\nExecution timed out for args:\n {args[ind]}')
+                    failed_indices.append(ind)
+                except Exception as exc:
                     print(f'\nExecution failed for args:\n {args[ind]}')
                     if verbose_errors:
                         tb = ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
@@ -74,14 +59,37 @@ def parallel_executor(func, args, method='Process', max_workers=10, return_value
                     else:
                         print(f'Exception: {exc}\n')
                     failed_indices.append(ind)
-                elif return_value:
-                    results[ind] = future.result()
-                if bar: pbar.update(1)
+                if bar:
+                    pbar.update(1)
+
         except KeyboardInterrupt:
             print("\nKeyboardInterrupt caught, canceling remaining operations...")
-            for future in futures.keys():
-                future.cancel()
+            pool.stop()
+            pool.join()
         finally:
-            if bar: pbar.close()
+            if bar:
+                pbar.close()
     
     return results, failed_indices
+
+# import random
+
+# def delayed_square(x):
+#     """Test function that squares a number after a delay"""
+#     time.sleep(random.uniform(0.05, 0.08))  # Simulate random work duration
+#     return x * x
+
+# if __name__ == "__main__":
+#     # Test data
+#     test_numbers = list(range(10))
+    
+#     print("\nTesting with ThreadPool:")
+#     results, failed = parallel_executor(delayed_square, test_numbers, method='Thread', return_value=True, timeout = 0.1)
+#     print(f"Thread results: {results}")
+#     print(f"Thread failed indices: {failed}")
+    
+    
+#     print("Testing with ProcessPool:")
+#     results, failed = parallel_executor(delayed_square, test_numbers, method='Process', return_value=True, timeout = 0.1)
+#     print(f"Process results: {results}")
+#     print(f"Process failed indices: {failed}")
