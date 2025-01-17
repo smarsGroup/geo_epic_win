@@ -5,6 +5,7 @@ import shortuuid
 import time
 import subprocess
 import platform
+# from redis import Redis
 
 def connect_to_redis(host='localhost', port=56379, db=0):
     """
@@ -99,3 +100,44 @@ class WorkerPool:
             return self.redis.llen(self.pool_key)
         else: return None
     
+if __name__ == "__main__":
+    # Test the WorkerPool functionality
+    print("Testing WorkerPool...")
+    
+    # Create a worker pool with 5 workers
+    pool = WorkerPool("test_pool")
+    print(pool)
+    pool.open(5)
+    print(f"Created pool with 5 workers. Queue length: {pool.queue_len()}")
+    
+    # Test acquiring and releasing resources
+    acquired_resources = []
+    print("\nAcquiring resources...")
+    for _ in range(3):
+        resource = pool.acquire()
+        acquired_resources.append(resource)
+        print(f"Acquired resource: {resource}. Remaining queue length: {pool.queue_len()}")
+    
+    print("\nReleasing resources...")
+    for resource in acquired_resources:
+        pool.release(resource)
+        print(f"Released resource: {resource}. Queue length: {pool.queue_len()}")
+    
+    # Test with base directory
+    print("\nTesting WorkerPool with base directory...")
+    temp_dir = "temp_worker_pool"
+    pool_with_dir = WorkerPool("test_pool_dir", base_dir=temp_dir)
+    pool_with_dir.open(3)
+    
+    print(f"Created pool with base directory. Queue length: {pool_with_dir.queue_len()}")
+    resource = pool_with_dir.acquire()
+    print(f"Acquired resource with directory: {resource}")
+    pool_with_dir.release(resource)
+    
+    # Cleanup
+    print("\nCleaning up...")
+    pool.close()
+    pool_with_dir.close()
+    if os.path.exists(temp_dir):
+        shutil.rmtree(temp_dir)
+    print("Test complete!")

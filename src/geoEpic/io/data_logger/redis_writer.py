@@ -1,7 +1,7 @@
 import redis
 import json
 import pandas as pd
-from geoEpic.utils.redis import connect_to_redis
+from geoEpic.utils.redis_utils import connect_to_redis
 
 class RedisWriter:
     def __init__(self, table_name, host='localhost', port=56379, db=0):

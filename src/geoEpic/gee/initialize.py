@@ -1,7 +1,7 @@
 import ee
 import json
 import os
-from geoEpic.utils.redis import WorkerPool
+from geoEpic.utils import WorkerPool
 
 def ee_Initialize():
     # Get the directory where the script is located
@@ -15,17 +15,10 @@ def ee_Initialize():
     if config and 'project' in config:
         project_name = config['project']
     else:
-        try:
-            ee.Initialize()
-            return
-        except Exception as e:
-            print(e)
         project_name = input("Please enter the GEE project: \n")
         config = {'project': project_name}
         with open(CONFIG_FILE, 'w') as file:
             json.dump(config, file, indent = 4)
-        print(f"Initialized GEE with project: {project_name}")
-    
     
     try:
         ee.Initialize(project=project_name, opt_url='https://earthengine-highvolume.googleapis.com')
@@ -33,6 +26,7 @@ def ee_Initialize():
         print("Authentication required")
         ee.Authenticate()
         ee.Initialize(project=project_name, opt_url='https://earthengine-highvolume.googleapis.com')
+        print(f"Initialized GEE with project: {project_name} ")    
     
     pool = WorkerPool(f'gee_global_lock_{project_name}')
     if pool.queue_len() is None: pool.open(40)

@@ -11,6 +11,7 @@ class OPC(pd.DataFrame):
     plantation_codes = [2, 3, 4]
     harvest_codes = [650]
     fertilizer_code = 71
+    winter_crop_codes = [10]
 
     @classmethod
     def load(cls, path, start_year=None):
@@ -446,7 +447,10 @@ class OPC(pd.DataFrame):
         plantation_dates = self.get_plantation_date(year, crop_code)
             
         if crop_code in plantation_dates:
-            harvest_dates = self.get_harvest_date(year, crop_code)
+            if crop_code in self.winter_crop_codes:
+                harvest_dates = self.get_harvest_date(year + 1, crop_code)
+            else:
+                harvest_dates = self.get_harvest_date(year, crop_code)
             new_planting_date = datetime(year,month,day)
             
             plantation_idx = plantation_dates[crop_code]['index']
@@ -501,7 +505,10 @@ class OPC(pd.DataFrame):
         harvest_dates = self.get_harvest_date(year_id, crop_code)
         
         if crop_code in harvest_dates:
-            plantation_dates = self.get_plantation_date(year_id, crop_code)
+            if crop_code in self.winter_crop_codes:
+                plantation_dates = self.get_plantation_date(year_id - 1, crop_code)
+            else:
+                plantation_dates = self.get_plantation_date(year_id, crop_code)
             new_harvest_date = datetime(year, month, day)
             harvest_idx = harvest_dates[crop_code]['index']
             new_planting_date = plantation_dates[crop_code]['date']
