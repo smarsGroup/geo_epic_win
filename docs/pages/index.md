@@ -1,64 +1,59 @@
-
-# GeoEPIC (win_v1.0)
-
-###<strong>A toolkit for geospatial Crop Simulations</strong>
-
-
-<img src="./assets/Yield_MD.png" alt="Maryland_Yield" width="90%"/> 
-<!-- ### <strong>Overview</strong> -->
-
-This package expands the capabilities of the **EPIC crop simulation model**, to simulate crop growth and development across large geographies, such as entire states or counties by leveraging openly availabe remote sensing products and geospatial databases. Additionally, the toolkit features a unique calibration module that allows fine-tuning of model parameters to reflect specific local conditions or experimental results. This toolkit allows researchers to assess crop production potential, management scenarios and risks at broader scales, informing decision-making for sustainable agricultural practices.
+---
+hide:
+  - navigation
+  - toc
+---
 
 
 
-<!-- !['Maryland_Yield'](./assets/Yield_MD.png) -->
+### <strong style="font-size:35px;">Python package for geospatial Crop Simulations</strong>
+<img src="./assets/Yield_MD.png" alt="Maryland_Yield" width="60%"/> 
+<p>GeoEpic is an open source package that expands the capabilities of the <strong>EPIC crop simulation model</strong>, to simulate crop growth and development across large geographies, such as entire states or counties by leveraging openly availabe remote sensing products and geospatial databases. Additionally, the package features a unique calibration module that allows fine-tuning of model parameters to reflect specific local conditions or experimental results. This toolkit allows researchers to assess crop production potential, management scenarios and risks at broader scales, informing decision-making for sustainable agricultural practices.</p>
+<!-- <p style="padding: 10px;">
+ <a href="/geo_epic_win/pages/installation" style=" padding: 10px 20px; text-decoration: none; border-radius: 5px;">Install GeoEPIC</a>
+</p> -->
 
-### <strong>Installation</strong>
-
-Before starting the setup, ensure you have [`conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html) installed. Follow the links for corresponding installation guides. Find the detailed instructions in the setup section. This version is developed exclusively for windows operating system.
-
-```bash
-conda create --name epic_env python=3.11
-```
-```bash
-conda activate epic_env
-```
-```bash
-pip install git+https://github.com/smarsGroup/geo_epic_win.git
-```
-
-<!-- 
-### <strong>Getting Started</strong>
-
-To begin using GeoEPIC:
-
-1. **Installation**: Follow the [installation guide](installation.md) to set up the toolkit in your Python environment.
-2. **Data Preparation**: Prepare your geospatial datasets, including soil, weather, and crop management data.
-3. **Running Simulations**: Use the provided modules to set up and execute your EPIC model simulations.
-4. **Result Analysis**: Analyze simulation outputs with built-in tools or export data for external analysis.
-
-For detailed instructions, visit the [Getting Started](index.md) section. -->
-<!-- 
-### <strong>Use Cases</strong>
-<!-- 
-GeoEPIC has been adopted in various research projects and integrated into several tools: -->
-
-<!-- - **Crop Yield Forecasting**: Used in studies predicting crop yields under different climate scenarios.
-- **Sustainable Agriculture Tools**: Incorporated into platforms promoting sustainable farming practices. -->
-<!-- - **Academic Research**: Featured in numerous [publications](#) exploring geospatial crop modeling.
-- **Collaborations**:
-  - **University of Agriculture**: Partnership focusing on soil health and crop productivity.
-  - **AgriTech Solutions**: Integration of GeoEPIC into precision agriculture tools. -->
+### <strong>What can you do with GeoEPIC?</strong>
 
 
-### <strong>Contributors</strong>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
 
-- Bharath Irigireddy, Varaprasad Bandaru, Sachin Velmurgan, Rohit Nandan, SMaRS Group
+  <div style="flex: 1 1 calc(50% - 20px); min-width: 300px; border: 1px solid #ddd; border-radius: 5px; padding: 10px;">
+    <h3><strong>Getting Input Files</strong></h3>
+    <p>Access and download necessary input files for your simulations from various geospatial databases.</p>
+    <a href="/geo_epic_win/pages/downloading_input_files" class="button-primary">Learn More</a>
+  </div>
 
-<!-- 
-### <strong>Cite the Package as</strong>
+  <div style="flex: 1 1 calc(50% - 20px); min-width: 300px; border: 1px solid #ddd; border-radius: 5px; padding: 10px;">
+    <h3><strong>Site Simulation</strong></h3>
+    <p>Run simulations to model crop growth and development across different geographies.</p>
+    <a href="/geo_epic_win/pages/simulation" class="button-primary">Learn More</a>
+  </div>
 
-If you use GeoEPIC in your research, please cite it as follows:
- -->
+  <div style="flex: 1 1 calc(50% - 20px); min-width: 300px; border: 1px solid #ddd; border-radius: 5px; padding: 10px;">
+    <h3><strong>Model Calibration</strong></h3>
+    <p>Calibrate model parameters to match local conditions or experimental data for more accurate simulations.</p>
+    <a href="/geo_epic_win/pages/calibration" class="button-primary">Learn More</a>
+  </div>
+
+  <div style="flex: 1 1 calc(50% - 20px); min-width: 300px; border: 1px solid #ddd; border-radius: 5px; padding: 10px;">
+    <h3><strong>Remote Sensing</strong></h3>
+    <p>Utilize remote sensing data to enhance the accuracy and scope of your crop simulations.</p>
+    <a href="/geo_epic_win/pages/remote_sensing" class="button-primary">Learn More</a>
+  </div>
+
+</div>
 
 
+### <strong>Contributors</strong> 
+
+- [Bharath Irigireddy](https://github.com/Bharath2), [Varaprasad Bandaru](https://www.ars.usda.gov/pacific-west-area/maricopa-arizona/us-arid-land-agricultural-research-center/plant-physiology-and-genetics-research/people/prasad-bandaru/), [Sachin Velmurgan](https://github.com/SachinVel), [SMaRS Group](https://www.smarsgroup.org/)
+- Contact: prasad.bandaru@usda.gov
+
+<style>
+.md-content__inner h1{
+    width:0px;
+    height:0px;
+    overflow: hidden;
+}
+</style>
