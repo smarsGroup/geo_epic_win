@@ -8,11 +8,11 @@ For more details on EPIC model, visit [Texas A&M AgriLife site](https://epicapex
 
 ## **Important Functionalities and Use Cases of EPIC**
 
-- **Weather Simulation**: Generates daily weather data, including precipitation, temperature, solar radiation, wind speed, and direction, to drive other model components. [EPICAPEX.TAMU.EDU](https://epicapex.tamu.edu/)
+- **Weather Simulation**: Generates daily weather data, including precipitation, temperature, solar radiation, wind speed, and direction, to drive other model components. 
 - **Hydrology**: Simulates surface runoff, infiltration, percolation, and evapotranspiration to understand water movement within the soil-plant-atmosphere continuum.
 - **Erosion-Sedimentation**: Assesses soil erosion caused by water and wind, predicting sediment yield and deposition.
 - **Nutrient Cycling**: Models the transformations and movements of nutrients like nitrogen and phosphorus within the soil-plant system.
-- **Crop Growth**: Simulates the growth and yield of various crops, considering factors such as photosynthesis, respiration, and nutrient uptake. [ARS.USDA.GOV](https://www.ars.usda.gov/)
+- **Crop Growth**: Simulates the growth and yield of various crops, considering factors such as photosynthesis, respiration, and nutrient uptake. 
 - **Soil Temperature**: Calculates soil temperature dynamics, influencing seed germination and microbial activity.
 - **Tillage**: Evaluates the effects of different tillage practices on soil properties and crop production.
 - **Economics**: Analyzes the economic implications of various agricultural practices, aiding in cost-benefit assessments.
@@ -31,7 +31,7 @@ The Soil Data File details soil properties such as texture, bulk density, hydrau
     - **Hydraulic Conductivity**: Influences infiltration rates.
     - **Albedo**: Impacts soil temperature and evaporation rates.
 
-By meticulously preparing the Soil Data File with accurate and site-specific data, users can leverage the EPIC model to simulate and evaluate the impacts of various agricultural practices. For more information, visit the [Soil Module](pages/Soil.md).
+By meticulously preparing the Soil Data File with accurate and site-specific data, users can leverage the EPIC model to simulate and evaluate the impacts of various agricultural practices. For more information, visit the [Soil Module](./Soil.md).
 
 ### **Weather Data File (.DLY)**
 
@@ -43,7 +43,7 @@ The Weather Data File contains daily weather parameters, including precipitation
     - **Solar Radiation**: Influences photosynthesis and evapotranspiration.
     - **Wind Speed**: Impacts evapotranspiration and erosion rates.
 
-For more information on weather data inputs, visit the [Weather Module](pages/Weather.md).
+For more information on weather data inputs, visit the [Weather Module](./Weather.md).
 
 ### **Operation Schedule File (.OPC)**
 
@@ -55,7 +55,7 @@ The Operation Schedule File outlines the sequence of field operations, such as p
     - **Irrigation Scheduling**: Ensures adequate water supply during critical growth stages.
     - **Tillage Practices**: Influence soil structure and erosion potential.
 
-For more information on crop management practices, visit the [Crop Management Module](pages/OPC.md).
+For more information on crop management practices, visit the [Crop Management Module](./OPC.md).
 
 ### **Site Data File (.SIT)**
 

@@ -86,30 +86,30 @@ plugins:
       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
 
 nav:
-  - Home: pages/index.md
+  - Home: index.md
   - Getting Started:
     - Overview: getting_started/overview.md
     - Installation: getting_started/installation.md
     - Input Files: 
       - Weather Module: getting_started/Weather.md
-      - Soil Module: pages/Soil.md
+      - Soil Module: getting_started/Soil.md
       - Crop Management: pages/OPC.md
     - Calibration: pages/calibration.md
     - Earth Engine Utility: pages/gee.md
     - License: pages/LICENSE.md
     - Contributing: pages/Contributing.md
   - Tutorials:
-    - Site Simulation: pages/starter_notebook.md
-    - Calibration Example: pages/opt.md
+    - Site Simulation: tutorials/site_simulation.md
+    - Calibration Example: tutorials/calibration.md
     - Creating Site Input Files: pages/runepic.md
     - Spatial Crop Simulations: pages/runepic.md
     - Querying USDA Soil Data Access: pages/runepic.md
   - Reference: 
-    - geoEpic.core: pages/api/core.md
-    - geoEpic.io: pages/api/io.md
-    - geoEpic.weather: pages/api/weather.md
-    - geoEpic.soil: pages/api/soil.md
-    - geoEpic.gee: pages/api/gee.md
-    - geoEpic.utils: pages/api/utils.md
-    - Command Line Interface: pages/api/api.md
-    - utility: pages/api/utils.md
+    - geoEpic.core: reference/api/core.md
+    - geoEpic.io: reference/api/io.md
+    - geoEpic.weather: reference/api/weather.md
+    - geoEpic.soil: reference/api/soil.md
+    - geoEpic.gee: reference/api/gee.md
+    - geoEpic.utils: reference/api/utils.md
+    - Command Line Interface: reference/api/api.md
+    - utility: reference/api/utils.md
