@@ -169,26 +169,26 @@ class SoilDataAccess:
             merged[col] = pd.to_numeric(merged[col], errors='coerce').fillna(0)
 
         soil_df = pd.DataFrame({
-        'mukey': merged['mukey'],
-        'Layer_number': merged['desgnvert'],
-        'Layer_depth': merged['hzdepb_r'] * 0.01,
-        'Bulk_Density': merged['dbthirdbar_r'],
-        'Wilting_capacity': merged['wfifteenbar_r'] * 0.01,
-        'Field_Capacity': merged['wthirdbar_r'] * 0.01,
-        'Sand_content': merged['sandtotal_r'],
-        'Silt_content': merged['silttotal_r'],
-        'N_concen': 0, 'pH': merged['ph1to1h2o_r'],
-        'Sum_Bases': merged['sumbases_r'],
-        'Organic_Carbon': merged['om_r'] * 0.58,
-        'Calcium_Carbonate': merged['caco3_r'],
-        'Cation_exchange': merged['cec7_r'],
-        'Course_Fragment': 100 - (merged['sieveno10_r'] + merged['fraggt10_r'] + merged['frag3to10_r']),
-        'cnds' : 0, 'pkrz' : 0, 'rsd' : 0,
-        'Bulk_density_dry': merged['dbovendry_r'], 'psp' : 0,
-        'Saturated_conductivity': merged['ksat_r'] * 3.6,
-        'albedo': merged['albedodry_r'] * 0.625,
-        'slope_length': merged['slopelenusle_r'],
-        'hydgrp_conv': merged['Hydgrp_conv']
+            'mukey': merged['mukey'],
+            'Layer_number': merged['desgnvert'],
+            'Layer_depth': merged['hzdepb_r'] * 0.01,
+            'Bulk_Density': merged['dbthirdbar_r'],
+            'Wilting_capacity': merged['wfifteenbar_r'] * 0.01,
+            'Field_Capacity': merged['wthirdbar_r'] * 0.01,
+            'Sand_content': merged['sandtotal_r'],
+            'Silt_content': merged['silttotal_r'],
+            'N_concen': 0, 'pH': merged['ph1to1h2o_r'],
+            'Sum_Bases': merged['sumbases_r'],
+            'Organic_Carbon': merged['om_r'] * 0.58,
+            'Calcium_Carbonate': merged['caco3_r'],
+            'Cation_exchange': merged['cec7_r'],
+            'Course_Fragment': 100 - (merged['sieveno10_r'] + merged['fraggt10_r'] + merged['frag3to10_r']),
+            'cnds' : 0, 'pkrz' : 0, 'rsd' : 0,
+            'Bulk_density_dry': merged['dbovendry_r'], 'psp' : 0,
+            'Saturated_conductivity': merged['ksat_r'] * 3.6,
+            'albedo': merged['albedodry_r'] * 0.625,
+            'slope_length': merged['slopelenusle_r'],
+            'hydgrp_conv': merged['Hydgrp_conv']
         })
 
         # Add new rounded_layer column

@@ -4,7 +4,7 @@
 The crop management file in the EPIC model contains essential information about various management practices carried out on an agricultural field. Each row in the management file (.OPC) represents a specific management operation. These operations include planting a specific crop,  fertilizer application, irrigation methods and timing, harvesting and tillage details. The interpretation of entries in certain columns changes depending on the operation being simulated. This detailed setup enables the EPIC model to accurately simulate the effects of management decisions on crop yield and environmental impact. For more information on the structure of management files, refer to the EPIC user manual.
 
 
-<img src="../assets/opc.jpg" alt="OPC" width="80%"/>
+<img src="../../assets/opc.jpg" alt="OPC" width="80%"/>
 
 ### 1. Generating Crop Management File
 

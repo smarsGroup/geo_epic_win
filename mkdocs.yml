@@ -57,8 +57,8 @@ theme:
   font:
     text: Roboto
     code: Roboto Mono
-  logo: pages/assets/geoepic_logo.png
-  favicon: pages/assets/geoepic_logo.webp
+  logo: assets/geoepic_logo.png
+  favicon: assets/geoepic_logo.webp
   icon:
     repo: fontawesome/brands/github
 
@@ -91,19 +91,19 @@ nav:
     - Overview: getting_started/overview.md
     - Installation: getting_started/installation.md
     - Input Files: 
-      - Weather Module: getting_started/Weather.md
-      - Soil Module: getting_started/Soil.md
-      - Crop Management: pages/OPC.md
-    - Calibration: pages/calibration.md
-    - Earth Engine Utility: pages/gee.md
-    - License: pages/LICENSE.md
-    - Contributing: pages/Contributing.md
+      - Weather Module: getting_started/weather.md
+      - Soil Module: getting_started/soil.md
+      - Crop Management: getting_started/opc.md
+      - Site Module: getting_started/site.md
+    - Simulation: getting_started/simulation.md
+    - Calibration: getting_started/calibration.md
+    - Earth Engine Utility: getting_started/gee.md
+    - License: getting_started/license.md
+    - Contributing: getting_started/contributing.md
   - Tutorials:
-    - Site Simulation: tutorials/site_simulation.md
-    - Calibration Example: tutorials/calibration.md
-    - Creating Site Input Files: pages/runepic.md
-    - Spatial Crop Simulations: pages/runepic.md
-    - Querying USDA Soil Data Access: pages/runepic.md
+    - Single Site Simulation: tutorials/single_site_simulation.md
+    - Regional Simulation: tutorials/regional_simulation.md
+    - Yield Calibration: tutorials/yield_calibration.md
   - Reference: 
     - geoEpic.core: reference/api/core.md
     - geoEpic.io: reference/api/io.md

@@ -27,7 +27,7 @@ hide:
       <li><strong>Weather Data:</strong> Extract historical and forecasted weather information, including temperature, precipitation, and solar radiation, from datasets like AgERA5 on Google Earth Engine.</li>
     </ul>
     <p>Modifying these inputs to reflect local conditions ensures more accurate simulation results.</p>
-    <a href="/geo_epic_win/getting_started/Weather" class="button-primary">Learn More</a>
+    <a href="/geo_epic_win/getting_started/weather" class="button-primary">Learn More</a>
   </div>
 
   <div style="width: 100%; border: 1px solid #ddd; border-radius: 5px; padding: 10px;">
