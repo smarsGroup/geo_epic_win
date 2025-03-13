@@ -94,226 +94,206 @@ This code retrieves daily weather data from the Daymet dataset for the specified
 ### Operation Schedule File (.OPC)
 The operation schedule file outlines the management operations to be performed at the site, such as planting, fertilization, and irrigation schedules.
 
+To generate OPC files using the geo_epic **generate_opc** command, follow these steps:​
 
+#### Prepare Required Files:
 
-You can create an OPC file based on crop rotation data, for example, using the Cropland Data Layer (CDL) which provides information about what crops were grown in a specific location over time.
+- **Crop Data CSV (crop_data.csv)**: Ensure this file contains the necessary columns: epic_code, planting_date, harvest_date, and year. Each row should represent a specific crop's data for a given year.​
 
-```python
-from geoEpic.io import OPC
-import os
+- **Template Directory (crop_templates)**: This folder should include:​
+  - Mapping File (Mapping): A CSV file mapping epic_code to corresponding template_code.
+  - Template OPC Files: OPC files named according to the template_code values specified in the Mapping file.
 
-# Path to crop templates
-crop_templates_path = './crop_templates/'
+#### Utilize Provided Templates:
 
-# Get CDL data for the site location (assuming you have downloaded this from Google Earth Engine)
-cdl_data = {
-  2015: 'CORN',
-  2016: 'SOYB',
-  2017: 'WWHT',
-  2018: 'CORN',
-  2019: 'WWHT_SOYB'
-}
+The geoEpic/assets/ws_template/opc/crop_templates directory contains basic templates that you can use or customize for your specific needs.
 
-# Set up parameters
-start_year = 2015
-opc_file_path = './opc/files/umstead.OPC'  # Output OPC file path
+#### Execute the Command:
 
-# Initialize result OPC file
-res_opc_file = None
-prev_code = ''
+Open your terminal and navigate to the directory containing your input files. Run the following command:
 
-# Iterate through each year and create the OPC file with appropriate crop rotations
-for year, code in cdl_data.items():
-  # Load template OPC file for the crop
-  template_opc = OPC.load(os.path.join(crop_templates_path, f'{code}.OPC'), start_year)
-  plantation_row = template_opc.iloc[0]
-  epic_code = plantation_row['CRP']
-  
-  # Append the template to the result OPC file
-  if res_opc_file is None:
-    res_opc_file = template_opc
-  else:
-    res_opc_file = res_opc_file.append(template_opc)
-  
-  # Keep track of previous crop for rotation logic
-  prev_code = code
-
-# Save the final OPC file
-res_opc_file.save(opc_file_path)
+```bash
+geo_epic generate_opc -c /path/to/crop_data.csv -t /path/to/crop_templates -o /path/to/output_directory
 ```
 
-This code demonstrates how to create a comprehensive operation schedule file that includes crop rotations, fertilizer applications, and irrigation settings based on historical crop data for your site. The resulting OPC file will contain a multi-year rotation schedule that matches the CDL data, with appropriate management operations for each crop.
+Replace `/path/to/crop_data.csv`, `/path/to/crop_templates`, and `/path/to/output_directory` with the actual paths to your crop data file, template directory, and desired output directory, respectively.
+
+#### Optional Arguments:
+
+- `-c` or `--crop_data`: Specifies the path to your crop data CSV file. Default is `./crop_data.csv`.​
+- `-t` or `--template`: Specifies the path to your template directory. Default is `./crop_templates`.​
+- `-o` or `--output`: Specifies the path to your output directory where the generated OPC files will be saved. Default is `./files`.​
+
+#### Example Usage:
+
+If your crop data CSV is located at `/home/user/data/crop_data.csv`, your templates are in `/home/user/data/crop_templates/`, and you want to save the output in `/home/user/data/output/`, you would run:​
+
+```bash
+geo_epic generate_opc -c /home/user/data/crop_data.csv -t /home/user/data/crop_templates -o /home/user/data/output/
+```
+
+Ensure that all paths provided are correct and that the command has the necessary permissions to read the input files and write to the output directory.​
+
+For more detailed information on using the geo_epic generate_opc command, refer to the official documentation or the help command:​
+
+```bash
+geo_epic generate_opc --help
+```
 ## Run Simulation
 
-nce the input files are prepared, you can create a `Site` object and an `EPICModn is complete, you can process and analyze the output files to examine the results, such as crop yields and leaf area index.
+Once the input files are prepared, you can create a `Site` object and an `EPICModel` object to run your simulation. This section demonstrates how to set up and execute the EPIC model for your site.
 
-## Follow the below lines of code
+### Import Required Classes
 
-Import the required classes from geoEpic
+First, import the necessary classes from geoEpic:
 
 ```python
 from geoEpic.core import Site, EPICModel
 from geoEpic.io import ACY, DGN
 ```
 
-First create a `Site` object with the necessary input files. 
+### Create Site Object
 
+Create a `Site` object by specifying paths to all the input files you prepared in the previous steps:
 
 ```python
 site = Site(opc = './opc/files/umstead.OPC',
-            dly = './weather/NCRDU.DLY',
-            sol = './soil/files/umstead.SOL',
-            sit = './sites/umstead.SIT')
+      dly = './weather/NCRDU.DLY',
+      sol = './soil/files/umstead.SOL',
+      sit = './sites/umstead.SIT')
 print(site.site_id)
 ```
+
+The output should display your site identifier:
+```
 umstead
-    
+```
 
-#### Define the EPICModel class
-Now Let's create an `EPICModel` object and specify the start date, duration of the simulation.
+### Configure and Run the Model
 
+Next, create an `EPICModel` object and configure the simulation parameters:
 
 ```python
+# Initialize the model with path to EPIC executable
 model = EPICModel('./model/EPIC1102.exe')
-model.start_date = '2015-01-01'
-model.duration = 5
-model.output_types = ['ACY']
+
+# Set simulation timeframe
+model.start_date = '2015-01-01'  # Simulation start date
+model.duration = 5               # Simulation duration in years
+
+# Specify which output files you want to generate
+model.output_types = ['ACY', 'DGN']  # Annual crop yield and Daily general outputs
 ```
 
-Run the model simulations at the required site
+Now run the model for your defined site:
 
 ```python
+# Execute the simulation
 model.run(site)
-# Close the model instance
-model.close()
-# Path to output files is stored in the site.outputs dict
-site.outputs
-```
 
-- EPICModel instance can also be created using a configuration file. 
-Example config file:
-```yaml
-# Model details
-EPICModel: ./model/EPIC1102.exe
-start_year: '2015-01-01'
-duration: 5
-output_types:
-  - ACY  # Annual Crop data file
-  - DGN  # Daily general output file
-log_dir: ./log
-output_dir: ./output
-```
-- This method allows for easier management of model parameters.
-
-#### Using EPICModel class with Configuration File
-
-```python
-model = EPICModel.from_config('./config.yml')
-model.run(site)
+# Close the model instance when finished
 model.close()
 
-#using with context
-with EPICModel.from_config('./config.yml') as model:
-    model.run(site)
+# Path to output files is stored in the site.outputs dictionary
+print(site.outputs)
 ```
 
-#### Examine the outputs
-Finally, examine the outputs generated by the model run.
+## Process Outputs
 
+After completing the simulation, you can analyze the results from the output files generated by the EPIC model. These files contain valuable information about crop performance, soil conditions, and other environmental factors.
+
+### Reading Output Files
+
+EPIC generates several types of output files. The most commonly used ones are:
+
+- **ACY** (Annual Crop Yield): Contains yearly crop production data
+- **DGN** (Daily General): Contains daily environmental and crop growth metrics
+
+Use the appropriate classes from the `geoEpic.io` module to read and process these files:
 
 ```python
+# Access the Annual Crop Yield data
 yields = ACY(site.outputs['ACY']).get_var('YLDG')
-yields
+print(yields)
 ```
 
+This will display a DataFrame with the annual crop yield data:
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+```
+  index    YR   CPNM    YLDG
+0      0  2015   CORN   7.175
+1      1  2016   CORN   4.735
+2      2  2017   CORN   9.072
+3      3  2018   CORN   7.829
+4      4  2019   CORN   5.434
+```
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
+### Visualizing Results
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>index</th>
-      <th>YR</th>
-      <th>CPNM</th>
-      <th>YLDG</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>2015</td>
-      <td>CORN</td>
-      <td>7.175</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>2016</td>
-      <td>CORN</td>
-      <td>4.735</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>2017</td>
-      <td>CORN</td>
-      <td>9.072</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>2018</td>
-      <td>CORN</td>
-      <td>7.829</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>4</td>
-      <td>2019</td>
-      <td>CORN</td>
-      <td>5.434</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-Plot the simulated Leaf Area Index
-
+You can create various visualizations to better understand the simulation results. For example, to plot the crop yields over time:
 
 ```python
 import matplotlib.pyplot as plt
+import pandas as pd
 
+# Create a bar chart of annual yields
+plt.figure(figsize=(10, 6))
+plt.bar(yields['YR'], yields['YLDG'], color='green')
+plt.title('Annual Corn Yield (2015-2019)')
+plt.xlabel('Year')
+plt.ylabel('Yield (t/ha)')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.xticks(yields['YR'])
+plt.tight_layout()
+plt.show()
+```
+
+Similarly, you can analyze daily metrics like Leaf Area Index (LAI) from the DGN file:
+
+```python
+# Access daily general data and plot Leaf Area Index
 lai = DGN(site.outputs['DGN']).get_var('LAI')
 
 plt.figure(figsize=(12, 6))
-plt.plot(lai['Date'], lai['LAI'])
+plt.plot(lai['Date'], lai['LAI'], color='darkgreen', linewidth=2)
 plt.title('Leaf Area Index (LAI) Over Time')
 plt.xlabel('Date')
 plt.ylabel('LAI')
-plt.grid(True)
+plt.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.show()
-
 ```
 
+### Advanced Analysis
 
-    
-![png](output_18_0.png)
-    
+For more complex analyses, you can combine multiple output variables:
+
+```python
+# Extract precipitation and soil moisture
+dgn_data = DGN(site.outputs['DGN'])
+precip = dgn_data.get_var('PRCP')
+soil_water = dgn_data.get_var('SW')
+
+# Merge the data on Date
+merged_data = pd.merge(precip, soil_water, on='Date')
+
+# Analyze the relationship between precipitation and soil moisture
+# Add your analysis code here...
+```
+
+### Exporting Results
+
+You can easily export the processed results for further analysis or reporting:
+
+```python
+# Export annual yields to CSV
+yields.to_csv('corn_yields_2015_2019.csv', index=False)
+
+# Export daily data to Excel
+with pd.ExcelWriter('simulation_results.xlsx') as writer:
+   yields.to_excel(writer, sheet_name='Annual_Yields', index=False)
+   lai.to_excel(writer, sheet_name='Daily_LAI', index=False)
+```
+
+By following these steps, you can effectively process, visualize, and analyze the outputs from your EPIC model simulation to gain valuable insights about crop production and environmental conditions at your site.
 
