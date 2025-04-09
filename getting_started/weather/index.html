@@ -20,15 +20,15 @@
       
       
       <link rel="icon" href="../../assets/geoepic_logo.webp">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.8">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
     
     
       
-        <title>Weather Module - GeoEPIC</title>
+        <title>Weather - GeoEPIC</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.4af4bdda.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Weather Module
+              Weather
             
           </span>
         </div>
@@ -151,11 +151,13 @@
     
     
     
-      <label class="md-header__button md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-      </label>
-      <div class="md-search" data-md-component="search" role="dialog">
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
@@ -194,6 +196,7 @@
     </div>
   </div>
 </div>
+      
     
     
       <div class="md-header__source">
@@ -226,9 +229,11 @@
   
   
   
+  
     <li class="md-tabs__item">
       <a href="../.." class="md-tabs__link">
         
+  
   
     
   
@@ -242,6 +247,7 @@
         
   
   
+  
     
   
   
@@ -250,6 +256,7 @@
       <li class="md-tabs__item md-tabs__item--active">
         <a href="../overview/" class="md-tabs__link">
           
+  
   
     
   
@@ -265,11 +272,13 @@
   
   
   
+  
     
     
       <li class="md-tabs__item">
         <a href="../../tutorials/single_site_simulation/" class="md-tabs__link">
           
+  
   
     
   
@@ -285,11 +294,13 @@
   
   
   
+  
     
     
       <li class="md-tabs__item">
         <a href="../../reference/api/core/" class="md-tabs__link">
           
+  
   
     
   
@@ -355,6 +366,7 @@
       <a href="../.." class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
     Home
     
@@ -391,8 +403,7 @@
       
         
       
-        
-      
+    
     
     
       
@@ -413,6 +424,7 @@
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
+  
   
   <span class="md-ellipsis">
     Getting Started
@@ -440,6 +452,7 @@
       <a href="../overview/" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
     Overview
     
@@ -461,6 +474,7 @@
     <li class="md-nav__item">
       <a href="../installation/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     Installation
@@ -495,6 +509,7 @@
       
     
     
+    
       
       
     
@@ -510,6 +525,7 @@
           
           <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
             
+  
   
   <span class="md-ellipsis">
     Input Files
@@ -546,8 +562,9 @@
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
   
+  
   <span class="md-ellipsis">
-    Weather Module
+    Weather
     
   </span>
   
@@ -558,8 +575,9 @@
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
+  
   <span class="md-ellipsis">
-    Weather Module
+    Weather
     
   </span>
   
@@ -582,28 +600,46 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#fetching-weather-data" class="md-nav__link">
+  <a href="#1-data-sources" class="md-nav__link">
     <span class="md-ellipsis">
-      Fetching Weather Data
+      1. Data Sources
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Fetching Weather Data">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-creating-weather-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Creating Weather File
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Creating Weather File">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#using-command-line" class="md-nav__link">
+  <a href="#21-requirements-and-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Using Command Line
+      2.1 Requirements and Configuration
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#using-python-api" class="md-nav__link">
+  <a href="#22-command-line-cli" class="md-nav__link">
     <span class="md-ellipsis">
-      Using Python API
+      2.2 Command Line (CLI)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 Python API
     </span>
   </a>
   
@@ -615,9 +651,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#modifying-weather-data-using-python-api" class="md-nav__link">
+  <a href="#3-editing-weather-file" class="md-nav__link">
     <span class="md-ellipsis">
-      Modifying Weather Data Using Python API
+      3. Editing Weather File
     </span>
   </a>
   
@@ -642,8 +678,9 @@
       <a href="../soil/" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
-    Soil Module
+    Soil
     
   </span>
   
@@ -663,6 +700,7 @@
     <li class="md-nav__item">
       <a href="../opc/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     Crop Management
@@ -686,8 +724,9 @@
       <a href="../site/" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
-    Site Module
+    Site
     
   </span>
   
@@ -716,6 +755,7 @@
       <a href="../simulation/" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
     Simulation
     
@@ -738,6 +778,7 @@
       <a href="../calibration/" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
     Calibration
     
@@ -757,30 +798,9 @@
   
   
     <li class="md-nav__item">
-      <a href="../gee/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Earth Engine Utility
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../license/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     License
@@ -803,6 +823,7 @@
     <li class="md-nav__item">
       <a href="../contributing/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     Contributing
@@ -840,6 +861,7 @@
       
     
     
+    
       
       
     
@@ -854,8 +876,10 @@
         
   
   
+  
     <a href="../../tutorials/single_site_simulation/" class="md-nav__link">
       
+  
   
   <span class="md-ellipsis">
     Tutorials
@@ -897,8 +921,7 @@
       
         
       
-        
-      
+    
     
     
       
@@ -915,8 +938,10 @@
         
   
   
+  
     <a href="../../reference/api/core/" class="md-nav__link">
       
+  
   
   <span class="md-ellipsis">
     Reference
@@ -962,28 +987,46 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#fetching-weather-data" class="md-nav__link">
+  <a href="#1-data-sources" class="md-nav__link">
     <span class="md-ellipsis">
-      Fetching Weather Data
+      1. Data Sources
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Fetching Weather Data">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-creating-weather-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Creating Weather File
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Creating Weather File">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#using-command-line" class="md-nav__link">
+  <a href="#21-requirements-and-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Using Command Line
+      2.1 Requirements and Configuration
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#using-python-api" class="md-nav__link">
+  <a href="#22-command-line-cli" class="md-nav__link">
     <span class="md-ellipsis">
-      Using Python API
+      2.2 Command Line (CLI)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 Python API
     </span>
   </a>
   
@@ -995,9 +1038,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#modifying-weather-data-using-python-api" class="md-nav__link">
+  <a href="#3-editing-weather-file" class="md-nav__link">
     <span class="md-ellipsis">
-      Modifying Weather Data Using Python API
+      3. Editing Weather File
     </span>
   </a>
   
@@ -1022,76 +1065,159 @@
   
 
 
-<h1 id="weather-module"><strong>Weather Module</strong></h1>
-<!-- <img src="./../pages/assets/fg.jpg" alt="weather" width="90%"/> -->
-
-<p>Weather data is vital in providing essential environmental inputs that significantly influence crop growth and development. Reliable weather inputs ensure that agricultural simulations reflect realistic responses to climatic conditions. The EPIC model requires weather input files that detail daily and monthly climatic variables. Daily files provide day-to-day weather data, while monthly files summarize the average or total values per month. These files are crucial for driving the daily simulation processes in EPIC.</p>
-<h2 id="fetching-weather-data"><strong>Fetching Weather Data</strong></h2>
-<h3 id="using-command-line"><strong>Using Command Line</strong></h3>
-<p>GeoEPIC allows the integration of various weather and climate data sources on GEE. To explore the available datasets, visit <a href="https://developers.google.com/earth-engine/datasets/">Google Earth Engine's dataset catalog</a> and <a href="https://gee-community-catalog.org/projects/agera5_datasets/">GEE Community Catalog</a>. Private assets can also be uploaded to Earth Engine, to use them in combination with existing datasets. Below is an example of configuration file that can be used to create weather input files.</p>
-<p><strong>Example config files:</strong></p>
+<h1 id="weather-module">Weather Module</h1>
+<p>Weather data is fundamental to agricultural simulation, providing environmental inputs crucial for modeling crop growth and yield. Reliable weather data ensures realistic simulation outcomes. The EPIC model specifically requires weather data formatted into two key input files:</p>
+<ol>
+<li><strong>Daily Weather Files (<code>.DLY</code>):</strong> Contain day-to-day meteorological data (solar radiation, temperature max/min, precipitation, relative humidity, wind speed). These drive the daily simulation processes.</li>
+<li><strong>Monthly Weather Files (<code>.WP1</code>):</strong> Summarize climate statistics, typically monthly averages or totals derived from daily data.</li>
+</ol>
+<p><img src="../../assets/weather.jpg" alt="soilg" width="100%"/></p>
+<h2 id="1-data-sources">1. Data Sources</h2>
+<p>Weather files can be created from various sources. GeoEPIC provides support for google earth engine sources.</p>
 <ul>
-<li><strong>using AgERA5</strong></li>
+<li><strong>Google Earth Engine (GEE):</strong>
+GEE is a cloud-based platform for planetary-scale geospatial analysis. It hosts a vast public data archive that includes numerous satellite imagery and climate datasets (like AgERA5, GRIDMET, CHIRPS, etc.), alongside capabilities to use your own private GEE assets. GeoEPIC leverages GEE to fetch data from these collections, allowing access to global or regional weather data often derived from satellite observations or climate reanalysis models.<ul>
+<li>Reference: <a href="https://developers.google.com/earth-engine/datasets/">Google Earth Engine dataset catalog</a></li>
+<li>Reference: <a href="https://gee-community-catalog.org/">GEE Community Catalog</a></li>
 </ul>
+</li>
+</ul>
+<h2 id="2-creating-weather-file">2. Creating Weather File</h2>
+<p>This section outlines the process for generating EPIC-compatible weather files (.DLY) using GeoEPIC.</p>
+<h3 id="21-requirements-and-configuration">2.1 Requirements and Configuration</h3>
+<p>When sourcing weather data from Google Earth Engine (GEE) collections (like AgERA5, GRIDMET, CHIRPS, or your private assets), a configuration file (typically <code>config.yml</code>) is essential. This file directs GeoEPIC on what data to retrieve, defining the time period, specific variables, target resolution, the GEE collection path, and how the source data bands should be mapped and potentially converted (e.g., units) to match EPIC's requirements.</p>
+<p><strong>Example Configuration File (<code>config.yml</code>) using AgERA5:</strong></p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Global parameters</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">global_scope</span><span class="p">:</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">time_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;2002-01-01&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;2022-12-31&#39;</span><span class="p p-Indicator">]</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">variables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;srad&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;tmax&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;tmin&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;prcp&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;rh&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;ws&#39;</span><span class="p p-Indicator">]</span><span class="w">  </span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">resolution</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9600</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Specify Earth Engine (EE) collections and their respective variables</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">collections</span><span class="p">:</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nt">AgEra5</span><span class="p">:</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">collection</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;projects/climate-engine-pro/assets/ce-ag-era5/daily&#39;</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">variables</span><span class="p">:</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">      </span><span class="nt">srad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b(&#39;Solar_Radiation_Flux&#39;)</span><span class="w"> </span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="nt">tmax</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b(&#39;Temperature_Air_2m_Max_24h&#39;) - 273.15</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">      </span><span class="nt">tmin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b(&#39;Temperature_Air_2m_Min_24h&#39;) - 273.15</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">      </span><span class="nt">prcp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b(&#39;Precipitation_Flux&#39;)</span><span class="w"> </span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">      </span><span class="nt">rh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b(&#39;Relative_Humidity_2m_06h&#39;)</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">      </span><span class="nt">ws</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b(&#39;Wind_Speed_10m_Mean&#39;)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Define the time period for data fetching</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">time_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;2002-01-01&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;2022-12-31&#39;</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># List of standard EPIC weather variable names</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">variables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;srad&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;tmax&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;tmin&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;prcp&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;rh&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;ws&#39;</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Target resolution in meters (AgERA5 native is ~9km or 9600m)</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">resolution</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9600</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Specify Earth Engine (EE) collections and map their bands to EPIC variables</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nt">collections</span><span class="p">:</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nt">AgEra5</span><span class="p">:</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Path to the EE ImageCollection Asset</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nt">collection</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;projects/climate-engine-pro/assets/ce-ag-era5/daily&#39;</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Define how EE bands map to EPIC variables</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># b() refers to the image band</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Note: Unit conversions can be applied directly (e.g., Kelvin to Celsius)</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nt">variables</span><span class="p">:</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nt">srad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b(&#39;Solar_Radiation_Flux&#39;)</span><span class="w"> </span><span class="c1"># MJ/m^2/day (assuming source is daily total flux)</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nt">tmax</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b(&#39;Temperature_Air_2m_Max_24h&#39;) - 273.15</span><span class="w"> </span><span class="c1"># Convert K to °C</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nt">tmin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b(&#39;Temperature_Air_2m_Min_24h&#39;) - 273.15</span><span class="w"> </span><span class="c1"># Convert K to °C</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nt">prcp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b(&#39;Precipitation_Flux&#39;)</span><span class="w"> </span><span class="c1"># mm/day (assuming source is daily total)</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nt">rh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b(&#39;Relative_Humidity_2m_06h&#39;)</span><span class="w"> </span><span class="c1"># % (using 6 AM value as representative)</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="nt">ws</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b(&#39;Wind_Speed_10m_Mean&#39;)</span><span class="w"> </span><span class="c1"># m/s</span>
 </span></code></pre></div>
-<p><strong>Using the config file to get data:</strong></p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Fetch and output weather input files for a specific latitude and longitude</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>geo_epic<span class="w"> </span>weather<span class="w"> </span>config.yml<span class="w"> </span>--fetch<span class="w"> </span><span class="o">{</span>lat<span class="o">}</span><span class="w"> </span><span class="o">{</span>lon<span class="o">}</span><span class="w"> </span>--out<span class="w"> </span><span class="o">{</span>out_path<span class="o">}</span>
+<h3 id="22-command-line-cli">2.2 Command Line (CLI)</h3>
+<p>Use the <code>geo_epic weather</code> command with your configuration file and specify the location(s).</p>
+<p><strong>Fetch for a Single Location (Latitude, Longitude):</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Provide lat, lon coordinates directly</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>geo_epic<span class="w"> </span>weather<span class="w"> </span>config.yml<span class="w"> </span>--fetch<span class="w"> </span><span class="m">40</span>.71<span class="w"> </span>-74.00<span class="w"> </span>--out<span class="w"> </span>./output/NewYorkCity.DLY
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Fetch for a list of locations in a csv file with lat, lon, out_path columns</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>geo_epic<span class="w"> </span>weather<span class="w"> </span>config.yml<span class="w"> </span>--fetch<span class="w"> </span><span class="o">{</span>list.csv<span class="o">}</span><span class="w"> </span>--out<span class="w"> </span><span class="o">{</span>column_name<span class="o">}</span>
+<p><strong>Fetch for Multiple Locations from a CSV File:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Specify input CSV and the column containing output file paths</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># CSV must contain &#39;lat&#39;, &#39;lon&#39;, and the output path column (e.g., &#39;OutputFileColumn&#39;)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># GeoEPIC adds a &#39;wthgridid&#39; column to the CSV</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>geo_epic<span class="w"> </span>weather<span class="w"> </span>config.yml<span class="w"> </span>--fetch<span class="w"> </span>locations.csv<span class="w"> </span>--out<span class="w"> </span>OutputFileColumn
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Fetch for crop sequence boundaries shape file.</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>geo_epic<span class="w"> </span>weather<span class="w"> </span>config.yml<span class="w"> </span>--fetch<span class="w"> </span><span class="o">{</span>aoi_csb.shp<span class="o">}</span><span class="w"> </span>--out<span class="w"> </span><span class="o">{</span>out_dir<span class="o">}</span>
-</span></code></pre></div></p>
-<p><strong>Note:</strong> This command will write weather grid IDs corresponding to each location as an attribute into the input file, when used with a CSV file or crop sequence boundary shapefile.</p>
-<h3 id="using-python-api"><strong>Using Python API</strong></h3>
-<p>GeoEPIC also provides a Python API for fetching weather data. The <code>DLY</code> class provides methods for handling daily weather data—a critical input for crop growth modeling. Daily weather files include data on solar radiation (srad), temperature (tmax, tmin), precipitation (prcp), relative humidity (rh), and wind speed (ws) that influence crop development.</p>
-<p><strong>Functions</strong></p>
-<ul>
-<li><strong>fetch_list</strong>: Fetches weather data based on the input type which could be coordinates, a CSV file, or a shapefile.</li>
-</ul>
+<p><strong>Fetch for Regions from a Shapefile:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Specify input Shapefile and the output directory for .DLY files</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># GeoEPIC adds a &#39;wthgridid&#39; attribute to the shapefile</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>geo_epic<span class="w"> </span>weather<span class="w"> </span>config.yml<span class="w"> </span>--fetch<span class="w"> </span>./boundaries/fields.shp<span class="w"> </span>--out<span class="w"> </span>./weather_output/
+</span></code></pre></div>
+<h3 id="23-python-api">2.3 Python API</h3>
+<p>Use the <code>geoEpic.io.fetch_list</code> function for programmatic fetching.</p>
+<p><strong>Fetch for a Single Location:</strong></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geoEpic.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_list</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Fetch weather data</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">fetch_list</span><span class="p">(</span><span class="n">config_file</span><span class="o">=</span><span class="s1">&#39;config.yml&#39;</span><span class="p">,</span> <span class="n">input_data</span><span class="o">=</span><span class="s1">&#39;coordinates&#39;</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="s1">&#39;./output&#39;</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Define parameters</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">config</span> <span class="o">=</span> <span class="s1">&#39;path/to/your/config.yml&#39;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;./weather_output/NewYorkCity.DLY&#39;</span> <span class="c1"># Specific file path for single location</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">single_location</span> <span class="o">=</span> <span class="s2">&quot;40.71,-74.00&quot;</span> <span class="c1"># Latitude,Longitude as a string</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Fetch weather data</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">fetch_list</span><span class="p">(</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="n">config_file</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">input_data</span><span class="o">=</span><span class="n">single_location</span><span class="p">,</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="n">output_dir</span><span class="o">=</span><span class="n">output</span><span class="p">,</span> <span class="c1"># For single location, this is the full output file path</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="n">raw</span><span class="o">=</span><span class="kc">False</span> <span class="c1"># False saves as .DLY (default)</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p">)</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Weather data fetched for </span><span class="si">{</span><span class="n">single_location</span><span class="si">}</span><span class="s2"> and saved to </span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Parameters:</p>
-<ul>
-<li><strong>input_data</strong>: Could be latitude and longitude as a string, path to a CSV file, or path to a shapefile.</li>
-<li><strong>output_dir</strong>: Directory or file path where the output should be saved.</li>
-<li><strong>raw</strong>: Whether to save as raw CSV (True) or DLY format (False). Defaults to False.</li>
-</ul>
-<h2 id="modifying-weather-data-using-python-api"><strong>Modifying Weather Data Using Python API</strong></h2>
-<p>The <code>DLY</code> class inherits from pandas.DataFrame, providing familiar DataFrame functionality while adding EPIC-specific capabilities. In the example above, the weather data is loaded into a <code>DLY</code> object, allowing easy access to weather variables like solar radiation using standard pandas column indexing. The <code>to_monthly()</code> method aggregates the daily data into monthly averages and saves it in the EPIC-compatible WP1 format.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geoEpic.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">DLY</span>
+<p><strong>Fetch for Multiple Locations (CSV or Shapefile):</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geoEpic.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_list</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Load daily weather data</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">dly</span> <span class="o">=</span> <span class="n">DLY</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;./NCRDU.DLY&#39;</span><span class="p">)</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Print daily solar radiation</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">dly</span><span class="p">[</span><span class="s1">&#39;srad&#39;</span><span class="p">])</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Define parameters</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">config</span> <span class="o">=</span> <span class="s1">&#39;path/to/your/config.yml&#39;</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Input can be a path to a CSV or a Shapefile</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">input_data</span> <span class="o">=</span> <span class="s1">&#39;path/to/locations.csv&#39;</span> <span class="c1"># or &#39;path/to/area_of_interest.shp&#39;</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;./weather_output&#39;</span> <span class="c1"># Base output directory</span>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Aggregate daily data to monthly and save in WP1 format</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">dly</span><span class="o">.</span><span class="n">to_monthly</span><span class="p">()</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Fetch weather data for all locations/features in the input file</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Note: If input is CSV, it must contain columns like &#39;lat&#39;, &#39;lon&#39;, and potentially output paths</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># output_dir acts as a base path if paths in CSV are relative, or target dir for shapefile outputs.</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># GeoEPIC adds &#39;wthgridid&#39; column/attribute to the input file.</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="n">fetch_list</span><span class="p">(</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="n">config_file</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="n">input_data</span><span class="o">=</span><span class="n">input_data</span><span class="p">,</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="n">output_dir</span><span class="o">=</span><span class="n">output</span><span class="p">,</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="n">raw</span><span class="o">=</span><span class="kc">False</span> <span class="c1"># False saves as .DLY (default)</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="p">)</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Weather data fetched for locations/regions in </span><span class="si">{</span><span class="n">input_data</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Input file has been updated with &#39;wthgridid&#39;.&quot;</span><span class="p">)</span>
 </span></code></pre></div>
+<h2 id="3-editing-weather-file">3. Editing Weather File</h2>
+<p>Once <code>.DLY</code> files are created (or if you have existing ones), the <code>geoEpic.io.DLY</code> class in the Python API allows loading, manipulation, and further processing. It acts like a <code>pandas.DataFrame</code> with added EPIC-specific features.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geoEpic.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">DLY</span> <span class="c1"># Import the DLY class</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># --- Loading Data ---</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Replace &#39;./output/NewYorkCity.DLY&#39; with the path to an actual .DLY file</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">dly_filepath</span> <span class="o">=</span> <span class="s1">&#39;./output/NewYorkCity.DLY&#39;</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="n">dly_data</span> <span class="o">=</span> <span class="n">DLY</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dly_filepath</span><span class="p">)</span> <span class="c1"># Use the class method &#39;load&#39;</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully loaded weather data from </span><span class="si">{</span><span class="n">dly_filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># --- Inspecting and Manipulating Data (using pandas methods) ---</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">First 5 rows of weather data:&quot;</span><span class="p">)</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">dly_data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Daily Solar Radiation (srad) head:&quot;</span><span class="p">)</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nb">print</span><span class="p">(</span><span class="n">dly_data</span><span class="p">[</span><span class="s1">&#39;srad&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span> <span class="c1"># Access columns like a DataFrame</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Weather data summary statistics:&quot;</span><span class="p">)</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="nb">print</span><span class="p">(</span><span class="n">dly_data</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># Example manipulation: Calculate Temperature Range</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># dly_data[&#39;Trange&#39;] = dly_data[&#39;tmax&#39;] - dly_data[&#39;tmin&#39;]</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="c1"># print(&quot;\nDaily Temperature Range (first 5 days):&quot;)</span>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="c1"># print(dly_data[&#39;Trange&#39;].head())</span>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="c1"># --- EPIC-specific Functionality: Creating Monthly Files ---</span>
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="c1"># Aggregates daily data to monthly stats and saves as .WP1</span>
+</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Generating monthly weather file (.WP1)...&quot;</span><span class="p">)</span>
+</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="n">wp1_filepath</span> <span class="o">=</span> <span class="n">dly_data</span><span class="o">.</span><span class="n">to_monthly</span><span class="p">()</span> <span class="c1"># Returns the path of the created WP1 file</span>
+</span><span id="__span-6-30"><a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>
+</span><span id="__span-6-31"><a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="k">if</span> <span class="n">wp1_filepath</span><span class="p">:</span>
+</span><span id="__span-6-32"><a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Monthly weather file created successfully: </span><span class="si">{</span><span class="n">wp1_filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-6-33"><a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="k">else</span><span class="p">:</span>
+</span><span id="__span-6-34"><a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to create monthly weather file.&quot;</span><span class="p">)</span>
+</span><span id="__span-6-35"><a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>
+</span><span id="__span-6-36"><a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+</span><span id="__span-6-37"><a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: The specified .DLY file was not found: </span><span class="si">{</span><span class="n">dly_filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-6-38"><a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-6-39"><a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred while processing </span><span class="si">{</span><span class="n">dly_filepath</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Key <code>DLY</code> Class Features:</strong></p>
+<ul>
+<li><strong>Loading:</strong> <code>DLY.load(filepath)</code> reads a <code>.DLY</code> file into a DLY object (DataFrame subclass).</li>
+<li><strong>Data Access/Manipulation:</strong> Utilize standard <code>pandas.DataFrame</code> methods for analysis and modification.</li>
+<li><strong>Monthly Aggregation:</strong> <code>dly_data.to_monthly()</code> calculates monthly statistics (averages/totals as appropriate for EPIC) and saves the results to a <code>.WP1</code> file (typically in the same directory with the same base name as the <code>.DLY</code> file).</li>
+</ul>
 
 
 
@@ -1144,7 +1270,9 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.instant", "navigation.instant.prefetch", "navigation.top", "navigation.tracking", "navigation.tabs", "navigation.path", "navigation.indexes", "navigation.prune", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.instant", "navigation.instant.prefetch", "navigation.top", "navigation.tracking", "navigation.tabs", "navigation.path", "navigation.indexes", "navigation.prune", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>

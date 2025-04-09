@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../assets/geoepic_logo.webp">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.8">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.4af4bdda.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#regional-simulation" class="md-skip">
+        <a href="#geoepic-regional-simulation-tutorial" class="md-skip">
           Skip to content
         </a>
       
@@ -151,11 +151,13 @@
     
     
     
-      <label class="md-header__button md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-      </label>
-      <div class="md-search" data-md-component="search" role="dialog">
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
@@ -194,6 +196,7 @@
     </div>
   </div>
 </div>
+      
     
     
       <div class="md-header__source">
@@ -226,9 +229,11 @@
   
   
   
+  
     <li class="md-tabs__item">
       <a href="../.." class="md-tabs__link">
         
+  
   
     
   
@@ -243,11 +248,13 @@
   
   
   
+  
     
     
       <li class="md-tabs__item">
         <a href="../../getting_started/overview/" class="md-tabs__link">
           
+  
   
     
   
@@ -262,6 +269,7 @@
         
   
   
+  
     
   
   
@@ -270,6 +278,7 @@
       <li class="md-tabs__item md-tabs__item--active">
         <a href="../single_site_simulation/" class="md-tabs__link">
           
+  
   
     
   
@@ -285,11 +294,13 @@
   
   
   
+  
     
     
       <li class="md-tabs__item">
         <a href="../../reference/api/core/" class="md-tabs__link">
           
+  
   
     
   
@@ -355,6 +366,7 @@
       <a href="../.." class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
     Home
     
@@ -389,8 +401,7 @@
       
         
       
-        
-      
+    
     
     
       
@@ -407,8 +418,10 @@
         
   
   
+  
     <a href="../../getting_started/overview/" class="md-nav__link">
       
+  
   
   <span class="md-ellipsis">
     Getting Started
@@ -446,6 +459,7 @@
       
     
     
+    
       
         
         
@@ -464,6 +478,7 @@
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
+  
   
   <span class="md-ellipsis">
     Tutorials
@@ -490,6 +505,7 @@
     <li class="md-nav__item">
       <a href="../single_site_simulation/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     Single Site Simulation
@@ -522,6 +538,7 @@
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
+  
   <span class="md-ellipsis">
     Regional Simulation
     
@@ -544,6 +561,7 @@
     <li class="md-nav__item">
       <a href="../yield_calibration/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     Yield Calibration
@@ -587,8 +605,7 @@
       
         
       
-        
-      
+    
     
     
       
@@ -605,8 +622,10 @@
         
   
   
+  
     <a href="../../reference/api/core/" class="md-nav__link">
       
+  
   
   <span class="md-ellipsis">
     Reference
@@ -662,8 +681,156 @@
   
 
 
-<h1 id="regional-simulation">Regional Simulation</h1>
-<p>The documentation is in progress.</p>
+<h1 id="geoepic-regional-simulation-tutorial">GeoEPIC Regional Simulation Tutorial</h1>
+<p>This tutorial provides step-by-step guidance on setting up and running simulations for multiple sites across a region, often as part of a calibration process, using GeoEPIC.</p>
+<ol>
+<li>
+<p><strong>Set Up Environment:</strong>
+    As with single-site simulations, the first step is to configure your local machine and install the necessary <code>geoEpic</code> components. This ensures your system is ready for both single-site and regional-scale tasks. For detailed instructions, please refer to the <strong><a href="link-to-installation-page">Installation Page</a></strong>. Completing this step is a prerequisite for all subsequent <code>geoEpic</code> operations.</p>
+</li>
+<li>
+<p><strong>Prepare Input Files for Multiple Sites:</strong>
+    For regional simulations, you need the standard input files (Site - .SIT, Soil - .SOL, Weather - .DLY, Operation Schedule - .OPC) for <em>each</em> site within your study region. This typically involves batch processing or scripting to generate files for numerous locations. Consistent naming conventions (e.g., using site IDs) are crucial for managing these files.</p>
+<ul>
+<li>Refer to the <strong><a href="link-to-sit-file-guide">Site File Section</a></strong>, <strong><a href="link-to-sol-file-guide">Soil File Section</a></strong>, <strong><a href="link-to-dly-file-guide">Weather File Section</a></strong>, and <strong><a href="link-to-opc-file-guide">Operation Schedule File Section</a></strong> in the getting started menu for details on the format and generation of each file type.</li>
+<li>You might use scripts to loop through a list of site coordinates or identifiers to automate the generation and saving of these files. Example concept for downloading weather for multiple sites:
+    <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>from geoEpic.weather import get_daymet_data
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>from geoEpic.io import DLY
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>import os
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sites = [
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    {&#39;id&#39;: &#39;siteA&#39;, &#39;lat&#39;: 35.1, &#39;lon&#39;: -78.5},
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    {&#39;id&#39;: &#39;siteB&#39;, &#39;lat&#39;: 35.2, &#39;lon&#39;: -78.6},
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    # ... more sites
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>]
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>start_date, end_date = &#39;2015-01-01&#39;, &#39;2019-12-31&#39;
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>output_weather_dir = &#39;./workspace/weather/&#39;
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>os.makedirs(output_weather_dir, exist_ok=True)
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>for site_info in sites:
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    site_id = site_info[&#39;id&#39;]
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    lat, lon = site_info[&#39;lat&#39;], site_info[&#39;lon&#39;]
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    print(f&quot;Processing weather for {site_id}...&quot;)
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    try:
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        df = get_daymet_data(lat, lon, start_date, end_date)
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        dly_path = os.path.join(output_weather_dir, f&quot;{site_id}.DLY&quot;)
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        DLY(df).save(dly_path)
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    except Exception as e:
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>        print(f&quot;Error processing {site_id}: {e}&quot;)
+</span></code></pre></div>
+Successfully preparing these files systematically for all sites is essential for regional analysis.</li>
+</ul>
+</li>
+<li>
+<p><strong>Set Up Workspace and Folder Structure:</strong>
+    Managing inputs and outputs for numerous sites requires an organized workspace. A well-defined folder structure is critical for regional runs and calibration workflows.</p>
+<ul>
+<li>It's recommended to create a main <code>workspace</code> directory. Inside, organize subdirectories for each input type and for outputs, often with further subdirectories per site or run configuration.</li>
+<li>Example Structure:
+    <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>workspace/
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── sites/             # .SIT files (e.g., siteA.SIT, siteB.SIT)
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├── soil/              # .SOL files (e.g., siteA.SOL, siteB.SOL)
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>├── weather/           # .DLY files (e.g., siteA.DLY, siteB.DLY)
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>├── opc/               # .OPC files or templates
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ├── files/         # Generated .OPC files (e.g., siteA.OPC)
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └── templates/     # OPC templates if using generate_opc
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>├── model/             # EPIC executable (e.g., EPIC1102.exe)
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>└── outputs/           # Simulation outputs, potentially nested
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    ├── run_config_1/
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    │   ├── siteA/     # Outputs for siteA (siteA.ACY, siteA.DGN)
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    │   └── siteB/     # Outputs for siteB
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    └── run_config_2/
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        └── ...
+</span></code></pre></div></li>
+<li>Refer to the <strong><a href="link-to-workspace-guide">Workspace Setup Guide</a></strong> for best practices and potential templates provided by <code>geoEpic</code>. This organization facilitates batch processing and managing results across the region.</li>
+</ul>
+</li>
+<li>
+<p><strong>Run Regional Simulation / Calibration:</strong>
+    Executing simulations for multiple sites often involves looping through your site list, configuring the model for each, and running it. Calibration adds complexity by adjusting model parameters based on observed data, typically requiring iterative runs.</p>
+<ul>
+<li>This process usually involves scripting to automate the setup and execution for each site within your organized workspace. You might use Python loops, parallel processing libraries (like <code>multiprocessing</code> or <code>dask</code>), or specialized functions within <code>geoEpic</code> if available for batch runs.</li>
+<li>For detailed strategies on handling multiple sites, managing parameters during calibration, potentially using parallel execution, and interpreting calibration results, please consult the <strong><a href="link-to-regional-calibration-guide">Regional Simulations and Calibration Guide</a></strong>. This guide covers the advanced techniques needed for efficient and effective regional modeling.</li>
+</ul>
+</li>
+<li>
+<p><strong>Process Outputs:</strong>
+    After running simulations for all sites, outputs (e.g., .ACY, .DGN files) will be available, likely organized within your workspace structure (e.g., in <code>workspace/outputs/run_config_X/siteY/</code>). Processing involves reading these numerous files, aggregating data, and performing regional analysis.</p>
+<ul>
+<li>
+<p><strong>Reading Multiple Output Files:</strong>
+    Use scripts to loop through your output directories and load data for each site.
+    <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>import os
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>import pandas as pd
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>from geoEpic.io import ACY # Or DGN, etc.
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>output_base_dir = &#39;./workspace/outputs/run_config_1/&#39;
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sites_to_process = [d for d in os.listdir(output_base_dir) if os.path.isdir(os.path.join(output_base_dir, d))] # Get site folders
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>all_yields = []
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>for site_id in sites_to_process:
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    acy_path = os.path.join(output_base_dir, site_id, f&quot;{site_id}.ACY&quot;) # Assuming output ACY is named after site_id
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    if os.path.exists(acy_path):
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        try:
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>            yield_df = ACY(acy_path).get_var(&#39;YLDG&#39;)
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>            yield_df[&#39;site_id&#39;] = site_id # Add site identifier
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>            all_yields.append(yield_df)
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>        except Exception as e:
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>            print(f&quot;Error reading {acy_path}: {e}&quot;)
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a># Combine data from all sites into a single DataFrame
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>if all_yields:
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>    regional_yields = pd.concat(all_yields, ignore_index=True)
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    print(regional_yields.head())
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>else:
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>    print(&quot;No yield data processed.&quot;)
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Regional Analysis and Visualization:</strong>
+    Analyze aggregated data to understand regional patterns, average performance, or variability.
+    <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>import matplotlib.pyplot as plt
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>import seaborn as sns # For potentially more complex plots
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>if &#39;regional_yields&#39; in locals() and not regional_yields.empty:
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    # Example: Boxplot of yields across sites for a specific year
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    year_to_plot = 2017
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    yields_year = regional_yields[regional_yields[&#39;YR&#39;] == year_to_plot]
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    if not yields_year.empty:
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>         plt.figure(figsize=(12, 7))
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>         sns.boxplot(x=&#39;site_id&#39;, y=&#39;YLDG&#39;, data=yields_year)
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>         plt.title(f&#39;Regional Corn Yield Distribution ({year_to_plot})&#39;)
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>         plt.xlabel(&#39;Site ID&#39;)
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>         plt.ylabel(&#39;Yield (t/ha)&#39;)
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>         plt.xticks(rotation=45, ha=&#39;right&#39;)
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>         plt.tight_layout()
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>         plt.show()
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    else:
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>        print(f&quot;No data found for year {year_to_plot}&quot;)
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    # Example: Calculate average yield per year across the region
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    avg_regional_yield = regional_yields.groupby(&#39;YR&#39;)[&#39;YLDG&#39;].mean().reset_index()
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    print(&quot;\nAverage Regional Yield per Year:&quot;)
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    print(avg_regional_yield)
+</span></code></pre></div>
+    Visualizations might include maps of yields, comparative charts, or plots showing the range of outcomes across the region.</p>
+</li>
+<li>
+<p><strong>Exporting Aggregated Results:</strong>
+    Save the combined regional data for reporting or further analysis.
+    <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>if &#39;regional_yields&#39; in locals() and not regional_yields.empty:
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    regional_yields.to_csv(&#39;regional_corn_yields_summary.csv&#39;, index=False)
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a># You could also save figures
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a># plt.savefig(&#39;regional_yield_boxplot_2017.png&#39;)
+</span></code></pre></div>
+This final step transforms individual site outputs into meaningful regional insights, often crucial for calibration validation and understanding spatial patterns.</p>
+</li>
+</ul>
+</li>
+</ol>
 
 
 
@@ -716,7 +883,9 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.instant", "navigation.instant.prefetch", "navigation.top", "navigation.tracking", "navigation.tabs", "navigation.path", "navigation.indexes", "navigation.prune", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.instant", "navigation.instant.prefetch", "navigation.top", "navigation.tracking", "navigation.tabs", "navigation.path", "navigation.indexes", "navigation.prune", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>

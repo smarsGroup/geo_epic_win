@@ -16,11 +16,11 @@
         <link rel="prev" href="../simulation/">
       
       
-        <link rel="next" href="../gee/">
+        <link rel="next" href="../license/">
       
       
       <link rel="icon" href="../../assets/geoepic_logo.webp">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.8">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.4af4bdda.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#model-parameter-calibration" class="md-skip">
+        <a href="#model-parameter-calibration-using-geoepic" class="md-skip">
           Skip to content
         </a>
       
@@ -151,11 +151,13 @@
     
     
     
-      <label class="md-header__button md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-      </label>
-      <div class="md-search" data-md-component="search" role="dialog">
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
@@ -194,6 +196,7 @@
     </div>
   </div>
 </div>
+      
     
     
       <div class="md-header__source">
@@ -226,9 +229,11 @@
   
   
   
+  
     <li class="md-tabs__item">
       <a href="../.." class="md-tabs__link">
         
+  
   
     
   
@@ -242,6 +247,7 @@
         
   
   
+  
     
   
   
@@ -250,6 +256,7 @@
       <li class="md-tabs__item md-tabs__item--active">
         <a href="../overview/" class="md-tabs__link">
           
+  
   
     
   
@@ -265,11 +272,13 @@
   
   
   
+  
     
     
       <li class="md-tabs__item">
         <a href="../../tutorials/single_site_simulation/" class="md-tabs__link">
           
+  
   
     
   
@@ -285,11 +294,13 @@
   
   
   
+  
     
     
       <li class="md-tabs__item">
         <a href="../../reference/api/core/" class="md-tabs__link">
           
+  
   
     
   
@@ -355,6 +366,7 @@
       <a href="../.." class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
     Home
     
@@ -391,8 +403,7 @@
       
         
       
-        
-      
+    
     
     
       
@@ -413,6 +424,7 @@
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
+  
   
   <span class="md-ellipsis">
     Getting Started
@@ -440,6 +452,7 @@
       <a href="../overview/" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
     Overview
     
@@ -461,6 +474,7 @@
     <li class="md-nav__item">
       <a href="../installation/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     Installation
@@ -493,6 +507,7 @@
       
     
     
+    
       
       
     
@@ -507,8 +522,10 @@
         
   
   
+  
     <a href="../weather/" class="md-nav__link">
       
+  
   
   <span class="md-ellipsis">
     Input Files
@@ -537,6 +554,7 @@
     <li class="md-nav__item">
       <a href="../simulation/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     Simulation
@@ -569,6 +587,7 @@
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
   
+  
   <span class="md-ellipsis">
     Calibration
     
@@ -580,6 +599,7 @@
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
+  
   
   <span class="md-ellipsis">
     Calibration
@@ -605,78 +625,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#1-prepare-your-environment-and-load-data" class="md-nav__link">
     <span class="md-ellipsis">
-      Getting Started
+      1. Prepare Your Environment and Load Data
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#import-required-modules" class="md-nav__link">
+  <a href="#2-define-sensitive-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      Import Required Modules
+      2. Define Sensitive Parameters
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#initiate-the-workspace-class" class="md-nav__link">
+  <a href="#3-define-the-objective-function" class="md-nav__link">
     <span class="md-ellipsis">
-      Initiate the Workspace Class
+      3. Define the Objective Function
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#load-parameter-files-and-set-sensitive-parameters" class="md-nav__link">
+  <a href="#4-configure-and-run-the-calibration" class="md-nav__link">
     <span class="md-ellipsis">
-      Load Parameter Files and Set Sensitive Parameters
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Load Parameter Files and Set Sensitive Parameters">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#verify-sensitive-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Verify Sensitive Parameters
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#load-target-yields-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      Load Target Yields File
+      4. Configure and Run the Calibration
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#define-an-objective-function" class="md-nav__link">
+  <a href="#result-of-calibration" class="md-nav__link">
     <span class="md-ellipsis">
-      Define an Objective Function
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#run-calibration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run Calibration
+      Result of Calibration
     </span>
   </a>
   
@@ -698,30 +685,9 @@
   
   
     <li class="md-nav__item">
-      <a href="../gee/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Earth Engine Utility
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../license/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     License
@@ -744,6 +710,7 @@
     <li class="md-nav__item">
       <a href="../contributing/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     Contributing
@@ -781,6 +748,7 @@
       
     
     
+    
       
       
     
@@ -795,8 +763,10 @@
         
   
   
+  
     <a href="../../tutorials/single_site_simulation/" class="md-nav__link">
       
+  
   
   <span class="md-ellipsis">
     Tutorials
@@ -838,8 +808,7 @@
       
         
       
-        
-      
+    
     
     
       
@@ -856,8 +825,10 @@
         
   
   
+  
     <a href="../../reference/api/core/" class="md-nav__link">
       
+  
   
   <span class="md-ellipsis">
     Reference
@@ -903,78 +874,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#1-prepare-your-environment-and-load-data" class="md-nav__link">
     <span class="md-ellipsis">
-      Getting Started
+      1. Prepare Your Environment and Load Data
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#import-required-modules" class="md-nav__link">
+  <a href="#2-define-sensitive-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      Import Required Modules
+      2. Define Sensitive Parameters
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#initiate-the-workspace-class" class="md-nav__link">
+  <a href="#3-define-the-objective-function" class="md-nav__link">
     <span class="md-ellipsis">
-      Initiate the Workspace Class
+      3. Define the Objective Function
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#load-parameter-files-and-set-sensitive-parameters" class="md-nav__link">
+  <a href="#4-configure-and-run-the-calibration" class="md-nav__link">
     <span class="md-ellipsis">
-      Load Parameter Files and Set Sensitive Parameters
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Load Parameter Files and Set Sensitive Parameters">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#verify-sensitive-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Verify Sensitive Parameters
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#load-target-yields-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      Load Target Yields File
+      4. Configure and Run the Calibration
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#define-an-objective-function" class="md-nav__link">
+  <a href="#result-of-calibration" class="md-nav__link">
     <span class="md-ellipsis">
-      Define an Objective Function
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#run-calibration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run Calibration
+      Result of Calibration
     </span>
   </a>
   
@@ -999,111 +937,140 @@
   
 
 
-<h1 id="model-parameter-calibration">Model Parameter Calibration</h1>
-<p>The calibration module in GeoEPIC was developed to assist in tuning the parameters involved in the EPIC model based on observational data, such as Leaf Area Index (LAI), Net Ecosystem Exchange (NEE), crop yield, or biomass. This allows the model parameters to be refined to better reflect specific local conditions or experimental results. GeoEPIC interfaces with the PyGMO library (Biscani and Izzo (2020)), providing access to a wide range of optimization algorithms, including Particle Swarm Optimization (PSO), Differential Evolution (DE), and various genetic algorithms. This integration enables users to experiment with different optimization strategies and configurations to find the most effective approach for their specific calibration needs. This section demonstrates how to set up a calibration workflow using GeoEPIC.</p>
-<p><img src="../../assets/calibration.png" alt="calibration" width="85%"/></p>
-<h3 id="getting-started">Getting Started</h3>
+<h1 id="model-parameter-calibration-using-geoepic">Model Parameter Calibration using GeoEPIC</h1>
+<p>This guide explains how to use GeoEPIC's calibration module to tune EPIC model parameters based on observational data (e.g., yield, LAI, NEE). By adjusting parameters, the model can better reflect specific local conditions or experimental results. GeoEPIC integrates with the PyGMO library for access to various optimization algorithms.</p>
+<p>This process assumes you have a workspace folder already set up with necessary EPIC input files and a target data file (e.g., <code>target_yields.csv</code> with <code>SiteID</code> and <code>Yield</code> columns).</p>
+<p>Here are the steps involved:</p>
+<h2 id="1-prepare-your-environment-and-load-data"><strong>1. Prepare Your Environment and Load Data</strong></h2>
+<p>Import necessary libraries, initialize the GeoEPIC workspace, and load your target observational data.</p>
 <ul>
-<li>If the package is installed in a conda environment, activate it in the command prompt with:
-  <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>epic_env
-</span></code></pre></div></li>
-<li>By this point, the workspace folder must be set up with all the required input files.</li>
-<li>Let's say, <code>target_yields.csv</code> has reported yield values with <code>SiteID</code>, <code>Yield</code> as columns, we would like to calibrate a few parameters so that the simulated yields match the target yields.</li>
-<li>Add files required for Calibration from geo_epic with:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span><span class="o">[</span>your_workspace<span class="w"> </span>folder<span class="o">]</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>geo_epic<span class="w"> </span>copy<span class="w"> </span>calibration_utils
-</span></code></pre></div></li>
-<li>Refer to <code>calibration_starter.ipynb</code>, which has the following lines of code.</li>
+<li>Import Python modules: <code>numpy</code> and <code>pandas</code> for data manipulation, GeoEPIC's <code>Parm</code>, <code>CropCom</code>, and <code>Workspace</code> for model interaction, <code>os</code> for file operations, and <code>pygmo</code> for the optimization algorithms.</li>
+<li>Initialize the <code>Workspace</code> object by pointing it to your main configuration file (<code>config.yml</code>). Ensure this file has the correct paths and settings for your calibration experiment.</li>
+<li>Optionally, clear previous logs and outputs to start fresh.</li>
+<li>Load your target data (e.g., measured yields) into a pandas DataFrame and convert it into a dictionary format where keys are <code>SiteID</code>s and values are the target yields. Assign this dictionary to <code>exp.target_yields</code>.</li>
 </ul>
-<h3 id="import-required-modules">Import Required Modules</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geoEpic.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parm</span><span class="p">,</span> <span class="n">CropCom</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geoEpic.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workspace</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pygmo</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pg</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geoEpic.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parm</span><span class="p">,</span> <span class="n">CropCom</span><span class="p">,</span> <span class="n">ACY</span> <span class="c1"># Added ACY import here as it&#39;s used later</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geoEpic.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workspace</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pygmo</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pg</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Initiate the Workspace Class (edit config.yml first)</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">exp</span> <span class="o">=</span> <span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;./config.yml&#39;</span><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Clear the logs and output directory (optional)</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">exp</span><span class="o">.</span><span class="n">clear_logs</span><span class="p">()</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">exp</span><span class="o">.</span><span class="n">clear_outputs</span><span class="p">()</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Load Target Yields File (replace with your actual path)</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">target_yields</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;path/to/target.csv&#39;</span><span class="p">)</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">exp</span><span class="o">.</span><span class="n">target_yields</span> <span class="o">=</span> <span class="n">target_yields</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;SiteID&#39;</span><span class="p">)[</span><span class="s1">&#39;yields&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
 </span></code></pre></div>
-<h3 id="initiate-the-workspace-class">Initiate the Workspace Class</h3>
+<h2 id="2-define-sensitive-parameters"><strong>2. Define Sensitive Parameters</strong></h2>
+<p>Specify which parameters within the EPIC model's input files should be adjusted ('tuned') during the calibration process.</p>
 <ul>
-<li>Edit the required options in the <code>config.yml</code> file.</li>
+<li>Load the relevant parameter files using GeoEPIC's <code>io</code> classes (e.g., <code>CropCom</code> for crop-specific parameters in <code>cropcom.DAT</code>, <code>Parm</code> for general parameters typically in <code>EPIC.PARM</code>). Load default versions usually kept in a separate calibration folder.</li>
+<li>Use the <code>.set_sensitive()</code> method on these objects to mark parameters for calibration. You can specify parameters directly (like 'WA', 'HI' for a specific crop code in <code>CropCom</code>) or provide a path to a file listing sensitive parameters (useful for <code>Parm</code>).</li>
+<li>Save the modified parameter files (which now know which parameters are sensitive) to your main model directory (<code>./model</code>), overwriting the existing ones.</li>
+<li>You can verify which parameters are marked as sensitive by accessing the <code>.prms</code> attribute of the parameter objects.</li>
 </ul>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">exp</span> <span class="o">=</span> <span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;./config.yml&#39;</span><span class="p">)</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Clear the logs and output directory</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">exp</span><span class="o">.</span><span class="n">clear_logs</span><span class="p">()</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">exp</span><span class="o">.</span><span class="n">clear_outputs</span><span class="p">()</span> 
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Load default cropcom.DAT file from a calibration files directory</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">cropcom</span> <span class="o">=</span> <span class="n">CropCom</span><span class="p">(</span><span class="s1">&#39;./calibration_files/defaults&#39;</span><span class="p">)</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set &#39;WA&#39;, &#39;HI&#39;, &#39;WSYF&#39; as sensitive for crop code 2 (e.g., corn)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">cropcom</span><span class="o">.</span><span class="n">set_sensitive</span><span class="p">([</span><span class="s1">&#39;WA&#39;</span><span class="p">,</span> <span class="s1">&#39;HI&#39;</span><span class="p">,</span> <span class="s1">&#39;WSYF&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Save the loaded cropcom.DAT to the model folder</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">cropcom</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./model&#39;</span><span class="p">)</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify sensitive CropCom parameters (optional)</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># cropcom.prms</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Load default general parameters (e.g., EPIC.PARM)</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">ieparm</span> <span class="o">=</span> <span class="n">Parm</span><span class="p">(</span><span class="s1">&#39;./calibration_files/defaults&#39;</span><span class="p">)</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Set sensitive parameters based on a list in a file</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">ieparm</span><span class="o">.</span><span class="n">set_sensitive</span><span class="p">([</span><span class="s1">&#39;./calibration_files/sensitivity/parm_yld.csv&#39;</span><span class="p">])</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Save the modified PARM file to the model folder</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="n">ieparm</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./model&#39;</span><span class="p">)</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Verify sensitive general parameters (optional)</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># ieparm.prms</span>
 </span></code></pre></div>
-<h3 id="load-parameter-files-and-set-sensitive-parameters">Load Parameter Files and Set Sensitive Parameters</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Load default cropcom.DAT file from the calibration folder</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">cropcom</span> <span class="o">=</span> <span class="n">CropCom</span><span class="p">(</span><span class="s1">&#39;./calibration_files/defaults&#39;</span><span class="p">)</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set a few parameters as sensitive for calibration.</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">cropcom</span><span class="o">.</span><span class="n">set_sensitive</span><span class="p">([</span><span class="s1">&#39;WA&#39;</span><span class="p">,</span> <span class="s1">&#39;HI&#39;</span><span class="p">,</span> <span class="s1">&#39;WSYF&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="c1"># here 2 is the crop code for corn</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Save the loaded cropcom.DAT to the model folder</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">cropcom</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./model&#39;</span><span class="p">)</span>
-</span></code></pre></div>
-<h5 id="verify-sensitive-parameters">Verify Sensitive Parameters</h5>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">cropcom</span><span class="o">.</span><span class="n">prms</span>
-</span></code></pre></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">ieparm</span> <span class="o">=</span> <span class="n">Parm</span><span class="p">(</span><span class="s1">&#39;./calibration_files/defaults&#39;</span><span class="p">)</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">ieparm</span><span class="o">.</span><span class="n">set_sensitive</span><span class="p">([</span><span class="s1">&#39;./calibration_files/sensitivity/parm_yld.csv&#39;</span><span class="p">])</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">ieparm</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./model&#39;</span><span class="p">)</span>
-</span></code></pre></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">ieparm</span><span class="o">.</span><span class="n">prms</span>
-</span></code></pre></div>
-<h3 id="load-target-yields-file">Load Target Yields File</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">target_yields</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;path/to/target.csv&#39;</span><span class="p">)</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">exp</span><span class="o">.</span><span class="n">target_yields</span> <span class="o">=</span> <span class="n">target_yields</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;SiteID&#39;</span><span class="p">)[</span><span class="s1">&#39;yields&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-</span></code></pre></div>
-<h3 id="define-an-objective-function">Define an Objective Function</h3>
+<h2 id="3-define-the-objective-function"><strong>3. Define the Objective Function</strong></h2>
+<p>Create functions that tell the optimization algorithm how 'good' a set of parameter values is by comparing simulation results to the target data.</p>
 <ul>
-<li><code>@exp.logger</code> routine is called after every site simulation and the site object is passed as input. Logger outputs are saved for later use.</li>
-<li><code>@exp.objective</code> routine is called after finishing simulation on all sites. It is useful to get the fitness for optimization.</li>
+<li>Use the <code>@exp.logger</code> decorator to define a function (e.g., <code>yield_error</code>) that runs <em>after each site simulation</em>. This function receives the <code>site</code> object, extracts the relevant simulated output (e.g., last year's yield using <code>ACY</code>), compares it to the target yield for that site (retrieved from <code>exp.target_yields</code>), calculates an error metric (e.g., absolute difference), and returns it in a dictionary. These logged values are stored by the workspace.</li>
+<li>Use the <code>@exp.objective</code> decorator to define a function (e.g., <code>aggregate</code>) that runs <em>after all sites in an optimization iteration are simulated</em>. This function fetches the logged results (using <code>exp.fetch_log</code>), aggregates the errors across all sites (e.g., calculates the mean error), and returns a single value (or list of values for multi-objective optimization). This aggregated value is the 'fitness' score that the optimization algorithm tries to minimize.</li>
 </ul>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nd">@exp</span><span class="o">.</span><span class="n">logger</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">yield_error</span><span class="p">(</span><span class="n">site</span><span class="p">):</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="sd">  Process EPIC outputs to extract data and carry out required computation.</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="sd">  &#39;&#39;&#39;</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  <span class="n">target_yield</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">target_yields</span><span class="p">[</span><span class="n">site</span><span class="o">.</span><span class="n">site_id</span><span class="p">]</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  <span class="n">simulated_yields</span> <span class="o">=</span> <span class="n">ACY</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;ACY&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">get_var</span><span class="p">(</span><span class="s1">&#39;YLDG&#39;</span><span class="p">)</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  <span class="n">last_year_yield</span> <span class="o">=</span> <span class="n">simulated_yields</span><span class="p">[</span><span class="s1">&#39;YLDG&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">target_yield</span> <span class="o">-</span> <span class="n">last_year_yield</span><span class="p">)}</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nd">@exp</span><span class="o">.</span><span class="n">objective</span>
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="k">def</span><span class="w"> </span><span class="nf">aggregate</span><span class="p">():</span>
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="sd">  Aggregate all the logged error values to return as objective </span>
-</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="sd">  &#39;&#39;&#39;</span>
-</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>  <span class="n">logged_data</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">fetch_log</span><span class="p">(</span><span class="s1">&#39;yield_error&#39;</span><span class="p">)</span>
-</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>  <span class="n">logged_data</span> <span class="o">=</span> <span class="n">logged_data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>  <span class="k">return</span> <span class="p">[</span><span class="n">logged_data</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@exp</span><span class="o">.</span><span class="n">logger</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">yield_error</span><span class="p">(</span><span class="n">site</span><span class="p">):</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="sd">  Calculates yield error for a single site after simulation.</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="sd">  &#39;&#39;&#39;</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  <span class="n">target_yield</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">target_yields</span><span class="p">[</span><span class="n">site</span><span class="o">.</span><span class="n">site_id</span><span class="p">]</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  <span class="c1"># Ensure ACY is imported: from geoEpic.io import ACY</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  <span class="n">simulated_yields</span> <span class="o">=</span> <span class="n">ACY</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;ACY&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">get_var</span><span class="p">(</span><span class="s1">&#39;YLDG&#39;</span><span class="p">)</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  <span class="c1"># Handle cases where simulation might not produce yield (e.g., return a large error or filter later)</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  <span class="k">if</span> <span class="n">simulated_yields</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">simulated_yields</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>      <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">}</span> <span class="c1"># Assign high error if no yield simulated</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  <span class="n">last_year_yield</span> <span class="o">=</span> <span class="n">simulated_yields</span><span class="p">[</span><span class="s1">&#39;YLDG&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># Use iloc for position</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">target_yield</span> <span class="o">-</span> <span class="n">last_year_yield</span><span class="p">)}</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nd">@exp</span><span class="o">.</span><span class="n">objective</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="k">def</span><span class="w"> </span><span class="nf">aggregate</span><span class="p">():</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="sd">  Aggregates errors from all sites to provide a single fitness value.</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="sd">  &#39;&#39;&#39;</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>  <span class="n">logged_data</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">fetch_log</span><span class="p">(</span><span class="s1">&#39;yield_error&#39;</span><span class="p">)</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>  <span class="n">logged_data</span> <span class="o">=</span> <span class="n">logged_data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>  <span class="c1"># Handle case with no valid logged data</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>  <span class="k">if</span> <span class="n">logged_data</span><span class="o">.</span><span class="n">empty</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">logged_data</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>      <span class="k">return</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span> <span class="c1"># Return high fitness if no valid errors</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>  <span class="c1"># Calculate mean of finite errors</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>  <span class="n">valid_errors</span> <span class="o">=</span> <span class="n">logged_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">logged_data</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]),</span> <span class="s1">&#39;error&#39;</span><span class="p">]</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>  <span class="k">return</span> <span class="p">[</span><span class="n">valid_errors</span><span class="o">.</span><span class="n">mean</span><span class="p">()]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">valid_errors</span><span class="o">.</span><span class="n">empty</span> <span class="k">else</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span>
 </span></code></pre></div>
-<h3 id="run-calibration">Run Calibration</h3>
+<h2 id="4-configure-and-run-the-calibration"><strong>4. Configure and Run the Calibration</strong></h2>
+<p>Set up the optimization algorithm using PyGMO, link it to the GeoEPIC workspace and parameters, and execute the calibration process.</p>
 <ul>
-<li>Choose necessary settings and optimization algorithm.</li>
-<li>Follow this link for <a href="https://esa.github.io/pygmo2/overview.html">pygmo docs</a>.</li>
+<li>Create a <code>PygmoProblem</code> object, passing it the initialized <code>Workspace</code> (<code>exp</code>) and the parameter objects (<code>cropcom</code>, <code>ieparm</code>) that have sensitive parameters defined. This wraps your setup for PyGMO.</li>
+<li>Optionally, run <code>exp.run()</code> <em>before</em> optimization to see the initial fitness (error) using the default parameter values.</li>
+<li>Choose a PyGMO optimization algorithm (e.g., <code>pg.pso_gen</code> for Particle Swarm Optimization) and configure its settings (e.g., number of generations <code>gen</code>). Set verbosity to control how much information the algorithm prints during execution.</li>
+<li>Create an initial <code>population</code> for the algorithm. This represents the starting set of parameter combinations that the algorithm will evaluate and improve upon.</li>
+<li>Run the optimization using <code>algo.evolve(population)</code>. This is the main calibration step where the algorithm iteratively adjusts the sensitive parameters, runs EPIC simulations via the workspace, evaluates the results using your objective function, and converges towards parameter values that minimize the error.</li>
+<li>After the evolution completes, run <code>exp.run()</code> again. This will now use the <em>best</em> parameter set found by the optimization algorithm, showing the final, hopefully improved (lower), fitness value.</li>
 </ul>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pygmo</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pg</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geoEpic.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">PygmoProblem</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Define pygmo problem with workspace and parameter files</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">problem</span> <span class="o">=</span> <span class="n">PygmoProblem</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">cropcom</span><span class="p">,</span> <span class="n">parm</span><span class="p">)</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Fitness before Optimization:&#39;</span><span class="p">,</span> <span class="n">exp</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pygmo</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pg</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">geoEpic.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">PygmoProblem</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Define pygmo problem linking workspace, CropCom, and Parm objects</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">problem</span> <span class="o">=</span> <span class="n">PygmoProblem</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">cropcom</span><span class="p">,</span> <span class="n">ieparm</span><span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check initial fitness with default parameters (optional)</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Fitness before Optimization:&#39;</span><span class="p">,</span> <span class="n">exp</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Choose an algorithm (PSO_gen) and settings</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="n">algo</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">pg</span><span class="o">.</span><span class="n">pso_gen</span><span class="p">(</span><span class="n">gen</span> <span class="o">=</span> <span class="mi">45</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="kc">True</span><span class="p">))</span> <span class="c1"># 45 generations</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="n">algo</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Print progress every generation</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Create initial population</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initial Population&quot;</span><span class="p">)</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="n">population</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">population</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="c1"># Population size of 50</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Run the optimization</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimizing...&quot;</span><span class="p">)</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="n">population</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">population</span><span class="p">)</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># Check final fitness with optimized parameters</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Fitness After Optimization:&#39;</span><span class="p">,</span> <span class="n">exp</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
 </span></code></pre></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Choose an algorithm and settings</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">algo</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">pg</span><span class="o">.</span><span class="n">pso_gen</span><span class="p">(</span><span class="n">gen</span> <span class="o">=</span> <span class="mi">45</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="kc">True</span><span class="p">))</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">algo</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initial Population&quot;</span><span class="p">)</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">population</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">population</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimizing...&quot;</span><span class="p">)</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="n">population</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">population</span><span class="p">)</span> 
-</span></code></pre></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Fitness After Optimization:&#39;</span><span class="p">,</span> <span class="n">exp</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
-</span></code></pre></div>
+<h2 id="result-of-calibration"><strong>Result of Calibration</strong></h2>
+<ul>
+<li>The primary result of the calibration is a set of <strong>optimized parameter values</strong> for the sensitive parameters you defined in Step 2. These optimized values are automatically written back into the corresponding parameter files (e.g., <code>cropcom.DAT</code>, <code>EPIC.PARM</code>) located in your <code>./model</code> directory.</li>
+<li>The optimization process aims to find parameter values that minimize the objective function defined in Step 3 (e.g., minimize the average absolute error between simulated and target yields).</li>
+<li>The final fitness value printed after optimization indicates how well the model reproduces the target data using the newly calibrated parameters. A lower fitness value generally signifies a better match between the simulation and the observations.</li>
+</ul>
 
 
 
@@ -1156,7 +1123,9 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.instant", "navigation.instant.prefetch", "navigation.top", "navigation.tracking", "navigation.tabs", "navigation.path", "navigation.indexes", "navigation.prune", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.instant", "navigation.instant.prefetch", "navigation.top", "navigation.tracking", "navigation.tabs", "navigation.path", "navigation.indexes", "navigation.prune", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
