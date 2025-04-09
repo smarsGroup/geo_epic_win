@@ -5,10 +5,7 @@ site_description: Python toolkit to run EPIC model
 site_url: https://smarsgroup.github.io/geo_epic_win/
 
 repo_url: https://github.com/smarsGroup/geo_epic_win
-edit_uri: edit/main/docs/
-
-# site_dir: './site'
-### Build settings ###
+# edit_uri: edit/main/docs/
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -24,34 +21,45 @@ extra_css:
 
 theme:
   name: material
-  # custom_dir: custom
   features:
     - announce.dismiss
-    - content.action.edit
-    # - content.action.view
+    # - content.action.edit
     - content.code.annotate
     - content.code.copy
     - content.tooltips
-    - navigation.footer
-    - navigation.indexes
-    - navigation.sections
-    - navigation.tabs
+    - navigation.instant
+    - navigation.instant.prefetch
     - navigation.top
     - navigation.tracking
+    - navigation.tabs
+    - navigation.path
+    - navigation.indexes
+    - navigation.prune
     - search.highlight
     - search.share
     - search.suggest
     - toc.follow
   
   palette:
-    primary: black
+    - scheme: slate
+      primary: lime
+      accent: lime
+      toggle:
+        icon: material/brightness-2
+        name: "Switch to light mode"
+    - scheme: default
+      primary: lime
+      accent: lime
+      toggle:
+        icon: material/brightness-5
+        name: "Switch to dark mode"
     
   font:
     text: Roboto
     code: Roboto Mono
-  favicon: assets/logo.png
+  logo: assets/geoepic_logo.png
+  favicon: assets/geoepic_logo.webp
   icon:
-    logo: logo
     repo: fontawesome/brands/github
 
 # Plugins
@@ -78,32 +86,30 @@ plugins:
       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
 
 nav:
-  - Home:
-    - Home: index.md
-    - EPIC Model: pages/epic.md
-    - Installation: pages/installation.md
-    - License: pages/LICENSE.md
-    - Contributing: pages/Contributing.md
+  - Home: index.md
   - Getting Started:
-    # - Overview: pages/overview.md
-    - Weather Module: pages/Weather.md
-    - Soil Module: pages/Soil.md
-    - Crop Management: pages/OPC.md
-    - EPIC Python Interface: pages/EPICModel.md
-    - Calibration Module: pages/calibration.md
-    - Earth Engine Utility: pages/gee.md
+    - Overview: getting_started/overview.md
+    - Installation: getting_started/installation.md
+    - Input Files: 
+      - Weather: getting_started/weather.md
+      - Soil: getting_started/soil.md
+      - Crop Management: getting_started/opc.md
+      - Site: getting_started/site.md
+    - Simulation: getting_started/simulation.md
+    - Calibration: getting_started/calibration.md
+    # - Earth Engine Utility: getting_started/gee.md
+    - License: getting_started/license.md
+    - Contributing: getting_started/contributing.md
   - Tutorials:
-    - Site Simulation: pages/starter_notebook.md
-    - Calibration Example: pages/opt.md
-    - Creating Site Input Files: pages/runepic.md
-    - Spatial Crop Simulations: pages/runepic.md
-    - Querying USDA Soil Data Access: pages/runepic.md
-  - API Reference: 
-    - geoEpic.core: pages/api/core.md
-    - geoEpic.io: pages/api/io.md
-    - geoEpic.weather: pages/api/weather.md
-    - geoEpic.soil: pages/api/soil.md
-    - geoEpic.gee: pages/api/gee.md
-    - geoEpic.utils: pages/api/utils.md
-    - Command Line Interface: pages/api/api.md
-    # - utility: pages/api/utils.md
+    - Single Site Simulation: tutorials/single_site_simulation.md
+    - Regional Simulation: tutorials/regional_simulation.md
+    - Yield Calibration: tutorials/yield_calibration.md
+  - Reference: 
+    - geoEpic.core: reference/api/core.md
+    - geoEpic.io: reference/api/io.md
+    - geoEpic.weather: reference/api/weather.md
+    - geoEpic.soil: reference/api/soil.md
+    # - geoEpic.gee: reference/api/gee.md
+    - geoEpic.utils: reference/api/utils.md
+    - Command Line Interface: reference/api/api.md
+    - utility: reference/api/utils.md

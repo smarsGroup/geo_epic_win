@@ -22,7 +22,8 @@ GeoEPIC allows the integration of various weather and climate data sources on GE
 # Global parameters
 global_scope:
   time_range: ['2002-01-01', '2022-12-31']
-  variables: ['srad', 'tmax', 'tmin', 'prcp', 'rh', 'ws']
+  variables: ['srad', 'tmax', 'tmin', 'prcp', 'rh', 'ws']  
+  resolution: 9600
 
 
 # Specify Earth Engine (EE) collections and their respective variables
