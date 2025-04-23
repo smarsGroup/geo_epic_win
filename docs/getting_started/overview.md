@@ -9,20 +9,20 @@ GeoEPIC is organized into multiple modules, each contributing to distinct stages
 ## **1. Input Generation and Processing Modules**
 Input generation is critical for EPIC simulations, requiring accurate soil, weather, and management practice data. These modules automate the process by sourcing data, preprocessing it, and storing it in EPIC-compatible formats.
 
-### **geoEPIC.weather**
+### **geoEpic.weather**
 "This module handles weather data acquisition and preprocessing. It downloads weather information from various sources, including Daymet and Google Earth Engine. The data is processed and stored in EPIC-compatible formats, such as daily weather files (.DLY) and monthly weather files (.INP), to ensure seamless integration into simulations.
 
 - [API Documentation for weather module](/geo_epic_win/reference/api/weather/)
 - [Usage Instructions for weather module](/geo_epic_win/getting_started/weather)
 
 
-### **geoEPIC.soil**
+### **geoEpic.soil**
 The soil module focuses on preparing soil properties data. It sources soil information from SSURGO and ISRIC, processes the data into appropriate units and formats, and generates the resulting file in the .SOL format required by the EPIC model. This ensures accurate and compatible soil inputs for simulations.
 
 - [API Documentation for soil module](/geo_epic_win/reference/api/soil/)
 - [Usage Instructions for soil module](/geo_epic_win/getting_started/soil)
 
-### **geoEPIC.opc**
+### **geoEpic.opc**
 This module processes crop management data into the .OPC format required by EPIC simulations. The .OPC file contains detailed information about management practices conducted at a specific site, such as planting crops, fertilizer applications, irrigation schedules, harvesting operations, and tillage practices. Users can programmatically manipulate these files through GeoEPIC's OPC class, which provides methods to add new operations, modify existing ones, and save changes in the appropriate format.
 
 - [Usage Instructions for opc module](/geo_epic_win/getting_started/opc)
@@ -32,7 +32,7 @@ This module processes crop management data into the .OPC format required by EPIC
 ## **2. Input and Output File Management**
 Once input data is prepared, this module facilitates user interactions with both input and output files. It supports efficient data handling and visualization, helping users analyze simulation results effectively.
 
-### **geoEPIC.io**
+### **geoEpic.io**
 The input/output module provides classes for managing various EPIC files, including input files (.DLY, .SOL, .OPC, .SIT) and output files (.ACY, .DGN, etc.). It serves multiple roles:
 
 - It enables input generation modules and the model execution module to interact with and modify files seamlessly.
