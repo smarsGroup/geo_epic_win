@@ -12,7 +12,7 @@ hide:
 <div style="display: flex; justify-content: flex-start; gap:10px; margin: 20px 0;">
   <a href="/geo_epic_win/getting_started/overview" class="md-button md-button--primary" style="background-color:rgb(203, 220, 56); color: #111; border-radius: 5px; padding: 10px;">Go to Overview</a>
 
-  <a href="/geo_epic_win/getting_started/installation" class="md-button md-button--primary" style="background-color:rgb(203, 220, 56); color: #111; border-radius: 5px; padding: 10px;">Install GeoEpic</a>
+  <a href="/geo_epic_win/getting_started/installation" class="md-button md-button--primary" style="background-color:rgb(203, 220, 56); color: #111; border-radius: 5px; padding: 10px;">Install GeoEPIC</a>
 </div>
 
 ### **What is EPIC Model?**
