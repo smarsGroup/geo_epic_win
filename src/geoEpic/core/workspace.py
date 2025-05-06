@@ -20,7 +20,7 @@ import time
 
 class Workspace:
     """
-    A class to organise the workspace for executing simulations, logging required results.
+    This class organises the workspace for executing simulations, saving required results.
 
     Attributes:
         uuid (str): Unique ID assigned to each workspace instance

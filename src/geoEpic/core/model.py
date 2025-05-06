@@ -12,7 +12,7 @@ from weakref import finalize
 
 class EPICModel:
     """
-    A model class to handle the setup and execution of the EPIC model simulations.
+    This class handles the setup and execution of the EPIC model executable.
 
     Attributes:
         base_dir (str): The base directory for model runs.
