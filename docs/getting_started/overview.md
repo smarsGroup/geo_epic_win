@@ -2,7 +2,7 @@
 
 GeoEPIC is organized into multiple modules, each contributing to distinct stages of the EPIC model workflow. Below is an overview of the modules, grouped by their roles in the workflow:
 
-<img src="../../assets/geo_epic.jpeg" alt="geoepic_overview" width="100%"/> 
+<img src="../../assets/geo_epic.png" alt="geoepic_overview" width="100%"/> 
 
 ---
 

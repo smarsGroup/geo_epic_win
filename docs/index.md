@@ -4,9 +4,10 @@ hide:
   - toc
 ---
 
+# GeoEPIC
 
 ### <strong style="font-size:35px;">Python package for geospatial Crop Simulations</strong>
-<img src="./assets/Yield_MD.png" alt="Maryland_Yield" width="60%"/> 
+<!-- <img src="./assets/Yield_MD.png" alt="Maryland_Yield" width="60%"/>  -->
 <p>GeoEpic is an open source package that expands the capabilities of the <strong>EPIC crop simulation model</strong>, to simulate crop growth and development across large geographies, such as entire states or counties by leveraging openly availabe remote sensing products and geospatial databases. Additionally, the package features a unique calibration module that allows fine-tuning of model parameters to reflect specific local conditions or experimental results. This toolkit allows researchers to assess crop production potential, management scenarios and risks at broader scales, informing decision-making for sustainable agricultural practices.</p>
 
 <div style="display: flex; justify-content: flex-start; gap:10px; margin: 20px 0;">
