@@ -112,4 +112,3 @@ nav:
     # - geoEpic.gee: reference/api/gee.md
     - geoEpic.utils: reference/api/utils.md
     - Command Line Interface: reference/api/api.md
-    - utility: reference/api/utils.md

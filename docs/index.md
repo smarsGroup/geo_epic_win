@@ -4,7 +4,7 @@ hide:
   - toc
 ---
 
-# GeoEPIC
+## GeoEPIC
 
 ### <strong style="font-size:35px;">Python package for geospatial Crop Simulations</strong>
 <!-- <img src="./assets/Yield_MD.png" alt="Maryland_Yield" width="60%"/>  -->
