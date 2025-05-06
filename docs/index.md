@@ -4,11 +4,11 @@ hide:
   - toc
 ---
 
-## GeoEPIC
+<h1 style="font-size:38px; font-weight:normal; margin:0;">GeoEPIC</h1>
 
-### <strong style="font-size:35px;">Python package for geospatial Crop Simulations</strong>
+### <strong style="font-size:18px;">Python package for geospatial Crop Simulations</strong>
 <!-- <img src="./assets/Yield_MD.png" alt="Maryland_Yield" width="60%"/>  -->
-<p>GeoEpic is an open source package that expands the capabilities of the <strong>EPIC crop simulation model</strong>, to simulate crop growth and development across large geographies, such as entire states or counties by leveraging openly availabe remote sensing products and geospatial databases. Additionally, the package features a unique calibration module that allows fine-tuning of model parameters to reflect specific local conditions or experimental results. This toolkit allows researchers to assess crop production potential, management scenarios and risks at broader scales, informing decision-making for sustainable agricultural practices.</p>
+<p>GeoEPIC is an open source package that expands the capabilities of the <strong>EPIC crop simulation model</strong>, to simulate crop growth and development across large geographies, such as entire states or counties by leveraging openly availabe remote sensing products and geospatial databases. Additionally, the package features a unique calibration module that allows fine-tuning of model parameters to reflect specific local conditions or experimental results. This toolkit allows researchers to assess crop production potential, management scenarios and risks at broader scales, informing decision-making for sustainable agricultural practices.</p>
 
 <div style="display: flex; justify-content: flex-start; gap:10px; margin: 20px 0;">
   <a href="/geo_epic_win/getting_started/overview" class="md-button md-button--primary" style="background-color:rgb(203, 220, 56); color: #111; border-radius: 5px; padding: 10px;">Go to Overview</a>
