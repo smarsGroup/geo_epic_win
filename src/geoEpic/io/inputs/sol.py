@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from geoEpic.soil.sda import SoilDataAccess
+from sda import SoilDataAccess
 
 class SOL:
     def __init__(self, soil_id=None, albedo=None, hydgrp=None, num_layers=None, layers_df=None):

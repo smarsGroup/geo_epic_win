@@ -1,13 +1,13 @@
-from utils import write_soil_file
 import pandas as pd
 from sda import SoilDataAccess
+from sol import *
 import geopandas as gpd
 import os
 import argparse
 from geoEpic.utils import parallel_executor
 
     
-def fetch_data(input_data, output_dir, raw):
+def fetch_data(mukey):
     """
     Process a single location (mukey or WKT) and save the results.
 
@@ -16,25 +16,20 @@ def fetch_data(input_data, output_dir, raw):
         output_dir (str): Directory where the results will be saved.
         raw (bool): Whether to save the results as raw CSV or .SOL file.
     """
-    df = SoilDataAccess.fetch_properties(input_data)
-    mukey = df['mukey'].iloc[0]
-    
-    if raw:
-        csv_path = os.path.join(output_dir, f"{mukey}.csv")
-        if not os.path.exists(csv_path):
-            df.to_csv(csv_path, index=False)
-        else:
-            print(f"File {csv_path} already exists, skipping.")
+    global output_dir, raw
+    file_name = f"{mukey}.csv" if raw else f"{mukey}.SOL"
+    file_path = os.path.join(output_dir, file_name)
+    if not os.path.exists(file_path):
+        if raw:
+            df = SoilDataAccess.fetch_properties(int(mukey)) 
+            df.to_csv(file_path, index=False)
+        else: 
+            SOL.from_sda(int(mukey)).save(file_path)
     else:
-        sol_path = os.path.join(output_dir, f"{mukey}.SOL")
-        if not os.path.exists(sol_path):
-           write_soil_file(df, output_dir)
-        else:
-            print(f"File {sol_path} already exists, skipping.")
-        
+        print(f"File {file_path} already exists, skipping.")
         
 
-def fetch_list(input_data, output_dir, raw):
+def fetch_list(input_data):
     """
     Fetches soil data based on the input type which could be coordinates, a CSV file, or a shapefile.
 
@@ -45,32 +40,42 @@ def fetch_list(input_data, output_dir, raw):
     """
     if input_data.endswith('.csv'):
         locations = pd.read_csv(input_data)
-        point_strings = [f"point({row.latitude} {row.longitude})" for _, row in locations.iterrows()]
-        parallel_executor(fetch_data, point_strings, output_dir, raw)
+        point_strings = [f"point({row.longitude} {row.latitude})" for _, row in locations.iterrows()]
+        locations['sol'], _ = parallel_executor(SoilDataAccess.get_mukey, point_strings, return_value = True, method = 'Thread') #[SoilDataAccess.get_mukey(point) for point in point_strings]
+        locations.to_csv(input_data, index = False)
     elif input_data.endswith('.shp'):
-        shapefile = gpd.read_file(input_data)
-        shapefile['centroid'] = shapefile.geometry.centroid
-        locations = shapefile['centroid'].apply(lambda x: f'point({x.x} {x.y})')
-        parallel_executor(fetch_data, locations, output_dir, raw)
-    else:
-       fetch_data(input_data, output_dir, raw)
-        
+        locations = gpd.read_file(input_data)
+        locations['centroid'] = locations.geometry.centroid
+        point_strings = locations['centroid'].apply(lambda x: f'point({x.x} {x.y})')
+        locations['sol'], _ = parallel_executor(SoilDataAccess.get_mukey, point_strings, return_value = True, method = 'Thread')
+        locations.to_file(input_data, index = False)
+    else: 
+        raise TypeError('Input file type not Supported')
+
+    print("Fetching files")
+    mukeys = locations['sol'].unique()
+    parallel_executor(fetch_data, list(mukeys), method = 'Thread')
+
         
 def main():
     parser = argparse.ArgumentParser(description="Fetch and output data from USDA SSURGO")
     parser.add_argument('--fetch', metavar='INPUT', nargs='+', help='Latitude and longitude as two floats, or a file path')
-    parser.add_argument('--out', default='./', dest='output_path', help='Output directory or file path for the fetched data')
+    parser.add_argument('--out', default='./', dest='output_path', help='Output directory for the fetched data')
     parser.add_argument('--raw', action='store_true', help='Save results as raw CSV instead of .SOL file')
 
     args = parser.parse_args()
+
+    global output_dir, raw
+    output_dir = args.output_path
+    raw = args.raw
     
     if len(args.fetch) == 2:
         latitude, longitude = map(float, args.fetch)
         wkt = f'point({longitude} {latitude})'
-        fetch_data(wkt, args.output_path, args.raw)
+        mukey = SoilDataAccess.get_mukey(wkt)
+        fetch_data(wkt)
     else:
-        fetch_list(args.fetch[0], args.output_path, args.raw)
-
+        fetch_list(args.fetch[0])
 
 
 if __name__ == '__main__':
