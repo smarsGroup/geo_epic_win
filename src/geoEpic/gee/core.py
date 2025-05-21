@@ -3,7 +3,7 @@ import pandas as pd
 from ruamel.yaml import YAML
 from concurrent.futures import ThreadPoolExecutor
 from shapely.geometry import Polygon, MultiPolygon
-from geoEpic.utils.redis import WorkerPool
+from geoEpic.utils import WorkerPool
 
 import ee
 from geoEpic.gee.initialize import ee_Initialize
