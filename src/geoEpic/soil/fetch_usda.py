@@ -1,6 +1,6 @@
 import pandas as pd
-from sda import SoilDataAccess
-from sol import *
+from geoEpic.soil import SoilDataAccess
+from geoEpic.io import *
 import geopandas as gpd
 import os
 import argparse
