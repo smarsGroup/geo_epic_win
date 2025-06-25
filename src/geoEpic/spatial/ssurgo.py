@@ -8,7 +8,6 @@ class SSURGO:
         # convert to WKT format
         point_wkt_format = point.wkt
 
-        print(SOL.from_sda(point_wkt_format).layers_df)\
         return SOL.from_sda(point_wkt_format)
 
 if __name__ == "__main__":
