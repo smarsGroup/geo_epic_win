@@ -1,6 +1,7 @@
 import os
 import re
 from geoEpic.utils import GeoInterface
+from geoEpic.gee import ee_Initialize
 
 
 class DEM:
@@ -16,6 +17,10 @@ class DEM:
             self._mode = "path"
         except ValueError as e:
             raise ValueError(f"GeoInterface failed to initialise {datasource} due to {e}") from e
+
+    def _initialise_for_open_source(self, datasource):
+        print(ee_Initialize())
+            # self._earthengine_initialise()
 
     def fetch(self, lat, lon):
         if self._mode == "path":
@@ -36,7 +41,8 @@ class DEM:
     def _fetch_for_open_source(self, lat, lon):
         pass
 
-
 if __name__ == "__main__":
-    dem = DEM("/home/sachinv/GeoEPIC/SRTM_1km_US_project.tif")
-    print(dem.fetch(35.9768, -90.1399))
+    # dem = DEM("/home/sachinv/GeoEPIC/SRTM_1km_US_project.tif")
+    # print(dem.fetch(35.9768, -90.1399))
+
+    dem = DEM("Anand")
