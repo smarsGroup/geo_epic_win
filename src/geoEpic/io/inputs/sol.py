@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from sda import SoilDataAccess
+from geoEpic.soil.sda import SoilDataAccess
 
 class SOL:
     def __init__(self, soil_id=None, albedo=None, hydgrp=None, num_layers=None, layers_df=None):
@@ -32,7 +32,7 @@ class SOL:
         Create a Soil object from Soil Data Access using a query.
 
         Args:
-            query (int or str): Query string for SoilDataAccess. (mukey or WKT str)
+            query (int or str): Query string for SoilDataAccess. (mukey or WKT str) ( "POINT(-123.4567 45.6789)" )
 
         Returns:
             Soil: A new Soil object populated with data from SDA.
