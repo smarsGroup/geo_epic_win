@@ -11,5 +11,5 @@ class SSURGO:
         return SOL.from_sda(point_wkt_format)
 
 if __name__ == "__main__":
-    SSURGO.fetch(35.9768, -90.1399)
+    print(SSURGO.fetch(35.9768, -90.1399).layers_df)
 
