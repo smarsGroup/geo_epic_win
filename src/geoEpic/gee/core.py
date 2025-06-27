@@ -6,12 +6,16 @@ from shapely.geometry import Polygon, MultiPolygon
 from geoEpic.utils import WorkerPool
 
 import ee
-from geoEpic.gee.initialize import ee_Initialize
+from .initialize import ee_Initialize
 
-pool = ee_Initialize()
+def get_gee_pool():
+    return ee_Initialize()
 
 def extract_features(collection, aoi, date_range, resolution):
 
+    pool = get_gee_pool()
+    worker = pool.acquire()
+    
     def map_function(image):
         # Function to reduce image region and extract data
         date = image.date().format()
@@ -19,8 +23,6 @@ def extract_features(collection, aoi, date_range, resolution):
         reduction = image.reduceRegion(reducer=reducer, geometry=aoi, scale=resolution, maxPixels=1e9)
         return ee.Feature(None, reduction).set('Date', date)
     
-    worker = pool.acquire()
-
     try:
         filtered_collection = collection.filterBounds(aoi)
         filtered_collection = filtered_collection.filterDate(*date_range)
