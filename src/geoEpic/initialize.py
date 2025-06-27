@@ -1,3 +1,4 @@
+import subprocess
 from geoEpic.io.config_parser import ConfigParser
 import os
 import urllib.request
@@ -24,6 +25,13 @@ def setup_metadata():
             "https://smarslab-files.s3.amazonaws.com/epic-utils/redis.conf",
             "https://smarslab-files.s3.amazonaws.com/epic-utils/redis_win_license",
         ]
+
+    try:
+        run_command(["redis-server", "--version"])
+        print("Redis is already installed.")
+    except:
+        print("Installing Redis...")
+        run_command(['conda', 'install', '-c', 'conda-forge', 'redis'])
         
     # Download the files to the metadata directory if they don't already exist
     for file_url in files_to_download:
@@ -33,6 +41,8 @@ def setup_metadata():
         else:
             print(f"'{filename}' already exists, skipping download.")
 
+def run_command(command):
+    return subprocess.run(command, check=True)
 
 def update_template_config_file():
 
