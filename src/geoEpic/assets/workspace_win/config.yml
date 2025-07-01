@@ -1,7 +1,7 @@
 # Experiment details
 EXPName: umstead Site
-Region: 
-Area_of_Interest: 
+Region:
+Area_of_Interest:
 
 # Model configuration
 EPICModel: ./model/EPIC1102.exe
@@ -23,8 +23,13 @@ opc_dir: ./opc/files
 
 # Workspace Run Options
 # Path to CSV file with columns ('SiteID', 'soil', 'opc', 'dly'). 
-sites_info: ./info.csv 
+sites_info: ./info.csv
 # option for selecting specific sites from above info file. Ex: Range(0.35, 0.8), Random(0.1), "CNTYFIPS == 8"; "Shape_Area > 6"
 select: Range(0, 1)
 # Timeout for each simulation run in seconds. Execution is terminated after this timeout.
 timeout: 30
+soil:
+  soil_map: /home/sachinv/GeoEPIC/SSURGO.tif
+site:
+  elevation: /home/sachinv/GeoEPIC/SRTM_1km_US_project.tif
+  slope: /home/sachinv/GeoEPIC/slope_us.tif
