@@ -213,12 +213,20 @@ class SoilDataAccess:
         float: The slope length for the specified input value.
         """
         query = f"""
-        SELECT slopelenusle_r
-        FROM component
-        WHERE mukey in ({SoilDataAccess._mukey_condition(input_value)})
+        SELECT c.mukey, c.comppct_r as max_comppct_r, c.slopelenusle_r
+        FROM component c
+        JOIN mapunit m ON c.mukey = m.mukey
+        WHERE c.mukey IN ({SoilDataAccess._mukey_condition(input_value)})
+        AND c.comppct_r = (
+            SELECT MAX(comppct_r)
+            FROM component
+            WHERE mukey = c.mukey
+        )
         """
         result = SoilDataAccess.query(query)
-        return result['slopelenusle_r'].values[0]
+        val = result['slopelenusle_r'].iloc[0]
+        slope_length = float(val) if val is not None else 0
+        return slope_length
 
     @staticmethod
     def fetch_value(input_value, values, table):
