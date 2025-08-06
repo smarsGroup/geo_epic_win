@@ -11,6 +11,7 @@ def ee_Initialize():
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'r') as file:
            config = json.load(file)
+           print("Config is ...", config)
     
     if config and 'project' in config:
         project_name = config['project']

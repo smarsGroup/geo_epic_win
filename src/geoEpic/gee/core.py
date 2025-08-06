@@ -8,10 +8,13 @@ from geoEpic.utils import WorkerPool
 import ee
 from geoEpic.gee.initialize import ee_Initialize
 
-pool = ee_Initialize()
+def get_gee_pool():
+    return ee_Initialize()
 
-def extract_features(collection, aoi, date_range, resolution):
+def extract_features(collection, aoi, date_range, resolution, pool):
 
+    worker = pool.acquire()
+    
     def map_function(image):
         # Function to reduce image region and extract data
         date = image.date().format()
@@ -19,8 +22,6 @@ def extract_features(collection, aoi, date_range, resolution):
         reduction = image.reduceRegion(reducer=reducer, geometry=aoi, scale=resolution, maxPixels=1e9)
         return ee.Feature(None, reduction).set('Date', date)
     
-    worker = pool.acquire()
-
     try:
         filtered_collection = collection.filterBounds(aoi)
         filtered_collection = filtered_collection.filterDate(*date_range)
@@ -66,6 +67,9 @@ class CompositeCollection:
     """
 
     def __init__(self, yaml_file, start_date = None, end_date = None):
+        
+        self._pool = get_gee_pool()
+
         # Initialize the CompositeCollection object
         self.global_scope = None
         with open(yaml_file, 'r') as file:
@@ -76,6 +80,7 @@ class CompositeCollection:
         self.vars = {}
         self.args = []
         self.resolution = self.global_scope['resolution']
+
         # Override the global scope time range with the provided start and end dates
         if start_date:
             self.global_scope['time_range'][0] = start_date
@@ -167,7 +172,7 @@ class CompositeCollection:
         
         def extract_features_wrapper(args):
             name, collection, date_range = args
-            return extract_features(collection, aoi, date_range, self.resolution)
+            return extract_features(collection, aoi, date_range, self.resolution, self._pool)
         
         with ThreadPoolExecutor(max_workers=10) as executor:
             results = list(executor.map(extract_features_wrapper, self.args))
@@ -225,6 +230,7 @@ class CompositeCollection:
 
 class TimeSeries:
     def __init__(self, collection, vars, date_range = None):
+        self._pool = get_gee_pool()
         self.collection = collection.select(vars)
         self.vars = vars
         self.date_range = date_range
@@ -249,7 +255,7 @@ class TimeSeries:
 
         if date_range is None:
             date_range = self.date_range
-        df = extract_features(self.collection, aoi, date_range, resolution)
+        df = extract_features(self.collection, aoi, date_range, resolution, self._pool)
         return df
 
 
