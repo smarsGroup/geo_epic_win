@@ -21,11 +21,7 @@ class SoilGrids:
     Returns:
         tuple: A tuple containing two pandas DataFrames: the raw combined data and the converted soil layer data.
     """
-
-        # Initialize Earth Engine
-        ee.Initialize(project='anand-464122')
-
-        resolution = 250 #Change resolution here
+        resolution = 250 
 
         point = ee.Geometry.Point([lon, lat])  # Earth Engine uses [lon, lat]
 
