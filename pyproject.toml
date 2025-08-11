@@ -125,8 +125,8 @@ dependencies = [
     "geopandas==1.0.1",
     "lxml==5.2.2",
     "matplotlib==3.9.2",
-    "numpy==1.26.4",
-    "pandas==2.2",
+    "numpy<2.0.0",
+    "pandas>=2.2.0",
     "pathspec==0.12.1",
     "pillow==10.4.0",
     "platformdirs==4.2.2",
@@ -148,7 +148,8 @@ dependencies = [
     "notebook==7.2",
     "redis",
     "pebble",
-    "Pyarrow"
+    "Pyarrow",
+    "netCDF4"
 ]
 
 # List additional groups of dependencies here (e.g. development

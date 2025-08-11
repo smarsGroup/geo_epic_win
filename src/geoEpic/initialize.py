@@ -14,9 +14,9 @@ def setup_metadata():
     
     # List of files to download
     files_to_download = [
-        "https://smarslab-files.s3.amazonaws.com/epic-utils/slope_us.tif",
-        "https://smarslab-files.s3.amazonaws.com/epic-utils/SRTM_1km_US_project.tif",
-        "https://smarslab-files.s3.amazonaws.com/epic-utils/SSURGO.tif",
+        # "https://smarslab-files.s3.amazonaws.com/epic-utils/slope_us.tif",
+        # "https://smarslab-files.s3.amazonaws.com/epic-utils/SRTM_1km_US_project.tif",
+        # "https://smarslab-files.s3.amazonaws.com/epic-utils/SSURGO.tif",
     ]
     # Add Redis files for Windows platform
     if platform.system() == 'Windows':  # Check if running on Windows
@@ -45,15 +45,23 @@ def setup_metadata():
 def run_command(command):
     return subprocess.run(command, check=True)
 
-def update_template_config_file():
-
-    config = ConfigParser(os.path.join(root_path, 'assets', 'workspace_win', 'config.yml'))
-
-    config.update({'soil' : {'soil_map': f'{metadata_dir}/SSURGO.tif',},
-                    'site': {'elevation': f'{metadata_dir}/SRTM_1km_US_project.tif',
-                             'slope': f'{metadata_dir}/slope_us.tif',
-        }, })
+def check_and_install_dependencies():
+    # Check for GDAL
+    try:
+        import gdal
+        print("GDAL is already installed.")
+    except ImportError:
+        print("Installing GDAL...")
+        run_command(['conda', 'install', '-c', 'conda-forge', 'gdal'])
+    
+    # Check for pygmo
+    try:
+        import pygmo
+        print("pygmo is already installed.")
+    except ImportError:
+        print("Installing pygmo...")
+        run_command(['conda', 'install', '-c', 'conda-forge', 'pygmo'])
     
 setup_metadata()
-update_template_config_file()
+check_and_install_dependencies()
 

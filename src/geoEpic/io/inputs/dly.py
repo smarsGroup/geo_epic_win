@@ -83,10 +83,10 @@ class DLY(pd.DataFrame):
         ss['sdtmn'] = grouped['tmin'].std()
         ss['sdrf'] = grouped['prcp'].std()
         # Additional calculations
-        ss['dayp'] = grouped.apply(lambda x: (x['prcp'] > 0.5).sum() / len(x) * dayinmonth[x.name - 1])
+        ss['dayp'] = grouped.apply(lambda x: (x['prcp'] > 0.5).sum() / len(x) * dayinmonth[x.name - 1], include_groups=False)
         ss['skrf'] = 3 * abs(ss['prcp'] - ss['prcp'].median()) / ss['sdrf']
-        ss['prw1'] = grouped.apply(lambda x: np.sum(np.diff(x['prcp'] > 0.5) == -1) / len(x))
-        ss['prw2'] = grouped.apply(lambda x: np.sum((x['prcp'].fillna(0) > 0.5).shift(fill_value=False) & (x['prcp'].fillna(0) > 0.5)) / len(x))
+        ss['prw1'] = grouped.apply(lambda x: np.sum(np.diff(x['prcp'] > 0.5) == -1) / len(x), include_groups=False)
+        ss['prw2'] = grouped.apply(lambda x: np.sum((x['prcp'].fillna(0) > 0.5).shift(fill_value=False) & (x['prcp'].fillna(0) > 0.5)) / len(x), include_groups=False)
         ss['wi'] = 0
         # Reorder columns
         ss = ss[['tmax', 'tmin', 'prcp', 'srad', 'rh', 'ws', 'sdtmx', 'sdtmn', 'sdrf', 'dayp', 'skrf', 'prw1', 'prw2', 'wi']]
@@ -118,4 +118,3 @@ class DLY(pd.DataFrame):
             for _ in range(16):
                 wnd_file.write("".join([f"{0.0:10.1f}" for _ in range(12)]) + "\n")
         return ss
-

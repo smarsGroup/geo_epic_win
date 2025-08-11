@@ -10,6 +10,7 @@ class SSURGO:
         lon(float)
     """
 
+    @staticmethod
     def fetch(lat, lon):
         # Point expects longitude as first parameter and latitude as second
         point = Point(lon, lat)

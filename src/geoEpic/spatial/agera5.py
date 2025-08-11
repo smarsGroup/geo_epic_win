@@ -1,8 +1,11 @@
 from geoEpic.gee.initialize import ee_Initialize
 from geoEpic.gee import CompositeCollection
+import os
+from geoEpic.io import DLY
+import pandas as pd 
 
 
-class AgEra:
+class AgEra5:
     @staticmethod
     def fetch(lat, lon):
         """
@@ -16,9 +19,16 @@ class AgEra:
         Returns:
             pd.DataFrame: A pandas DataFrame containing the extracted data.
         """
-        
-        collection = CompositeCollection("src/geoEpic/assets/gee_examples/hls.yml")
-        return collection.extract([[lon, lat]])
+        current_dir = os.path.dirname(__file__)
+        yml_path = os.path.join(current_dir, "..", "assets", "gee_examples", "daily_weather.yml")
+        collection = CompositeCollection(yml_path)
+        dly =  collection.extract([[lon, lat]])
+        # print(dly)
+        dly['Date'] = pd.to_datetime(dly['Date'])
+        dly['year'] = dly['Date'].dt.year
+        dly['month'] = dly['Date'].dt.month
+        dly['day'] = dly['Date'].dt.day
+        return DLY(dly)
 
 if __name__ == "__main__":
     test_lat = 35.9768

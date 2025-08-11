@@ -144,24 +144,42 @@ class SoilGrids:
             'Saturated_conductivity': [combined_results['ksat'][depth] * 0.416 for depth in depths]
         })
         
-        # Extract hydrologic soil group
-        hydrologic_soil_group = combined_results["hydrologic_soil_group"]['HSG'] # take first depth
+        # Extract and normalize hydrologic soil group to one of 'A','B','C','D'
+        hsg_value = combined_results.get("hydrologic_soil_group", {}).get('HSG', None)
+        if isinstance(hsg_value, (int, float)):
+            try:
+                hsg_int = int(hsg_value)
+            except Exception:
+                hsg_int = 3
+            hydrologic_soil_group = {1: 'A', 2: 'B', 3: 'C', 4: 'D'}.get(hsg_int, 'C')
+        elif isinstance(hsg_value, str) and len(hsg_value) > 0:
+            hydrologic_soil_group = hsg_value.strip()[0].upper()
+            if hydrologic_soil_group not in {'A','B','C','D'}:
+                hydrologic_soil_group = 'C'
+        else:
+            hydrologic_soil_group = 'C'
 
         # Generate unique soil ID based on latitude and longitude
         soil_id = SoilGrids.generate_soil_id(lat, lon)
         
+        # Choose a reasonable default albedo if unavailable from datasets
+        default_albedo = 0.15
+
         # Extract data into soil object and return the object.
-        soil = SOL(soil_id,None, hydrologic_soil_group, len(depths), layers_df = soil_layer )
+        soil = SOL(soil_id, default_albedo, hydrologic_soil_group, len(depths), layers_df=soil_layer)
 
         return soil
     
 
+    @staticmethod
     def generate_soil_id(lat, lon):
-        combined_unique_str = f"{lat},{lon}"
-        hash_obj = hashlib.sha256(combined_unique_str.encode('utf-8'))
-        hex_digest = hash_obj.hexdigest()
-        unique_integer_id = int(hex_digest[:16], 16)
-        return unique_integer_id
+        res_deg = 0.0025
+        # grid indices at 250 m-ish resolution
+        i = int(round(lat / res_deg))
+        j = int(round(lon / res_deg))
+        # 8-digit stable hash
+        h = hashlib.blake2s(f"{i},{j}".encode(), digest_size=8).digest()
+        return int.from_bytes(h, "big") % 100_000_000
 
 if __name__ == "__main__":
     test_lat = 35.9768

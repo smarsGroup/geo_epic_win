@@ -32,7 +32,7 @@ def connect_to_redis(host='localhost', port=56379, db=0):
                 metadata_dir = os.path.join(os.path.expanduser("~"), 'GeoEPIC')
                 redis_server = os.path.join(metadata_dir, 'redis-server.exe')
                 redis_conf = os.path.join(metadata_dir, 'redis.conf')
-                subprocess.Popen([redis_server, redis_conf])
+                subprocess.Popen([redis_server, redis_conf], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             else:  # Unix-like systems
                 subprocess.Popen(['redis-server', '--port', '56379'])  # Start Redis in the background
             # Wait briefly for the Redis server to start up

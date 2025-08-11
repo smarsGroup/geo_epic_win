@@ -49,19 +49,21 @@ class SIT:
 
     def save(self, output_dir):
         """
-        Save the current site information to a .sit file.
+        Save the current site information to a .SIT file.
 
         Parameters:
-        output_dir (str): Directory where the .sit file will be saved, or the full path including the .sit extension.
+        output_dir (str): Directory where the .SIT file will be saved, or the full path including the .SIT extension.
         """
         if not self.site_info["ID"]:
             raise ValueError("Site ID is not set. Cannot write to file.")
 
-        # Determine if output_dir already includes the .sit extension
-        if output_dir.endswith('.sit'):
+        # Determine if output_dir already includes the .SIT extension
+        if output_dir.endswith('.SIT'):
             output_file_path = output_dir
+        elif output_dir.endswith('.sit'):
+            output_file_path = output_dir[:-4] + '.SIT'
         else:
-            output_file_path = os.path.join(output_dir, f"{self.site_info['ID']}.sit")
+            output_file_path = os.path.join(output_dir, f"{self.site_info['ID']}.SIT")
         
         # Modify the template lines or create a new template if not read from a file
         if not self.template:
@@ -71,7 +73,7 @@ class SIT:
         self.template[2] = f'ID: {self.site_info["ID"]}\n'
         self.template[3] = f'{self.site_info["lat"]:8.2f}{self.site_info["lon"]:8.2f}{self.site_info["elevation"]:8.2f}{self.template[3][24:]}' if len(self.template) > 3 else ''
         self.template[4] = f'{self.template[4][:48]}{self.site_info["slope_length"]:8.2f}{self.site_info["slope_steep"]:8.2f}{self.template[4][64:]}' if len(self.template) > 4 else ''
-        self.template[6] = '                                                   \n' if len(self.template) > 6 else ''
+        self.template[5] = '                                                   \n' if len(self.template) > 6 else ''
         
         # Write the modified template to the new file
         with open(output_file_path, 'w') as f:

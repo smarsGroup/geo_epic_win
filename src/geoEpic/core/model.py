@@ -7,7 +7,7 @@ import numpy as np
 from geoEpic.io import ConfigParser
 import platform
 from geoEpic.utils import FileLockHandle
-from datetime import datetime
+from datetime import datetime, date
 from weakref import finalize
 
 class EPICModel:
@@ -19,7 +19,7 @@ class EPICModel:
         executable (str): Path to the executable model file.
         output_dir (str): Directory to store model outputs.
         log_dir (str): Directory to store logs.
-        start_date (datetime): The start date of the EPIC model simulation.
+        start_date (datetime.date): The start date of the EPIC model simulation.
         duration (int): The duration of the EPIC model simulation in years.
         output_types (list): A list of enabled output types for the EPIC model.
         model_dir (str): Directory path where the executable is located.
@@ -93,7 +93,7 @@ class EPICModel:
         Get the start date of the EPIC model simulation.
 
         Returns:
-            datetime: The start date of the simulation.
+            datetime.date: The start date of the simulation.
         """
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
         with open(epiccont_path, 'r') as file:
@@ -102,7 +102,7 @@ class EPICModel:
             year = int(values[1])
             month = int(values[2])
             day = int(values[3])
-            self._start_date = datetime(year, month, day)
+            self._start_date = date(year, month, day)
         return self._start_date
 
     @start_date.setter
@@ -111,17 +111,21 @@ class EPICModel:
         Set the start date of the EPIC model simulation.
 
         Args:
-            value (datetime or str): The new start date to set. If a string is provided,
-                                     it should be in the format 'YYYY-MM-DD'.
+            value (datetime.date, datetime.datetime, or str): The new start date to set. 
+                If a string is provided, it should be in the format 'YYYY-MM-DD'.
+                If a datetime object is provided, it will be converted to date.
         """
         if isinstance(value, str):
             try:
-                value = datetime.strptime(value, '%Y-%m-%d')
+                parsed_date = datetime.strptime(value, '%Y-%m-%d')
+                value = parsed_date.date()
             except ValueError:
                 raise ValueError("Invalid date string. Please use the format 'YYYY-MM-DD'.")
+        elif isinstance(value, datetime):
+            value = value.date()
         
-        if not isinstance(value, datetime):
-            raise TypeError("Start date must be a datetime object or a string in 'YYYY-MM-DD' format.")
+        if not isinstance(value, date):
+            raise TypeError("Start date must be a datetime.date object, datetime.datetime object, or a string in 'YYYY-MM-DD' format.")
         
         self._start_date = value
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')

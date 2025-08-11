@@ -1,31 +1,19 @@
 # Global parameters
 global_scope:
-  time_range: ['2005-01-01', '2022-12-31']
-  variables: ['srad', 'tmax', 'tmin', 'prcp', 'rh', 'ws']  
-  resolution: 1000
+  # Define the time period for data fetching
+  time_range: ['2002-01-01', '2022-12-31']
+  variables: ['srad', 'tmax', 'tmin', 'prcp', 'rh', 'ws']
+  resolution: 10
 
-
-# Specify Earth Engine collections and their respective variables
+# Specify Earth Engine (EE) collections and map their bands to EPIC variables
 collections:
-  daymet:
-    collection: NASA/ORNL/DAYMET_V4
+  AgEra5:
+    # Path to the EE ImageCollection Asset
+    collection: 'projects/climate-engine-pro/assets/ce-ag-era5/daily'
     variables:
-      tmax: b('tmax')
-      tmin: b('tmin')
-      srad: b('srad')
-      dayl: b('dayl')
-      prcp: b('prcp')
-      vp: b('vp')
-      
-  nldas_ws:
-    collection: NASA/NLDAS/FORA0125_H002
-    variables:
-      wind_u: b('wind_u')
-      wind_v: b('wind_v')
-
-# Derived variables
-derived_variables:
-  srad: ({srad} * {dayl}) / 1e6
-  rh: '{vp}/(611 * exp(17.502 * (({tmax} + {tmin})/2) / ((({tmax} + {tmin})/2) + 240.97 )))'
-  ws: '{wind_u}**2 + {wind_v}**2'
-
+      srad: b('Solar_Radiation_Flux') / 1e6  # MJ/m^2/day (assuming source is daily total flux)
+      tmax: b('Temperature_Air_2m_Max_24h') - 273.15  # Convert K to °C
+      tmin: b('Temperature_Air_2m_Min_24h') - 273.15  # Convert K to °C
+      prcp: b('Precipitation_Flux')  # mm/day (assuming source is daily total)
+      rh: b('Relative_Humidity_2m_06h')  # % (using 6 AM value as representative)
+      ws: b('Wind_Speed_10m_Mean')  # m/s
