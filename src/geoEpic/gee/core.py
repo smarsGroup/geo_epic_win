@@ -163,12 +163,19 @@ class CompositeCollection:
             pd.DataFrame: A pandas DataFrame containing the extracted data.
         """
         # Convert coordinates to AOI geometry
-        if isinstance(aoi_coords, (Polygon, MultiPolygon)):
+        if isinstance(aoi_coords, Polygon):
+            # For Polygon, get the exterior coordinates and build a Polygon
             aoi_coords = aoi_coords.exterior.coords[:]
-        if len(aoi_coords) == 1:
-            aoi = ee.Geometry.Point(aoi_coords[0])
-        else:
             aoi = ee.Geometry.Polygon(aoi_coords)
+        elif isinstance(aoi_coords, MultiPolygon):
+            # For MultiPolygon, use the .geoms attribute to get the individual polygons
+            aoi_coords = [polygon.exterior.coords[:] for polygon in aoi_coords.geoms]
+            aoi = ee.Geometry.MultiPolygon(aoi_coords)
+        # If there is only one point (in case of a Polygon), create a buffered point geometry
+        elif isinstance(aoi, ee.Geometry) and aoi.type() == 'Point' and len(aoi_coords) == 1:
+            lat, lon = aoi_coords[0]
+            aoi = ee.Geometry.Point([lat, lon]).buffer(90).bounds()
+        else: return
         
         def extract_features_wrapper(args):
             name, collection, date_range = args
