@@ -175,7 +175,9 @@ class CompositeCollection:
         elif isinstance(aoi, ee.Geometry) and aoi.type() == 'Point' and len(aoi_coords) == 1:
             lat, lon = aoi_coords[0]
             aoi = ee.Geometry.Point([lat, lon]).buffer(90).bounds()
-        else: return
+        else: 
+            print(f"Unrecognized Geometry type: {type(aoi_coords)}")
+            return
         
         def extract_features_wrapper(args):
             name, collection, date_range = args
