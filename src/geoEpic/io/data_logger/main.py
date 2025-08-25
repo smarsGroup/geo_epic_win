@@ -4,7 +4,7 @@ from shortuuid import uuid
 from .sql_writer import SQLTableWriter
 from .csv_writer import CSVWriter
 from .redis_writer import RedisWriter
-
+from .lmdb_writer import LMDBTableWriter
 
 class DataLogger:
     """
@@ -38,7 +38,7 @@ class DataLogger:
 
         os.makedirs(self.output_folder, exist_ok=True)
 
-        if self.backend not in ['redis', 'sql', 'csv']:
+        if self.backend not in ['redis', 'sql', 'csv', 'lmdb']:
             raise ValueError(f"Unsupported backend: {self.backend}")
 
     def get_writer(self, func_name):
@@ -58,7 +58,8 @@ class DataLogger:
         writer_classes = {
             'redis': RedisWriter,
             'sql': SQLTableWriter,
-            'csv': CSVWriter
+            'csv': CSVWriter,
+            'lmdb': LMDBTableWriter
         }
         writer_class = writer_classes.get(self.backend)
         if not writer_class:
@@ -82,18 +83,19 @@ class DataLogger:
         with self.get_writer(func_name) as writer:
             writer.write_row(**result)
 
-    def get(self, func_name):
+    def get(self, func_name, keep = False):
         """
         Retrieve logged data using the specified backend.
 
         Args:
             func_name (str): The name of the function whose data needs to be retrieved.
+            keep (bool): If True, do not delete the table even if delete_on_read is True.
 
         Returns:
             pandas.DataFrame: The DataFrame containing the logged data.
         """
         with self.get_writer(func_name) as writer:
             df = writer.query_rows()
-            if self.delete_on_read:
+            if self.delete_on_read and not keep:
                 writer.delete_table()
         return df

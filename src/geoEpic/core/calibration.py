@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+import pygmo as pg
 
 class PygmoProblem:
     """
@@ -90,7 +91,6 @@ class PygmoProblem:
             names.extend(df.var_names())
         return names
 
-
     def get_bounds(self):
         """
         Get the bounds for parameters as tuples of (min, max) values for each parameter across all data frames.
@@ -99,7 +99,92 @@ class PygmoProblem:
             tuple: Two numpy arrays representing the lower and upper bounds of the parameters.
         """
         return self.bounds[:, 0], self.bounds[:, 1]
+
+
+class Problem_Wrapper:
+    """
+    A wrapper class that provides a simplified interface for optimization and sensitivity analysis.
     
+    Attributes:
+        problem (PygmoProblem): The underlying PyGMO problem instance.
+        algorithm: The PyGMO algorithm instance for optimization.
+        population: The PyGMO population instance.
+        population_size (int): Size of the population for optimization.
+    """
+
+    def __init__(self, workspace, *dfs):
+        """
+        Initialize the calibration problem.
+
+        Args:
+            workspace (Workspace): The workspace object managing the environment.
+            *dfs (DataFrame-like): Variable number of parameter objects with constraints.
+        """
+        self.problem = pg.problem(PygmoProblem(workspace, *dfs))
+        # Initialize optimization components as None
+        self.algorithm = None
+        self.pg_algorithm = None
+        self.population = None
+        self.population_size = None
+        self.workspace = workspace
+
+    def init(self, algorithm, **kwargs):
+        """
+        Initialize the optimization algorithm and population.
+
+        Args:
+            algorithm: PyGMO algorithm class (e.g., pg.pso_gen)
+            **kwargs: Additional keyword arguments to pass to the algorithm
+        """
+        # Store the algorithm with gen=1 and any additional kwargs
+        self.algorithm = algorithm(gen=1, **kwargs)
+        self.pg_algorithm = pg.algorithm(self.algorithm)
+        
+    def optimize(self, population_size, generations):
+        """
+        Run the optimization process.
+        
+        Args:
+            population_size (int): Size of the population for optimization
+            generations (int): Number of generations to run
+            
+        Returns:
+            The evolved population after optimization
+        """
+        from collections import deque
+        from time import perf_counter
+        
+        if self.pg_algorithm is None:
+            raise Exception("Must call init() before optimize()")
+        
+        # Print fitness before optimization
+        fitness_before = self.workspace.run(progress_bar = False)
+        print(f"Fitness before optimization: {fitness_before}")
+        print("Setting Initial Population")
+        self.population = pg.population(self.problem, size=population_size)
+
+        # Moving average of recent per-gen durations
+        recent = deque(maxlen=10)
+        print("optimizing...")
+        bar = tqdm(total=generations, unit="gen", leave=True)
+        for g in range(1, generations + 1):
+            t0 = perf_counter()
+            self.population = self.pg_algorithm.evolve(self.population)  # one generation
+            dt = perf_counter() - t0
+            
+            recent.append(dt)
+            mean_dt = sum(recent) / len(recent)
+            eta = (generations - g) * mean_dt
+            
+            # Show best fitness compactly (first objective if multi-objective)
+            f = self.population.champion_f
+            f0 = float(f[0] if np.ndim(f) else f)
+            bar.set_postfix({"best_fitness": f"{f0:.6g}"})
+            bar.update(1)
+        
+        bar.close()
+        print(f"Final best fitness: {self.population.champion_f}")
+
 
     def sensitivity_analysis(self, base_no_of_samples, method):
         """
@@ -115,9 +200,9 @@ class PygmoProblem:
         from SALib import ProblemSpec
         # Define the problem using ProblemSpec
         sp = ProblemSpec({
-            'num_vars': len(self.bounds),
-            'names': self.var_names,
-            'bounds': [list(bound) for bound in self.bounds],
+            'num_vars': len(self.problem.bounds),
+            'names': self.problem.var_names,
+            'bounds': [list(bound) for bound in self.problem.bounds],
             "outputs": ["Y"]
         })
 
@@ -139,7 +224,7 @@ class PygmoProblem:
             print("Evaluating objective function for each sample...")
             outputs = []
             for i, sample in tqdm(enumerate(samples)):
-                output = self.fitness(sample)
+                output = self.problem.fitness(sample)
                 if len(output) > 1:
                     print('Warning: Choosing the first output')
                 outputs.append(output[0])
@@ -160,12 +245,3 @@ class PygmoProblem:
 
         print(f"Sensitivity analysis completed.")
         return results
-            
-
-
-            
-
-            
-
-        
-    

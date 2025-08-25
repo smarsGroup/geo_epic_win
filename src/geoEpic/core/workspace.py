@@ -14,8 +14,8 @@ from shortuuid import uuid
 import signal
 from weakref import finalize
 # import subprocess
-# import platform
-from .calibration import PygmoProblem
+import platform
+from .calibration import Problem_Wrapper
 import time
 
 class Workspace:
@@ -50,6 +50,7 @@ class Workspace:
         self.objective_function = None
         self.dataframes = {}
         self.delete_after_use = True
+        
         self.model = EPICModel.from_config(config_path)
 
         # Create Cache folders on RAM or local storage
@@ -65,17 +66,17 @@ class Workspace:
         self._process_run_info(self.config['run_info'])
 
         # Initialise DataLogger
-        self.data_logger = DataLogger(self.cache)
+        if platform.system() == "Windows":
+            self.data_logger = DataLogger(self.cache, backend = 'lmdb')
+        else:
+            self.data_logger = DataLogger(self.cache, backend = 'redis')
 
         # Initialise Model pool
         # epicruns_dir = os.path.join(self.cache, 'EPICRUNS')
         # WorkerPool(self.uuid, epicruns_dir).open(self.config["num_of_workers"]*2)
         
         # Warning while use more workers
-        # if self.config["num_of_workers"] > os.cpu_count():
-        #     warning_msg = (f"Workers greater than number of CPU cores ({os.cpu_count()}).")
-        #     warnings.warn(warning_msg, RuntimeWarning)
-        self.num_of_workers = 4
+        self.num_of_workers = 8
         
         # Capture exit signals and clean up cache
         self._finalizer = finalize(self, self.cache_cleanup)
@@ -127,9 +128,7 @@ class Workspace:
             callable: The decorated function that executes without logging.
         """
         @wraps(func)
-        def wrapper(site):
-            func(site)
-
+        def wrapper(site): func(site)
         self.routines[func.__name__] = wrapper
         return wrapper
 
@@ -148,17 +147,18 @@ class Workspace:
         self.objective_function = wrapper
         return wrapper
     
-    def fetch_log(self, func):
+    def fetch_log(self, func, keep = False):
         """
         Retrieve the logs for a specific function.
 
         Args:
             func (str): The name of the function whose logs are to be retrieved.
+            keep (bool): If True, preserve the logs after retrieval. If False, logs are deleted after reading. Defaults to False.
 
         Returns:
             pandas.DataFrame: DataFrame containing the logs for the specified function.
         """
-        return self.data_logger.get(func)
+        return self.data_logger.get(func, keep)
 
     def run_simulation(self, site_or_info):
         """
@@ -178,9 +178,10 @@ class Workspace:
             raise ValueError("Input must be a Site object or a dictionary containing site information.")
 
         self.model.run(site)
-
+        
         # Post Process Simulation outcomes
-        results = self.post_process(site)
+        for func in self.routines.values():
+            func(site)
         # Handle output files
         for out_path in site.outputs.values():
             if self.config['output_dir'] is None or (self.routines and self.delete_after_use):
@@ -188,7 +189,7 @@ class Workspace:
             else:
                 dst = os.path.join(self.config['output_dir'], os.path.basename(out_path))
                 shutil.move(out_path, dst)
-        return results
+        # return results
                     
 
     def run(self, select_str = None, progress_bar = True):
@@ -201,6 +202,10 @@ class Workspace:
         Returns:
             Any: The result of the objective function if set, otherwise None.
         """
+        if self.num_of_workers > os.cpu_count():
+            warning_msg = (f"Workers greater than number of CPU cores ({os.cpu_count()}).")
+            warnings.warn(warning_msg, RuntimeWarning)
+            
         # Warn if outputs wont be saved
         if self.config['output_dir'] is None or (self.routines and self.delete_after_use):
             if progress_bar:
@@ -221,41 +226,19 @@ class Workspace:
         parallel_executor(
             self.run_simulation, 
             info_ls, 
-            method='Process',
+            method='Thread',
             max_workers=self.num_of_workers,
             timeout=self.config["timeout"],
             bar=int(progress_bar),
+            
         )
-        # # Sequential execution as fallback
+        # Sequential execution as fallback
         # for info in info_ls:
         #     self.run_simulation(info)
         self.model._model_lock = temp
 
         # Return result of objective function if defined, else None
         return self.objective_function() if self.objective_function else None
-    
-    def post_process(self, site):
-        """
-        Execute routines in parallel and return their results in a dictionary.
-
-        Args:
-            site: The site object to be passed to each routine.
-
-        Returns:
-            dict: A dictionary with function names as keys and their returned values as values.
-        """
-        evaluate = lambda func: func(site)
-        results = parallel_executor(
-            evaluate, 
-            list(self.routines.values()), 
-            method='Thread',
-            timeout=10,
-            bar=False,
-            return_value=True,
-            verbose_errors=True
-        )
-        return dict(zip(self.routines.keys(), results))
-
     
     def clear_logs(self):
         """
@@ -304,7 +287,7 @@ class Workspace:
         temp = self.model._model_lock
         self.model._model_lock = None
         # Create pygmo problem instance
-        prob = pg.problem(PygmoProblem(self, *dfs))
+        prob = Problem_Wrapper(self, *dfs)
         # Restore original model lock
         self.model._model_lock = temp
         # Return the problem instance, not the lock
@@ -338,7 +321,14 @@ class Workspace:
             data.drop(columns=['geometry'], inplace=True)
         else:
             raise ValueError("Unsupported file format. Please provide a '.csv' or '.shp' file.")
-        
+        # Strip and normalize
+        site_ids = data['SiteID'].astype(str).str.strip()
+        # Vectorized checks
+        invalid_mask = (data['SiteID'].isna() | (site_ids == '') | (~site_ids.str.match(r'^[A-Za-z0-9]+$')) | (site_ids.str.len() > 9))
+        if invalid_mask.any():
+            raise ValueError("Invalid SiteID: must be non-empty, alphanumeric and length ≤ 9")
+        # write back to the DataFrame
+        data['SiteID'] = site_ids  
         # Check for OPC files
         opc_files = glob(f'{self.config["opc_dir"]}/*.OPC')
         present = [os.path.basename(f).split('.')[0] for f in opc_files]

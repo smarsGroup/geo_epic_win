@@ -19,14 +19,14 @@ def setup_metadata():
         # "https://smarslab-files.s3.amazonaws.com/epic-utils/SSURGO.tif",
     ]
     # Add Redis files for Windows platform
-    if platform.system() == 'Windows':  # Check if running on Windows
-        files_to_download += [
-            "https://smarslab-files.s3.amazonaws.com/epic-utils/redis-server.exe",
-            "https://smarslab-files.s3.amazonaws.com/epic-utils/redis.conf",
-            "https://smarslab-files.s3.amazonaws.com/epic-utils/redis_win_license",
-        ]
+    # if platform.system() == 'Windows':  # Check if running on Windows
+        # files_to_download += [
+        #     "https://smarslab-files.s3.amazonaws.com/epic-utils/redis-server.exe",
+        #     "https://smarslab-files.s3.amazonaws.com/epic-utils/redis.conf",
+        #     "https://smarslab-files.s3.amazonaws.com/epic-utils/redis_win_license",
+        # ]
 
-    elif platform.system() == 'Linux':
+    if platform.system() == 'Linux':
         try:
             run_command(["redis-server", "--version"])
             print("Redis is already installed.")

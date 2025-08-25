@@ -284,77 +284,106 @@ class EPICModel:
         """
         fid = site.site_id
         dly = site.get_dly()
-        new_dir = os.path.join(self.cache_path, 'EPICRUNS', str(fid)) #if dest is None else dest
+        if dest is not None:
+            new_dir = dest
+        else:
+            new_dir = os.path.join(self.cache_path, 'EPICRUNS', str(fid))
 
         if os.path.exists(new_dir):
             shutil.rmtree(new_dir)
 
         shutil.copytree(self.model_dir, new_dir, ignore=lambda _, files: ['.lock'])
-        os.chdir(new_dir)
         
         try:
-            # Prepare weather data
-            dly.save(1)
-            dly.to_monthly(1)
-            # copy virtual links and Write configuration files
-            self._writeDATFiles(site.copy('./'))
-            # Run EPIC executable
-            log_file = f"{fid}.log"
+            # Prepare weather data directly into new_dir (APIs accept a PATH)
+            dly.save(os.path.join(new_dir, '1'))
+            dly.to_monthly(os.path.join(new_dir, '1'))
+
+            # Copy virtual links and write configuration files into new_dir
+            self._writeDATFiles(site.copy(new_dir), new_dir)
+            
+            # Build paths (all absolute)
+            log_file = os.path.join(new_dir, f"{fid}.log")
+            exe_src = os.path.join(new_dir, self.executable_name)
+            exe_base, exe_ext = os.path.splitext(os.path.basename(self.executable_name))
+            executable_with_site_id = os.path.join(new_dir, f"{exe_base}_{fid}{exe_ext}")
+
+            # Copy/rename the executable inside the run directory
+            shutil.copy2(exe_src, executable_with_site_id)
             with open(log_file, 'w') as log:
-                process = subprocess.Popen([self.executable_name], stdin=subprocess.PIPE, stdout=log, stderr=log)
-                # Work Around for pause when error occurs.
-                while process.poll() is None:
-                    process.communicate(input=b'\n')
+                process = subprocess.Popen(
+                    [executable_with_site_id],
+                    stdin=subprocess.PIPE,
+                    stdout=log,
+                    stderr=log,
+                    cwd=new_dir,
+                    shell=False,
+                )
+                # Feed newlines in case the binary pauses on errors.
+                process.communicate(input=(b'\r\n' * 20))
+            
+            # Process output files
+            out_root = self.output_dir if dest is None else dest
+            if not os.path.exists(out_root):
+                os.makedirs(out_root, exist_ok=True)
+
             # Process output files
             for out_type in self._output_types:
-                out_path = f'{fid}.{out_type}'
+                out_name = f"{fid}.{out_type}"
+                out_path = os.path.join(new_dir, out_name)
                 if not os.path.exists(out_path) or os.path.getsize(out_path) == 0:
                     log_file_dst = os.path.join(self.log_dir, f"{fid}.log")
                     shutil.move(log_file, log_file_dst)
                     raise FileNotFoundError(f"Output file ({out_type}) not found or empty. \n Check {log_file_dst} for details")
-                dst = os.path.join(self.output_dir if dest is None else os.path.dirname(new_dir), out_path)
+                dst = os.path.join(out_root, out_name)
                 shutil.move(out_path, dst)
                 site.outputs[out_type] = dst
         finally:
             # Clean up
-            os.chdir(self.base_dir)
             if self.delete_after_run or self.cache_path == '/dev/shm':
-                shutil.rmtree(new_dir)
+                try:
+                    shutil.rmtree(new_dir)
+                except Exception:
+                    pass
 
-    def _writeDATFiles(self, site):
+    def _writeDATFiles(self, site, dest = None):
         """
         Write configuration data files required for the model run.
 
         Args:
             site (Site): A Site object for which data files are being prepared.
+            dest (str, optional): Destination directory to write files. If None, writes to current directory.
         """
-        with open('./EPICRUN.DAT', 'w') as ofile:
+        # Determine the base directory for file operations
+        base_dir = dest if dest is not None else '.'
+        
+        with open(os.path.join(base_dir, 'EPICRUN.DAT'), 'w') as ofile:
             fmt = '%s 1  0  0  0  1  1  1/'%(site.site_id)
             ofile.write(fmt)
 
-        with open(self.file_names['FSITE'], 'w') as ofile:
+        with open(os.path.join(base_dir, self.file_names['FSITE']), 'w') as ofile:
             fmt = '1    "./%s"\n' % (os.path.basename(site.sit_path))
             ofile.write(fmt)
 
-        with open(self.file_names['FSOIL'], 'w') as ofile:
+        with open(os.path.join(base_dir, self.file_names['FSOIL']), 'w') as ofile:
             fmt = '1    "./%s"\n' % (os.path.basename(site.sol_path))
             ofile.write(fmt)
 
-        with open(self.file_names['FWLST'], 'w') as ofile:
+        with open(os.path.join(base_dir, self.file_names['FWLST']), 'w') as ofile:
             ofile.write('1    1.DLY\n')
 
-        with open(self.file_names['FWPM1'], 'w') as ofile:
+        with open(os.path.join(base_dir, self.file_names['FWPM1']), 'w') as ofile:
             fmt = '1    1.WP1   %.2f   %.2f    %.2f\n' % (site.latitude, site.longitude, site.elevation)
             ofile.write(fmt)
         
-        with open(self.file_names['FWIND'], 'w') as ofile:
+        with open(os.path.join(base_dir, self.file_names['FWIND']), 'w') as ofile:
             fmt = '1    1.WND   %.2f   %.2f    %.2f\n' % (site.latitude, site.longitude, site.elevation)
             ofile.write(fmt)
             
-        with open(self.file_names['FOPSC'], 'w') as ofile:
+        with open(os.path.join(base_dir, self.file_names['FOPSC']), 'w') as ofile:
             fmt = '1    "./%s"\n' % (os.path.basename(site.opc_path))
             ofile.write(fmt)
-    
+
 
     def auto_irrigation(self, bir, efi=None, vimx=None, armn=None, armx=None):
         """

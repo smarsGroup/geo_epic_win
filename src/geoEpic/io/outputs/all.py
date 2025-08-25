@@ -2,12 +2,13 @@ import os
 import numpy as np
 import pandas as pd
 
-
 class ACY: 
     def __init__(self, file_path):
         """
         Initialize the ACY object by reading from an ACY file.
         """
+        if not isinstance(file_path, (str, os.PathLike)):
+            file_path = file_path.outputs['ACY']
         name = os.path.basename(file_path)
         self.name = (name.split('.'))[0]
         self.data = self._readACY(file_path)
@@ -37,6 +38,8 @@ class DGN:
         """
         Initialize the DGN object by reading from a DGN file.
         """
+        if not isinstance(file_path, (str, os.PathLike)):
+            file_path = file_path.outputs['DGN']
         name = os.path.basename(file_path)
         self.name = (name.split('.'))[0]
         self.data = self._readDGN(file_path)
@@ -61,4 +64,32 @@ class DGN:
             var_data = self.data[['Date', varname]].copy()
         
         return var_data
-    
+
+
+class DWC:
+    def __init__(self, file_path):
+        """
+        Initialize the DWC object by reading from a DWC file.
+        """
+        if not isinstance(file_path, (str, os.PathLike)):
+            file_path = file_path.outputs['DWC']
+        name = os.path.basename(file_path)
+        self.name = (name.split('.'))[0]
+        self.data = self._readDWC(file_path)
+
+    def _readDWC(self, file_path):
+        """
+        Private method to read DWC data.
+        """
+        data = pd.read_csv(file_path, sep="\s+", skiprows = 10)
+        if data.empty: raise ValueError('Data is Empty')
+        data['Date'] = pd.to_datetime(data[['Y', 'M', 'D']].astype(str).agg('-'.join, axis=1))
+        data['ET'] = pd.to_numeric(data['ET'], errors='coerce')
+        return data
+
+    def get_var(self, varname):
+        """
+        Extract variable from the DWC data.
+        """
+        var_data = self.data[['Date', varname]].copy()
+        return var_data
