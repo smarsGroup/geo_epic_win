@@ -23,7 +23,7 @@ class CropCom:
         with open(path, 'r') as file:
             self.header = [file.readline() for _ in range(2)]
         self.name = 'CROPCOM'
-        self.prms = None
+        self.vars = None
         self.original_columns = self.data.columns.tolist()
         
         # Split the specified columns
@@ -54,7 +54,7 @@ class CropCom:
         """
         Returns the current values of parameters in the DataFrame.
         """
-        cols = self.prms['Parm'].values
+        cols = self.vars['Parm'].values
         all_values = []
         for crop in self.crops:
             crop_values = self.data.loc[self.data['#'] == crop, cols].values.flatten()
@@ -80,7 +80,7 @@ class CropCom:
         """
         Updates the parameters in the DataFrame with new values.
         """
-        cols = self.prms['Parm'].values
+        cols = self.vars['Parm'].values
         values_split = np.split(values, self.split[:-1])
         for i, id in enumerate(self.crops):
             self.data.loc[self.data['#'] == id, cols] = values_split[i]
@@ -100,36 +100,36 @@ class CropCom:
         sens_path = os.path.join(os.path.dirname(self.path), 'CROPCOM.sens')
         
         if all:
-            prms = pd.read_csv(sens_path)
-            prms['Select'] = 1
-            prms['Range'] = prms.apply(lambda x: (x['Min'], x['Max']), axis=1)
+            vars = pd.read_csv(sens_path)
+            vars['Select'] = 1
+            vars['Range'] = vars.apply(lambda x: (x['Min'], x['Max']), axis=1)
         else:
             if isinstance(parms_input, str):
                 # Single CSV path provided
-                prms = pd.read_csv(parms_input)
-                prms['Select'] = prms.get('Select', False)
-                prms = prms[prms['Select'] == 1]
+                vars = pd.read_csv(parms_input)
+                vars['Select'] = vars.get('Select', False)
+                vars = vars[vars['Select'] == 1]
             else:
                 # List of parameter names provided
-                prms = pd.read_csv(sens_path)
-                prms['Select'] = prms['Parm'].isin(parms_input)
-                prms = prms[prms['Select'] == 1]
-            prms['Range'] = prms.apply(lambda x: (x['Min'], x['Max']), axis=1)
+                vars = pd.read_csv(sens_path)
+                vars['Select'] = vars['Parm'].isin(parms_input)
+                vars = vars[vars['Select'] == 1]
+            vars['Range'] = vars.apply(lambda x: (x['Min'], x['Max']), axis=1)
             
-        self.prms = prms.copy()
+        self.vars = vars.copy()
         self.crops = crop_codes
-        self.split = np.cumsum([len(self.prms)]*len(crop_codes))
+        self.split = np.cumsum([len(self.vars)]*len(crop_codes))
         
     def constraints(self):
         """
         Returns the constraints (min, max ranges) for the parameters.
         """
-        return list(self.prms['Range'].values)*len(self.crops)
+        return list(self.vars['Range'].values)*len(self.crops)
     
     def var_names(self):
         names = []
         for crop in self.crops:
-            temp = [f'{p}_{crop}' for p in list(self.prms['Parm'].values)]
+            temp = [f'{p}_{crop}' for p in list(self.vars['Parm'].values)]
             names.extend(temp)
         return names
 

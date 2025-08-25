@@ -4,7 +4,9 @@ import os
 import sys
 import importlib.util
 import shutil
-
+import struct
+import mmap
+import shortuuid
 
 def read_gdb_layer(gdb_data, layer_name, columns = None, names = None):
     """
@@ -247,3 +249,167 @@ class FileLockHandle:
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Context manager exit."""
         self.release()
+
+
+if IS_WINDOWS:
+    import win32event
+    import win32con
+    import win32api
+
+class WorkerPoolWin:
+    """
+    Cross-process, Windows-only worker pool keyed by pool_key.
+    Mirrors the API of your Redis/LMDB version:
+      - __init__(pool_key=None, base_dir=None)
+      - open(max_resources)
+      - acquire()
+      - release(resource)
+      - queue_len()
+      - close()
+    Resources are simple indices 0..max_resources-1, optionally materialized
+    as subfolders under base_dir.
+    """
+
+    _HDR_SIZE = 12   # 3×uint32: [capacity, head, tail]
+
+    def __init__(self, pool_key: str = None, base_dir: str = None):
+        self.pool_key = pool_key or f"worker_pool_{shortuuid.uuid()}"
+        self.base_dir  = base_dir
+        self._inited   = False
+        self._mem      = None
+        self._sem      = None
+        self._mtx      = None
+
+    def open(self, max_resources: int):
+        """
+        Initialize or reinitialize the pool to hold max_resources slots.
+        Any existing pool with the same pool_key in this session will be reused.
+        """
+        self.capacity = max_resources
+        self._map_size = self._HDR_SIZE + 4 * self.capacity
+
+        tag           = f"Local\\WP_{self.pool_key}"
+        self._map_name = tag + "_MMF"
+        self._sem_name = tag + "_SEM"
+        self._mtx_name = tag + "_MTX"
+
+        # create base_dir and its slot subfolders if requested
+        if self.base_dir:
+            os.makedirs(self.base_dir, exist_ok=True)
+            for i in range(self.capacity):
+                slot_dir = os.path.join(self.base_dir, str(i))
+                os.makedirs(slot_dir, exist_ok=True)
+
+        # 1) open or create the named mmap
+        self._mem = mmap.mmap(-1, self._map_size, tagname=self._map_name)
+
+        # 2) read existing capacity, ensure it matches or init
+        existing_cap, = struct.unpack_from("I", self._mem, 0)
+        if existing_cap not in (0, self.capacity):
+            raise ValueError(
+                f"Pool '{self.pool_key}' already exists with capacity={existing_cap}"
+            )
+
+        # 3) open/create Win32 semaphore & mutex
+        #    initial sem count=0 if first opener
+        self._sem = win32event.CreateSemaphore(None, 0, self.capacity, self._sem_name)
+        self._mtx = win32event.CreateMutex   (None, False,           self._mtx_name)
+
+        # 4) first opener zero-initializes the ring and sem count
+        if existing_cap == 0:
+            # write [capacity, head=0, tail=capacity]
+            struct.pack_into("I", self._mem, 0, self.capacity)
+            struct.pack_into("I", self._mem, 4, 0)                # head
+            struct.pack_into("I", self._mem, 8, self.capacity)    # tail
+
+            # fill slots with their own indices
+            buf_off = self._HDR_SIZE
+            for i in range(self.capacity):
+                struct.pack_into("I", self._mem, buf_off + 4 * i, i)
+
+            # release all slots onto the semaphore
+            win32event.ReleaseSemaphore(self._sem, self.capacity)
+
+        self._inited = True
+
+    def acquire(self, block: bool = True, timeout: float = None) -> str:
+        """
+        Block until a slot is free, then pop it.
+        Returns the resource (index or path) as string, or None on timeout/non-block.
+        """
+        if not self._inited:
+            raise RuntimeError("Pool not open: call open(max_resources) first.")
+        
+        interval_ms = 200  # poll every 200ms
+        timeout_ms  = int(timeout * 1000) if timeout is not None else None
+        elapsed_ms  = 0
+
+        while True:
+            # Wait for the shorter of the polling interval or remaining timeout
+            wait_ms = interval_ms if timeout_ms is None else min(interval_ms, timeout_ms - elapsed_ms)
+            rc = win32event.WaitForSingleObject(self._sem, wait_ms)
+            if rc == win32con.WAIT_OBJECT_0: break
+            elif rc == win32con.WAIT_TIMEOUT:
+                if timeout_ms is not None:
+                    elapsed_ms += wait_ms
+                    if elapsed_ms >= timeout_ms:
+                        return None
+            else: return None
+
+        # proceed with normal dequeue
+        win32event.WaitForSingleObject(self._mtx, win32event.INFINITE)
+        head, tail = struct.unpack_from("II", self._mem, 4)
+        slot_off   = self._HDR_SIZE + 4 * head
+        idx,       = struct.unpack_from("I", self._mem, slot_off)
+
+        # bump head (circular)
+        head = (head + 1) % self.capacity
+        struct.pack_into("I", self._mem, 4, head)
+        win32event.ReleaseMutex(self._mtx)
+        return os.path.join(self.base_dir, str(idx)) if self.base_dir else str(idx)
+
+    def release(self, resource: str):
+        """
+        Push a slot back into the pool and signal waiting acquirers.
+        `resource` should be the string returned by acquire().
+        """
+        if not self._inited:
+            raise RuntimeError("Pool not open: call open(max_resources) first.")
+
+        # parse the original index
+        idx = int(os.path.basename(resource)) if self.base_dir else int(resource)
+        win32event.WaitForSingleObject(self._mtx, win32con.INFINITE)
+        head, tail = struct.unpack_from("II", self._mem, 4)
+        slot_off   = self._HDR_SIZE + 4 * tail
+        struct.pack_into("I", self._mem, slot_off, idx)
+
+        # bump tail (circular)
+        tail = (tail + 1) % self.capacity
+        struct.pack_into("I", self._mem, 8, tail)
+        win32event.ReleaseMutex(self._mtx)
+        win32event.ReleaseSemaphore(self._sem, 1)
+
+    def queue_len(self) -> int:
+        """Return the current number of free slots in the pool."""
+        if not self._inited: return 0
+        head, tail = struct.unpack_from("II", self._mem, 4)
+        return (tail - head) % self.capacity
+
+    def close(self, cleanup_dirs: bool = False):
+        """
+        Drain and optionally delete per-slot directories, then close handles.
+        Windows will automatically clean up named objects once no handles remain.
+        """
+        if self._inited:
+            # drain without blocking
+            while True:
+                slot = self.acquire(block=False)
+                if slot is None: break
+                if cleanup_dirs and self.base_dir and os.path.exists(slot):
+                    shutil.rmtree(slot, ignore_errors=True)
+
+        # tear down handles
+        if self._mem: self._mem.close()
+        if self._sem: win32api.CloseHandle(self._sem)
+        if self._mtx: win32api.CloseHandle(self._mtx)
+        self._inited = False

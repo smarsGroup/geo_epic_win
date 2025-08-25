@@ -1,7 +1,14 @@
 import ee
 import json
 import os
-from geoEpic.utils import WorkerPool
+
+import platform
+IS_WINDOWS = platform.system() == 'Windows'
+
+if IS_WINDOWS:
+    from geoEpic.utils import WorkerPoolWin as WorkerPool
+else:
+    from geoEpic.utils import WorkerPool
 
 def ee_Initialize():
     # Get the directory where the script is located

@@ -16,7 +16,7 @@ class Parm:
         self.data = self.read_parm(path)
         self.path = path
         self.name = 'PARM'
-        self.prms = None
+        self.vars = None
 
     def read_parm(self, file_name):
         """
@@ -78,7 +78,7 @@ class Parm:
         """
         Updates the parameters in the DataFrame with new values.
         """
-        cols = self.prms['Parm'].values
+        cols = self.vars['Parm'].values
         self.data.loc[0, cols] = values
         
     @property
@@ -86,7 +86,7 @@ class Parm:
         """
         Returns the current values of parameters in the DataFrame.
         """
-        cols = self.prms['Parm'].values
+        cols = self.vars['Parm'].values
         return self.data.loc[0, cols]
 
     def set_sensitive(self, parms_input, all=False):
@@ -103,29 +103,29 @@ class Parm:
         sens_path = os.path.join(os.path.dirname(self.path), 'PARM.sens')
         
         if all:
-            prms = pd.read_csv(parms_input if isinstance(parms_input, str) else sens_path)
-            prms['Select'] = 1
-            prms['Range'] = prms.apply(lambda x: (x['Min'], x['Max']), axis=1)
+            vars = pd.read_csv(parms_input if isinstance(parms_input, str) else sens_path)
+            vars['Select'] = 1
+            vars['Range'] = vars.apply(lambda x: (x['Min'], x['Max']), axis=1)
         else:
             if isinstance(parms_input, str):
                 # Single CSV path provided
-                prms = pd.read_csv(parms_input)
-                prms['Select'] = prms.get('Select', False)
-                prms = prms[prms['Select'] == 1]
+                vars = pd.read_csv(parms_input)
+                vars['Select'] = vars.get('Select', False)
+                vars = vars[vars['Select'] == 1]
             else:
                 # List of parameter names provided
-                prms = pd.read_csv(sens_path)
-                prms['Select'] = prms['Parm'].isin(parms_input)
-                prms = prms[prms['Select'] == 1]
-            prms['Range'] = prms.apply(lambda x: (x['Min'], x['Max']), axis=1)
+                vars = pd.read_csv(sens_path)
+                vars['Select'] = vars['Parm'].isin(parms_input)
+                vars = vars[vars['Select'] == 1]
+            vars['Range'] = vars.apply(lambda x: (x['Min'], x['Max']), axis=1)
             
-        self.prms = prms.copy()
+        self.vars = vars.copy()
         
     def constraints(self):
         """
         Returns the constraints (min, max ranges) for the parameters.
         """
-        return list(self.prms['Range'].values)
+        return list(self.vars['Range'].values)
     
     def var_names(self):
-        return list(self.prms['Parm'].values)
+        return list(self.vars['Parm'].values)

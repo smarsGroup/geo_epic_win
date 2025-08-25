@@ -60,7 +60,13 @@ class LMDBTableWriter:
         """Atomically allocate/increment row ID (if None) and write the row."""
         if self.env is None or self.db is None:
             raise Exception("Database is not open. Call open() first.")
-
+        
+                # 2) If caller provided SiteID, coerce/check row_id against it
+        if "SiteID" in kwargs:
+            site_id = kwargs["SiteID"]
+            if row_id is None:
+                row_id = site_id
+        
         payload = json.dumps(kwargs, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
 
         while True:
@@ -76,9 +82,13 @@ class LMDBTableWriter:
                         txn.put(key, payload, db=self.db, append=True)
                         return str(new_id)
                     else:
-                        # explicit id (accepts int or numeric string)
-                        rid = int(row_id)
-                        key = self._pack_id(rid)
+                        if isinstance(row_id, str):
+                            # treat as alphanumeric ID
+                            key = row_id.encode("utf-8")
+                        else:
+                            # treat as integer
+                            rid = int(row_id)
+                            key = self._pack_id(rid)
                         txn.put(key, payload, db=self.db)
                         return str(rid)
             except lmdb.MapFullError:

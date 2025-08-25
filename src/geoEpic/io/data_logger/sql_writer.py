@@ -51,17 +51,39 @@ class SQLTableWriter:
     def get_sqlite_type(self, value):
         return self.TYPE_MAPPING.get(type(value), "BLOB")
 
+    # def _write_row(self, kwargs):
+    #     if not self.initialized:
+    #         # Infer column types from the given arguments
+    #         columns_with_types = [f"{col} {self.get_sqlite_type(value)}" for col, value in kwargs.items()]
+    #         columns_stmt = ', '.join(columns_with_types)
+    #         self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} ({columns_stmt})")
+    #         self.initialized = True
+
+    #     columns = ', '.join(kwargs.keys())
+    #     placeholders = ':' + ', :'.join(kwargs.keys())
+    #     self.cursor.execute(f"INSERT INTO {self.table_name} ({columns}) VALUES ({placeholders})", kwargs)
+    #     self.conn.commit()
+
     def _write_row(self, kwargs):
         if not self.initialized:
-            # Infer column types from the given arguments
-            columns_with_types = [f"{col} {self.get_sqlite_type(value)}" for col, value in kwargs.items()]
-            columns_stmt = ', '.join(columns_with_types)
-            self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} ({columns_stmt})")
+            # Mark site_id as PRIMARY KEY
+            cols = []
+            for col, val in kwargs.items():
+                sql_type = self.get_sqlite_type(val)
+                if col == "SiteID":
+                    cols.append(f"{col} {sql_type} PRIMARY KEY")
+                else:
+                    cols.append(f"{col} {sql_type}")
+            schema = ", ".join(cols)
+            self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} ({schema})")
             self.initialized = True
 
-        columns = ', '.join(kwargs.keys())
+        columns      = ', '.join(kwargs.keys())
         placeholders = ':' + ', :'.join(kwargs.keys())
-        self.cursor.execute(f"INSERT INTO {self.table_name} ({columns}) VALUES ({placeholders})", kwargs)
+        self.cursor.execute(
+            f"INSERT OR REPLACE INTO {self.table_name} ({columns}) VALUES ({placeholders})",
+            kwargs
+        )
         self.conn.commit()
 
     def query_rows(self, condition=None, *args, **kwargs):
