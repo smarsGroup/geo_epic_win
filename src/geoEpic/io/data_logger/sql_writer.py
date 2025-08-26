@@ -77,7 +77,6 @@ class SQLTableWriter:
             schema = ", ".join(cols)
             self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} ({schema})")
             self.initialized = True
-
         columns      = ', '.join(kwargs.keys())
         placeholders = ':' + ', :'.join(kwargs.keys())
         self.cursor.execute(
@@ -88,16 +87,18 @@ class SQLTableWriter:
 
     def query_rows(self, condition=None, *args, **kwargs):
         return self._execute_with_retry(self._query_rows, condition, *args, **kwargs)
-
+    
     def _query_rows(self, condition, *args, **kwargs):
         query = f"SELECT * FROM {self.table_name}"
-        if condition:
-            query += f" WHERE {condition}"
-        self.cursor.execute(query, *args, **kwargs)
-        rows = self.cursor.fetchall()
-        # Get column names from cursor.description
-        columns = [description[0] for description in self.cursor.description]
-        return pd.DataFrame(rows, columns=columns)
+        if condition: query += f" WHERE {condition}"
+        try:
+            self.cursor.execute(query, *args, **kwargs)
+            rows = self.cursor.fetchall()
+            columns = [description[0] for description in self.cursor.description]
+            return pd.DataFrame(rows, columns=columns)
+        except sqlite3.OperationalError as e:
+            if "no such table" in str(e): return pd.DataFrame()
+            else: raise e
 
     def delete_table(self):
         if self.conn is None or self.cursor is None:

@@ -1,5 +1,6 @@
 import os
 import shutil
+import stat
 import warnings
 import pandas as pd
 from functools import wraps
@@ -11,12 +12,13 @@ import geopandas as gpd
 from glob import glob
 # from geoEpic.utils.redis import WorkerPool
 from shortuuid import uuid 
-import signal
-from weakref import finalize
+import weakref
 # import subprocess
 import platform
 from .calibration import Problem_Wrapper
 import time
+import atexit
+from weakref import finalize
 
 class Workspace:
     """
@@ -34,7 +36,7 @@ class Workspace:
         data_logger (DataLogger): Instance of the DataLogger for logging data.
     """
 
-    def __init__(self, config_path, cache_path = None):
+    def __init__(self, config_path, cache_path=None):
         """
         Initialize the Workspace with a configuration file.
 
@@ -67,33 +69,36 @@ class Workspace:
 
         # Initialise DataLogger
         if platform.system() == "Windows":
-            self.data_logger = DataLogger(self.cache, backend = 'lmdb')
+            self.data_logger = DataLogger(self.cache, backend = 'sql')
         else:
             self.data_logger = DataLogger(self.cache, backend = 'redis')
 
-        # Initialise Model pool
-        # epicruns_dir = os.path.join(self.cache, 'EPICRUNS')
-        # WorkerPool(self.uuid, epicruns_dir).open(self.config["num_of_workers"]*2)
-        
-        # Warning while use more workers
         self.num_of_workers = 8
-        
-        # Capture exit signals and clean up cache
-        self._finalizer = finalize(self, self.cache_cleanup)
-        signal.signal(signal.SIGINT, self._signal_handler)
-        signal.signal(signal.SIGTERM, self._signal_handler)
-        signal.signal(signal.SIGBREAK, self._signal_handler)
 
-    def _signal_handler(self, signum, frame):
-        '''Clean up cache while exiting'''
+        # --- register cleanup WITHOUT capturing a bound method ---
+        self_ref = weakref.ref(self)
+        atexit.register(Workspace._cleanup_via_ref, self_ref)
+        self._finalizer = finalize(self, Workspace._cleanup_via_ref, self_ref)
+
+    @staticmethod
+    def _cleanup_via_ref(self_ref):
+        obj = self_ref()
+        if obj is not None:
+            obj.cache_cleanup()
+
+    def close(self):
+        """Explicit cleanup (use this in notebooks)."""
         self.cache_cleanup()
-        exit(0)
-    
+        # disarm finalizer so it won't run later
+        if self._finalizer.alive: self._finalizer()
+
     def cache_cleanup(self):
-        # Close worker pool and delete cache
-        # WorkerPool(self.uuid).close()
-        self.model.close()
-        shutil.rmtree(self.cache)
+        # Close resources first (important on Windows)
+        if hasattr(self, 'model') and self.model:
+            self.model.close()
+        # Delete the cache (handles read-only files)
+        if hasattr(self, 'cache') and self.cache and os.path.exists(self.cache):
+            shutil.rmtree(self.cache)
 
     def logger(self, func):
         """

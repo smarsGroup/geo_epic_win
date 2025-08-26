@@ -179,7 +179,7 @@ class Problem_Wrapper:
             # Show best fitness compactly (first objective if multi-objective)
             f = self.population.champion_f
             f0 = float(f[0] if np.ndim(f) else f)
-            bar.set_postfix({"best_fitness": f"{f0:.6g}"})
+            bar.set_postfix({"Best_Fitness": f"{f0:.6g}"})
             bar.update(1)
         
         bar.close()

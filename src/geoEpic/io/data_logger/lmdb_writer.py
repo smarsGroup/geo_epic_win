@@ -1,4 +1,3 @@
-# pip install lmdb pandas
 import os, json, struct
 import lmdb
 import pandas as pd
@@ -27,6 +26,11 @@ class LMDBTableWriter:
         self.meta_db = None
 
     def open(self):
+        # Ensure parent directory exists before creating the lmdb directory
+        parent_dir = os.path.dirname(os.path.abspath(self.dir_path))
+        if not os.path.exists(parent_dir):
+            os.makedirs(parent_dir, exist_ok=True)
+        
         os.makedirs(self.dir_path, exist_ok=True)
         self.env = lmdb.open(
             self.dir_path, subdir=True, max_dbs=4,
@@ -60,8 +64,7 @@ class LMDBTableWriter:
         """Atomically allocate/increment row ID (if None) and write the row."""
         if self.env is None or self.db is None:
             raise Exception("Database is not open. Call open() first.")
-        
-                # 2) If caller provided SiteID, coerce/check row_id against it
+        # 2) If caller provided SiteID, coerce/check row_id against it
         if "SiteID" in kwargs:
             site_id = kwargs["SiteID"]
             if row_id is None:
@@ -119,11 +122,10 @@ class LMDBTableWriter:
                     row["row_id"] = rid
                     rows.append(row)
 
-        if not rows:
-            return pd.DataFrame()
-        df = pd.DataFrame(rows).set_index("row_id").sort_index()
-        df.index = df.index.map(str)  # keep your original string-like index feel
-        df.index.name = None
+        if not rows: return pd.DataFrame()
+        df = pd.DataFrame(rows)
+        if 'SiteID' in df.columns:
+            df = df.drop(columns=['row_id'])
         return df
 
     def delete_table(self):

@@ -2,19 +2,18 @@ import os
 import platform
 from shortuuid import uuid 
 from .sql_writer import SQLTableWriter
-from .csv_writer import CSVWriter
 from .redis_writer import RedisWriter
 from .lmdb_writer import LMDBTableWriter
 
 class DataLogger:
     """
-    A class to handle logging of data using different backends: Redis, CSV, or SQL.
+    A class to handle logging of data using different backends: Redis, SQL, or LMDB.
     It supports logging dictionaries and retrieving logged data.
 
     Attributes:
         output_folder (str): Directory where files are stored (if applicable).
         delete_on_read (bool): Whether to delete the data after retrieving it.
-        backend (str): The backend to use ('redis', 'csv', 'sql').
+        backend (str): The backend to use ('redis', 'sql', 'lmdb').
     """
 
     def __init__(self, output_folder=None, delete_on_read=True, backend='redis', **kwargs):
@@ -24,7 +23,7 @@ class DataLogger:
         Args:
             output_folder (str, optional): Directory to store the files. Defaults to current directory.
             delete_on_read (bool): Whether to delete the data after retrieval. Defaults to True.
-            backend (str): The backend to use ('redis', 'sql', 'csv'). Defaults to 'lmdb'.
+            backend (str): The backend to use ('redis', 'sql', 'lmdb'). Defaults to 'redis'.
             **kwargs: Additional parameters for backend configuration.
 
         Raises:
@@ -38,7 +37,7 @@ class DataLogger:
 
         os.makedirs(self.output_folder, exist_ok=True)
 
-        if self.backend not in ['redis', 'sql', 'csv', 'lmdb']:
+        if self.backend not in ['redis', 'sql', 'lmdb']:
             raise ValueError(f"Unsupported backend: {self.backend}")
 
     def get_writer(self, func_name):
@@ -58,7 +57,6 @@ class DataLogger:
         writer_classes = {
             'redis': RedisWriter,
             'sql': SQLTableWriter,
-            'csv': CSVWriter,
             'lmdb': LMDBTableWriter
         }
         writer_class = writer_classes.get(self.backend)

@@ -133,3 +133,27 @@ class CropCom:
             names.extend(temp)
         return names
 
+    def get_vars(self):
+        """
+        Returns the vars DataFrame with an additional column containing current values.
+        """
+        if self.vars is None: return None
+        vars_with_current = self.vars.copy()
+        # Get current values for the first crop (since this method doesn't specify which crop)
+        if hasattr(self, 'crops') and len(self.crops) > 0:
+            cols = self.vars['Parm'].values
+            first_crop = self.crops[0]
+            current_values = self.data.loc[self.data['#'] == first_crop, cols].values.flatten()
+            vars_with_current['Current'] = current_values
+        # Drop specified columns if they exist
+        columns_to_drop = ['Range', 'Category', 'Unit', 'ID']
+        for col in columns_to_drop:
+            if col in vars_with_current.columns:
+                vars_with_current.drop(columns=[col], inplace=True)
+        # Rename columns
+        if 'Parm' in vars_with_current.columns:
+            vars_with_current.rename(columns={'Parm': 'Parameter'}, inplace=True)
+        if 'Parm.Description' in vars_with_current.columns:
+            vars_with_current.rename(columns={'Parm.Description': 'Description'}, inplace=True)
+        return vars_with_current
+

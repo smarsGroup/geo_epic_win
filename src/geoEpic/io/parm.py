@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 from decimal import Decimal
 
-
 class Parm:
 
     def __init__(self, path):
@@ -129,3 +128,25 @@ class Parm:
     
     def var_names(self):
         return list(self.vars['Parm'].values)
+
+    def get_vars(self):
+        """
+        Returns the vars DataFrame with an additional column containing current values.
+        """
+        if self.vars is None: return None
+        vars_with_current = self.vars.copy()
+        # Get current values
+        cols = self.vars['Parm'].values
+        current_values = self.data.loc[0, cols].values
+        vars_with_current['Current'] = current_values
+        # Drop specified columns if they exist
+        columns_to_drop = ['Range', 'Category', 'Unit', 'ID']
+        for col in columns_to_drop:
+            if col in vars_with_current.columns:
+                vars_with_current.drop(columns=[col], inplace=True)
+         # Rename columns
+        if 'Parm' in vars_with_current.columns:
+            vars_with_current.rename(columns={'Parm': 'Parameter'}, inplace=True)
+        if 'Parm.Description' in vars_with_current.columns:
+            vars_with_current.rename(columns={'Parm.Description': 'Description'}, inplace=True)
+        return vars_with_current
