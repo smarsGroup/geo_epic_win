@@ -12,12 +12,12 @@ class SIT:
         """
         self.template = []
         self.site_info = {
-            "ID": None,
-            "lat": None,
-            "lon": None,
-            "elevation": None,
-            "slope_length": None,
-            "slope_steep": None
+            "ID": 'Ne2',
+            "lat": 1,
+            "lon": 1,
+            "elevation": 1,
+            "slope_length": 1,
+            "slope_steep": 0.0
         }
 
         if site_info: self.site_info.update(site_info)
@@ -94,29 +94,54 @@ class SIT:
         Parameters:
         output_dir (str): Directory where the .SIT file will be saved, or the full path including the .SIT extension.
         """
-        if not self.site_info["ID"]:
-            raise ValueError("Site ID is not set. Cannot write to file.")
+        try:
+            if not self.site_info["ID"]:
+                raise ValueError("Site ID is not set. Cannot write to file.")
 
-        # Determine if output_dir already includes the .SIT extension
-        if output_dir.endswith('.SIT'):
-            output_file_path = output_dir
-        elif output_dir.endswith('.sit'):
-            output_file_path = output_dir[:-4] + '.SIT'
-        else:
-            output_file_path = os.path.join(output_dir, f"{self.site_info['ID']}.SIT")
-        
-        # Modify the template lines or create a new template if not read from a file
-        if not self.template:
-            self.template = [''] * 7  # Assuming the template has at least 7 lines
-        self.template[0] = 'Crop Simulations\n'
-        self.template[1] = 'Prototype\n'
-        self.template[2] = f'ID: {self.site_info["ID"]}\n'
-        self.template[3] = f'{self.site_info["lat"]:8.2f}{self.site_info["lon"]:8.2f}{self.site_info["elevation"]:8.2f}{self.template[3][24:]}' if len(self.template) > 3 else ''
-        self.template[4] = f'{self.template[4][:48]}{self.site_info["slope_length"]:8.2f}{self.site_info["slope_steep"]:8.2f}{self.template[4][64:]}' if len(self.template) > 4 else ''
-        self.template[5] = '                                                   \n' if len(self.template) > 6 else ''
-        
-        # Write the modified template to the new file
-        with open(output_file_path, 'w') as f:
-            f.writelines(self.template)
+            # Determine if output_dir already includes the .SIT extension
+            if output_dir.endswith('.SIT'):
+                output_file_path = output_dir
+            elif output_dir.endswith('.sit'):
+                output_file_path = output_dir[:-4] + '.SIT'
+            else:
+                output_file_path = os.path.join(output_dir, f"{self.site_info['ID']}.SIT")
+            
+            # Modify the template lines or create a new template if not read from a file
+            if not self.template:
+                self.template = [''] * 7  # Assuming the template has at least 7 lines
+            
+            # Ensure template has enough lines and none are None
+            while len(self.template) < 7:
+                self.template.append('')
+            
+            # Replace None values with empty strings
+            for i in range(len(self.template)):
+                if self.template[i] is None:
+                    self.template[i] = ''
+            
+            self.template[0] = 'Crop Simulations\n'
+            self.template[1] = 'Prototype\n'
+            self.template[2] = f'ID: {self.site_info["ID"]}\n'
+            
+            # Handle template[3] - ensure it has enough characters or create default
+            if len(self.template[3]) >= 24:
+                self.template[3] = f'{self.site_info["lat"]:8.2f}{self.site_info["lon"]:8.2f}{self.site_info["elevation"]:8.2f}{self.template[3][24:]}'
+            else:
+                self.template[3] = f'{self.site_info["lat"]:8.2f}{self.site_info["lon"]:8.2f}{self.site_info["elevation"]:8.2f}\n'
+            
+            # Handle template[4] - ensure it has enough characters or create default
+            if len(self.template[4]) >= 64:
+                self.template[4] = f'{self.template[4][:48]}{self.site_info["slope_length"]:8.2f}{self.site_info["slope_steep"]:8.2f}{self.template[4][64:]}'
+            else:
+                # Create a default line with proper spacing
+                padding = ' ' * 48  # 48 spaces before slope data
+                self.template[4] = f'{padding}{self.site_info["slope_length"]:8.2f}{self.site_info["slope_steep"]:8.2f}\n'
+            
+            self.template[5] = '                                                   \n'
+            # Write the modified template to the new file
+            with open(output_file_path, 'w') as f:
+                f.writelines(self.template)
+        except:
+            pass
 
         # print(f"File written to: {output_file_path}")

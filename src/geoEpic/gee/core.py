@@ -13,7 +13,7 @@ def get_gee_pool():
 
 def extract_features(collection, aoi, date_range, resolution, pool):
 
-    worker = pool.acquire()
+    # worker = pool.acquire()
     
     def map_function(image):
         # Function to reduce image region and extract data
@@ -30,8 +30,8 @@ def extract_features(collection, aoi, date_range, resolution, pool):
                 'expression': daily_data,
                 'fileFormat': 'PANDAS_DATAFRAME'
             })
-    finally: 
-        pool.release(worker)
+    finally: pass
+        # pool.release(worker)
 
     if not df.empty:
         df['Date'] = pd.to_datetime(df['Date']).dt.date
@@ -171,14 +171,13 @@ class CompositeCollection:
             # For MultiPolygon, use the .geoms attribute to get the individual polygons
             aoi_coords = [polygon.exterior.coords[:] for polygon in aoi_coords.geoms]
             aoi = ee.Geometry.MultiPolygon(aoi_coords)
-        # If there is only one point (in case of a Polygon), create a buffered point geometry
-        elif isinstance(aoi, ee.Geometry) and aoi.type() == 'Point' and len(aoi_coords) == 1:
+        # If there is only one point (in case of a Point), create a buffered point geometry
+        elif len(aoi_coords) == 1:
             lat, lon = aoi_coords[0]
-            aoi = ee.Geometry.Point([lat, lon]).buffer(90).bounds()
+            aoi = ee.Geometry.Point([lon, lat]).buffer(90).bounds()
         else: 
             print(f"Unrecognized Geometry type: {type(aoi_coords)}")
             return
-        
         def extract_features_wrapper(args):
             name, collection, date_range = args
             return extract_features(collection, aoi, date_range, self.resolution, self._pool)

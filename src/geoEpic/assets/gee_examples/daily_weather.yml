@@ -1,7 +1,7 @@
 # Global parameters
 global_scope:
   # Define the time period for data fetching
-  time_range: ['2002-01-01', '2022-12-31']
+  time_range: ['2018-01-01', '2019-12-31']
   variables: ['srad', 'tmax', 'tmin', 'prcp', 'rh', 'ws']
   resolution: 10
 

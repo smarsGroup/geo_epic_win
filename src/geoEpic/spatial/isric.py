@@ -2,6 +2,7 @@ import hashlib
 import pandas as pd
 import ee
 from geoEpic.io import SOL
+from geoEpic.gee.initialize import ee_Initialize
 
 class SoilGrids:
     """
@@ -11,17 +12,18 @@ class SoilGrids:
     @staticmethod
     def fetch(lat, lon):
         """
-    Retrieves combined soil data with depth layers from HiHydro SoilGrids v2.0 and ISRIC SoilGrids for a given latitude and longitude.
+        Retrieves combined soil data with depth layers from HiHydro SoilGrids v2.0 and ISRIC SoilGrids for a given latitude and longitude.
 
-    Args:
-        lat (float): Latitude.
-        lon (float): Longitude.
-        resolution (int): Resolution in meters.
+        Args:
+            lat (float): Latitude.
+            lon (float): Longitude.
+            resolution (int): Resolution in meters.
 
-    Returns:
-        tuple: A tuple containing two pandas DataFrames: the raw combined data and the converted soil layer data.
-    """
+        Returns:
+            tuple: A tuple containing two pandas DataFrames: the raw combined data and the converted soil layer data.
+        """
         resolution = 250 
+        ee_Initialize()
 
         point = ee.Geometry.Point([lon, lat])  # Earth Engine uses [lon, lat]
 
