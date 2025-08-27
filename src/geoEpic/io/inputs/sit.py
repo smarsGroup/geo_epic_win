@@ -22,6 +22,46 @@ class SIT:
 
         if site_info: self.site_info.update(site_info)
 
+    @property
+    def lat(self):
+        """Get latitude value."""
+        return self.site_info["lat"]
+    
+    @lat.setter
+    def lat(self, value):
+        """Set latitude value."""
+        self.site_info["lat"] = float(value)
+    
+    @property
+    def lon(self):
+        """Get longitude value."""
+        return self.site_info["lon"]
+    
+    @lon.setter
+    def lon(self, value):
+        """Set longitude value."""
+        self.site_info["lon"] = float(value)
+
+    @property
+    def elevation(self):
+        """Get elevation value."""
+        return self.site_info["elevation"]
+    
+    @elevation.setter
+    def elevation(self, value):
+        """Set elevation value."""
+        self.site_info["elevation"] = float(value)
+    
+    @property
+    def slope(self):
+        """Get slope steep value."""
+        return self.site_info["slope_steep"]
+    
+    @slope.setter
+    def slope(self, value):
+        """Set slope steep value."""
+        self.site_info["slope_steep"] = float(value)
+
     @classmethod
     def load(cls, file_path):
         """

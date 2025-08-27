@@ -270,8 +270,8 @@ class EPICModel:
         lines[self.PF_TOG2] = '   ' + '   '.join(toggles[len(lines[self.PF_TOG1].strip().split()):]) + '\n'
         with open(print_file_path, 'w') as file:
             file.writelines(lines)
-
-    def run(self, site, verbose = True, dest = None):
+            
+    def run(self, site, verbose = False, dest = None):
         """
         Execute the model for the given site and handle output files.
 
@@ -288,6 +288,29 @@ class EPICModel:
             new_dir = dest
         else:
             new_dir = os.path.join(self.cache_path, 'EPICRUNS', str(fid))
+
+        # Check if required outputs already exist in output_dir
+        
+        if 'ACY' not in self._output_types:
+            self._output_types.append('ACY')
+        out_root = self.output_dir if dest is None else dest
+        all_outputs_exist = True
+        for out_type in self._output_types:
+            out_name = f"{fid}.{out_type}"
+            dst = os.path.join(out_root, out_name)
+            if not os.path.exists(dst) or os.path.getsize(dst) == 0:
+                all_outputs_exist = False
+                break
+        
+        # If all required outputs exist, populate site.outputs and return without executing
+        if all_outputs_exist:
+            for out_type in self._output_types:
+                out_name = f"{fid}.{out_type}"
+                dst = os.path.join(out_root, out_name)
+                site.outputs[out_type] = dst
+            if verbose:
+                print(f"All required outputs for site {fid} already exist. Skipping execution.")
+            return
 
         if os.path.exists(new_dir):
             shutil.rmtree(new_dir)
@@ -323,7 +346,6 @@ class EPICModel:
                 process.communicate(input=(b'\r\n' * 20))
             
             # Process output files
-            out_root = self.output_dir if dest is None else dest
             if not os.path.exists(out_root):
                 os.makedirs(out_root, exist_ok=True)
 
@@ -341,10 +363,8 @@ class EPICModel:
         finally:
             # Clean up
             if self.delete_after_run or self.cache_path == '/dev/shm':
-                try:
-                    shutil.rmtree(new_dir)
-                except Exception:
-                    pass
+                try: shutil.rmtree(new_dir)
+                except Exception: pass
 
     def _writeDATFiles(self, site, dest = None):
         """

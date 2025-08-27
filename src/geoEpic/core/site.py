@@ -69,9 +69,9 @@ class Site:
                 name += cfg['ext']
             paths[key] = os.path.join(cfg['dir'], name)
 
-        # # Handle 'sit' separately
-        # sit_path = os.path.join(config['site_dir'], f"{site_id}.SIT")
-        # paths['sit'] = sit_path
+        # Handle 'sit' separately
+        sit_path = os.path.join(config['site_dir'], f"1.SIT")
+        paths['sit'] = sit_path
 
         # Check for missing files
         missing_files = [f"{key.upper()} file not found: {path}" for key, path in paths.items() if not os.path.exists(path)]

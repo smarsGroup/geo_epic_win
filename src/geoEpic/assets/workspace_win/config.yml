@@ -16,9 +16,9 @@ output_dir: ./output
 
 # Path to folders containing input files
 weather_dir: ./weather
-soil_dir: ./soil/files
+soil_dir: ./soil
 site_dir: ./sites
-opc_dir: ./opc/files
+opc_dir: ./opc
 
 
 # Workspace Run Options

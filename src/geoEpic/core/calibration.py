@@ -181,6 +181,7 @@ class Problem_Wrapper:
             f0 = float(f[0] if np.ndim(f) else f)
             bar.set_postfix({"Best_Fitness": f"{f0:.6g}"})
             bar.update(1)
+            self.workspace.clear_outputs()
         
         bar.close()
         print(f"Final best fitness: {self.population.champion_f}")
