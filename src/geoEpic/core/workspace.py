@@ -51,7 +51,7 @@ class Workspace:
         self.routines = {}
         self.objective_function = None
         self.dataframes = {}
-        self.delete_after_use = True
+        self.delete_after_use = False
         
         self.model = EPICModel.from_config(config_path)
 

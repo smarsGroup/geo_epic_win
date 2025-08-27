@@ -10,7 +10,14 @@ class SIT:
         Parameters:
         site_info (dict): Dictionary containing site information (optional).
         """
-        self.template = []
+        # Load template from template.SIT file in the same directory as this Python file
+        template_path = os.path.join(os.path.dirname(__file__), 'template.SIT')
+        if os.path.exists(template_path):
+            with open(template_path, 'r') as file:
+                self.template = file.readlines()
+        else:
+            self.template = []
+        
         self.site_info = {
             "ID": 'Ne2',
             "lat": 1,
@@ -21,6 +28,7 @@ class SIT:
         }
 
         if site_info: self.site_info.update(site_info)
+        
 
     @property
     def lat(self):
