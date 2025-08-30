@@ -106,7 +106,8 @@ class Problem_Wrapper:
     A wrapper class that provides a simplified interface for optimization and sensitivity analysis.
     
     Attributes:
-        problem (PygmoProblem): The underlying PyGMO problem instance.
+        problem (PygmoProblem): The PygmoProblem instance.
+        pg_problem (pg.problem): The wrapped PyGMO problem instance.
         algorithm: The PyGMO algorithm instance for optimization.
         population: The PyGMO population instance.
         population_size (int): Size of the population for optimization.
@@ -120,7 +121,8 @@ class Problem_Wrapper:
             workspace (Workspace): The workspace object managing the environment.
             *dfs (DataFrame-like): Variable number of parameter objects with constraints.
         """
-        self.problem = pg.problem(PygmoProblem(workspace, *dfs))
+        self.problem = PygmoProblem(workspace, *dfs)
+        self.pg_problem = pg.problem(self.problem)
         # Initialize optimization components as None
         self.algorithm = None
         self.pg_algorithm = None
@@ -161,7 +163,7 @@ class Problem_Wrapper:
         fitness_before = self.workspace.run(progress_bar = False)
         print(f"Fitness before optimization: {fitness_before}")
         print("Setting Initial Population")
-        self.population = pg.population(self.problem, size=population_size)
+        self.population = pg.population(self.pg_problem, size=population_size)
 
         # Moving average of recent per-gen durations
         recent = deque(maxlen=10)
@@ -199,15 +201,23 @@ class Problem_Wrapper:
         - dict: Results of the sensitivity analysis.
         """
         from SALib import ProblemSpec
+        
+        # Get bounds and variable names from the problem
+        lower_bounds, upper_bounds = self.problem.get_bounds()
+        var_names = self.problem.var_names
+        
+        # Create bounds in the format expected by SALib (list of [min, max] pairs)
+        bounds = [[lower_bounds[i], upper_bounds[i]] for i in range(len(var_names))]
+        
         # Define the problem using ProblemSpec
         sp = ProblemSpec({
-            'num_vars': len(self.problem.bounds),
-            'names': self.problem.var_names,
-            'bounds': [list(bound) for bound in self.problem.bounds],
-            "outputs": ["Y"]
+            'num_vars': len(bounds),
+            'names': var_names,
+            'bounds': bounds,
+            'outputs': ['Y']
         })
 
-        # Select the sampling and analysis method based on the method argument
+        # Select the sampling method based on the method argument
         if method == 'sobol':
             print(f"Sampling using Sobol with {base_no_of_samples} samples...")
             sp.sample_sobol(base_no_of_samples)
@@ -224,13 +234,16 @@ class Problem_Wrapper:
         def evaluate(samples):
             print("Evaluating objective function for each sample...")
             outputs = []
-            for i, sample in tqdm(enumerate(samples)):
+            for i, sample in enumerate(tqdm(samples)):
                 output = self.problem.fitness(sample)
-                if len(output) > 1:
-                    print('Warning: Choosing the first output')
-                outputs.append(output[0])
-            outputs = np.array(outputs)
-            return outputs
+                # Handle multi-objective case
+                if hasattr(output, '__len__') and not isinstance(output, str):
+                    if len(output) > 1:
+                        print('Warning: Multi-objective output detected, choosing the first objective')
+                    outputs.append(float(output[0]))
+                else:
+                    outputs.append(float(output))
+            return np.array(outputs)
 
         # Evaluate samples
         sp.evaluate(evaluate)
