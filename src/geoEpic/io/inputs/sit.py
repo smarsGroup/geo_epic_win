@@ -84,7 +84,8 @@ class SIT:
         instance = cls()
         with open(file_path, 'r') as file:
             instance.template = file.readlines()
-
+            
+        # print(file_path, instance.template)
         # Extract information based on the template positions
         instance.site_info["ID"] = instance.template[2].split(":")[1].strip()
         instance.site_info["lat"] = float(instance.template[3][0:8].strip())
