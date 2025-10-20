@@ -61,7 +61,15 @@ def check_and_install_dependencies():
     except ImportError:
         print("Installing pygmo...")
         run_command(['conda', 'install', '-c', 'conda-forge', 'pygmo'])
-    
+
+    # Check for pywin32
+    try:
+        import win32api
+        print("pywin32 is already installed.")
+    except ImportError:
+        print("Installing pywin32...")
+        run_command(['conda', 'install', '-c', 'conda-forge', 'pywin32'])
+
 setup_metadata()
 check_and_install_dependencies()
 
