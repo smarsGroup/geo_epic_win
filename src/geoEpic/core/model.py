@@ -304,6 +304,8 @@ class EPICModel:
             new_dir = dest
         else:
             new_dir = os.path.join(self.cache_path, 'EPICRUNS', str(fid))
+        
+        new_dir = os.path.abspath(new_dir)
 
         # Check if required outputs already exist in output_dir
         

@@ -36,14 +36,18 @@ class Workspace:
         data_logger (DataLogger): Instance of the DataLogger for logging data.
     """
 
-    def __init__(self, config_path, cache_path=None):
+    def __init__(self, config_path, cache_path=None, debug=False):
         """
         Initialize the Workspace with a configuration file.
 
         Args:
             config_path (str): Path to the configuration file.
             cache_path (str): Path to store cahe, /dev/shm by default
+            debug (bool): If True, print debug statements. Defaults to False.
         """
+        self.debug = debug
+        if self.debug:
+            print(f"Initializing Workspace with config: {config_path}")
         self.uuid = uuid() 
         config = ConfigParser(config_path)
         self.config = config.as_dict()
@@ -53,8 +57,10 @@ class Workspace:
         self.dataframes = {}
         self.delete_after_use = False
         
+        if self.debug:
+            print(f"Loading model from config...")
         self.model = EPICModel.from_config(config_path)
-
+        
         # Create Cache folders on RAM or local storage
         username = os.getlogin()
         if cache_path is None: 
@@ -62,16 +68,20 @@ class Workspace:
             else: cache_path = os.path.join(self.base_dir, '.cache')
         self.cache = os.path.join(cache_path, f'geo_epic_{username}', self.uuid)
         os.makedirs(self.cache, exist_ok=True)
+        if self.debug:
+            print(f"Cache configured at: {self.cache}")
         self.model.cache_path = self.cache
 
         # Process run info
+        if self.debug:
+            print(f"Processing run info...")
         self._process_run_info(self.config['run_info'])
 
         # Initialise DataLogger
-        if platform.system() == "Windows":
-            self.data_logger = DataLogger(self.cache, backend = 'sql')
-        else:
-            self.data_logger = DataLogger(self.cache, backend = 'redis')
+        # if platform.system() == "Windows":
+        self.data_logger = DataLogger(self.cache, backend = 'sql')
+        # else:
+            # self.data_logger = DataLogger(self.cache, backend = 'redis')
 
         self.num_of_workers = 8
 
@@ -207,6 +217,8 @@ class Workspace:
         Returns:
             Any: The result of the objective function if set, otherwise None.
         """
+        if self.debug:
+            print("Starting Workspace.run()...")
         if self.num_of_workers > os.cpu_count():
             warning_msg = (f"Workers greater than number of CPU cores ({os.cpu_count()}).")
             warnings.warn(warning_msg, RuntimeWarning)

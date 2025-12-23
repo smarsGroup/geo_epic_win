@@ -58,6 +58,12 @@ class ConfigParser:
     
     def __getitem__(self, key):
         return self.get(key, None)
+    
+    def __contains__(self, key):
+        return key in self.config_data
+
+    def __iter__(self):
+        return iter(self.config_data)
 
     def __repr__(self):
         return repr(self.config_data)
