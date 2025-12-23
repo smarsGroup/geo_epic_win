@@ -197,5 +197,7 @@ package-data = {"geoEpic" = [
     "assets/**/**/*",
     "io/inputs/template.sol",
     "io/inputs/template.sit",
+    "io/inputs/template.SOL",
+    "io/inputs/template.SIT",
     "assets/EPICeditor.xlsm",
 ]}
