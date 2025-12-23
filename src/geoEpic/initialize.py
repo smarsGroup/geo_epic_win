@@ -27,12 +27,21 @@ def setup_metadata():
         # ]
 
     if platform.system() == 'Linux':
+        # Install Redis server
         try:
-            run_command(["redis-server", "--version"])
-            print("Redis is already installed.")
-        except:
-            print("Installing Redis...")
-            run_command(['conda', 'install', '-c', 'conda-forge', 'redis'])
+            subprocess.run(["redis-server", "--version"], capture_output=True, check=True)
+            print("Redis server is already installed.")
+        except (FileNotFoundError, subprocess.CalledProcessError):
+            print("Installing Redis server...")
+            run_command(['conda', 'install', '-c', 'conda-forge', 'redis', '-y'])
+        
+        # Verify redis-py package is installed
+        try:
+            import redis
+            print("redis-py is already installed.")
+        except ImportError:
+            print("Installing redis-py...")
+            run_command(['pip', 'install', 'redis'])
         
     # Download the files to the metadata directory if they don't already exist
     for file_url in files_to_download:
@@ -62,13 +71,14 @@ def check_and_install_dependencies():
         print("Installing pygmo...")
         run_command(['conda', 'install', '-c', 'conda-forge', 'pygmo'])
 
-    # Check for pywin32
-    try:
-        import win32api
-        print("pywin32 is already installed.")
-    except ImportError:
-        print("Installing pywin32...")
-        run_command(['conda', 'install', '-c', 'conda-forge', 'pywin32'])
+    # Check for pywin32 (Windows only)
+    if platform.system() == 'Windows':
+        try:
+            import win32api
+            print("pywin32 is already installed.")
+        except ImportError:
+            print("Installing pywin32...")
+            run_command(['conda', 'install', '-c', 'conda-forge', 'pywin32', '-y'])
 
 setup_metadata()
 check_and_install_dependencies()

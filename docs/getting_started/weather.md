@@ -83,102 +83,43 @@ geo_epic weather config.yml --fetch ./boundaries/fields.shp --out ./weather_outp
 
 ### 2.3 Python API
 
-Use the `geoEpic.io.fetch_list` function for programmatic fetching.
+#### Direct Fetching with `geoEpic.spatial`
 
-**Fetch for a Single Location:**
-
-```python
-from geoEpic.io import fetch_list
-
-# Define parameters
-config = 'path/to/your/config.yml'
-output = './weather_output/NewYorkCity.DLY' # Specific file path for single location
-single_location = "40.71,-74.00" # Latitude,Longitude as a string
-
-# Fetch weather data
-fetch_list(
-config_file=config,
-input_data=single_location,
-output_dir=output, # For single location, this is the full output file path
-raw=False # False saves as .DLY (default)
-)
-print(f"Weather data fetched for {single_location} and saved to {output}")
-```
-
-**Fetch for Multiple Locations (CSV or Shapefile):**
+For simple single-location fetching, use the `Daymet` and `AgEra5` classes directly:
 
 ```python
-from geoEpic.io import fetch_list
+from geoEpic.spatial import Daymet, AgEra5
+from geoEpic.io import DLY
 
-# Define parameters
-config = 'path/to/your/config.yml'
-# Input can be a path to a CSV or a Shapefile
-input_data = 'path/to/locations.csv' # or 'path/to/area_of_interest.shp'
-output = './weather_output' # Base output directory
+# Fetch weather data from Daymet or AgERA5
+dly_daymet = Daymet.fetch(lat=35.9768, lon=-90.1399)
+print(dly_daymet['srad'].head())
 
-# Fetch weather data for all locations/features in the input file
-# Note: If input is CSV, it must contain columns like 'lat', 'lon', and potentially output paths
-# output_dir acts as a base path if paths in CSV are relative, or target dir for shapefile outputs.
-# GeoEPIC adds 'wthgridid' column/attribute to the input file.
-fetch_list(
-config_file=config,
-input_data=input_data,
-output_dir=output,
-raw=False # False saves as .DLY (default)
-)
-print(f"Weather data fetched for locations/regions in {input_data}.")
-print("Input file has been updated with 'wthgridid'.")
+dly_era5 = AgEra5.fetch(lat=35.9768, lon=-90.1399)
+dly_era5.save('era5_weather.DLY')
+
+# Load and manipulate existing weather file
+dly = DLY.load('./existing_weather.DLY')
+dly.to_monthly()  # Saves as WP1 format
 ```
 
 ## 3. Editing Weather File
 
-Once `.DLY` files are created (or if you have existing ones), the `geoEpic.io.DLY` class in the Python API allows loading, manipulation, and further processing. It acts like a `pandas.DataFrame` with added EPIC-specific features.
+Once `.DLY` files are created, the `geoEpic.io.DLY` class allows loading, manipulation, and further processing. It acts like a `pandas.DataFrame` with added EPIC-specific features.
 
 ```python
-import pandas as pd
-from geoEpic.io import DLY # Import the DLY class
+from geoEpic.io import DLY
 
-# --- Loading Data ---
-# Replace './output/NewYorkCity.DLY' with the path to an actual .DLY file
-dly_filepath = './output/NewYorkCity.DLY'
-try:
-dly_data = DLY.load(dly_filepath) # Use the class method 'load'
-print(f"Successfully loaded weather data from {dly_filepath}")
+# Load and manipulate existing weather file
+dly = DLY.load('./weather1.DLY')
+print(dly['srad'].head())
 
-# --- Inspecting and Manipulating Data (using pandas methods) ---
-print("\nFirst 5 rows of weather data:")
-print(dly_data.head())
-
-print("\nDaily Solar Radiation (srad) head:")
-print(dly_data['srad'].head()) # Access columns like a DataFrame
-
-print("\nWeather data summary statistics:")
-print(dly_data.describe())
-
-# Example manipulation: Calculate Temperature Range
-# dly_data['Trange'] = dly_data['tmax'] - dly_data['tmin']
-# print("\nDaily Temperature Range (first 5 days):")
-# print(dly_data['Trange'].head())
-
-# --- EPIC-specific Functionality: Creating Monthly Files ---
-# Aggregates daily data to monthly stats and saves as .WP1
-print("\nGenerating monthly weather file (.WP1)...")
-wp1_filepath = dly_data.to_monthly() # Returns the path of the created WP1 file
-
-if wp1_filepath:
-print(f"Monthly weather file created successfully: {wp1_filepath}")
-else:
-print("Failed to create monthly weather file.")
-
-except FileNotFoundError:
-print(f"Error: The specified .DLY file was not found: {dly_filepath}")
-except Exception as e:
-print(f"An error occurred while processing {dly_filepath}: {e}")
-
+# Generate monthly weather file (.WP1)
+dly.to_monthly()
 ```
 
 **Key `DLY` Class Features:**
 
 * **Loading:** `DLY.load(filepath)` reads a `.DLY` file into a DLY object (DataFrame subclass).
-* **Data Access/Manipulation:** Utilize standard `pandas.DataFrame` methods for analysis and modification.
-* **Monthly Aggregation:** `dly_data.to_monthly()` calculates monthly statistics (averages/totals as appropriate for EPIC) and saves the results to a `.WP1` file (typically in the same directory with the same base name as the `.DLY` file).
+* **Data Access:** Utilize standard `pandas.DataFrame` methods for analysis and modification.
+* **Monthly Aggregation:** `dly.to_monthly()` calculates monthly statistics and saves as `.WP1` file.

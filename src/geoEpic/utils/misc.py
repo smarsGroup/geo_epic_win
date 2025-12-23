@@ -273,6 +273,9 @@ class WorkerPoolWin:
     _HDR_SIZE = 12   # 3×uint32: [capacity, head, tail]
 
     def __init__(self, pool_key: str = None, base_dir: str = None):
+        if not IS_WINDOWS:
+            raise RuntimeError("WorkerPoolWin can only be used on Windows. "
+                             "Use WorkerPool (Redis-based) on Linux instead.")
         self.pool_key = pool_key or f"worker_pool_{shortuuid.uuid()}"
         self.base_dir  = base_dir
         self._inited   = False

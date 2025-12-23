@@ -4,6 +4,14 @@ from tqdm import tqdm
 import sys, traceback
 import inspect
 
+def run_with_timeout(func, args=(), kwargs={}, timeout=None):
+    """
+    Run a function with a timeout using pebble.ThreadPool.
+    """
+    with ThreadPool(max_workers=1) as pool:
+        future = pool.schedule(func, args=args, kwargs=kwargs)
+        return future.result(timeout=timeout)
+
 def parallel_executor(func, args, method='Process', max_workers=10, return_value=False,
                       bar=True, timeout=None, verbose=True):
     """

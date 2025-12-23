@@ -5,7 +5,7 @@ import warnings
 import pandas as pd
 from functools import wraps
 from geoEpic.io import DataLogger, ConfigParser
-from geoEpic.utils import parallel_executor, filter_dataframe
+from geoEpic.utils import parallel_executor, run_with_timeout, filter_dataframe
 from .model import EPICModel
 from .site import Site
 import geopandas as gpd
@@ -223,7 +223,12 @@ class Workspace:
         info_ls = info.to_dict('records')
 
         # Run first simulation for error check, if progress bar is enabled
-        if progress_bar: self.run_simulation(info_ls.pop(0))
+        if progress_bar: 
+            run_with_timeout(
+                self.run_simulation, 
+                args=(info_ls.pop(0),), 
+                timeout=self.config["timeout"]
+            )
         temp = self.model._model_lock
         self.model._model_lock = None
         # Execute simulations in parallel

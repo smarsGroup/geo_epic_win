@@ -60,11 +60,23 @@ class SOL:
         if self.layers_df is None:
             raise ValueError("Soil properties DataFrame is empty. Nothing to save.")
         
-        if template is not None:
+        # --- Load template lines ---
+        if template is None:
+            template_path = os.path.join(os.path.dirname(__file__), "template.SOL")
+            with open(template_path, "r") as file:
+                template_lines = file.readlines()
+        elif isinstance(template, (str, os.PathLike)):
+            # template provided as a file path
+            template_path = os.fspath(template)
+            with open(template_path, "r") as file:
+                template_lines = file.readlines()
+        elif isinstance(template, list):
+            # template provided as lines
             template_lines = template.copy()
         else:
-            with open(f'{os.path.dirname(__file__)}/template.SOL', 'r') as file:
-                template_lines = file.readlines()
+            raise TypeError(
+                "template must be None, a list of lines, or a path (str/os.PathLike)."
+            )
         
         template_lines[0] = f"ID: {self.soil_id}\n"
         hydgrp_conv = {'A': 1, 'B': 2, 'C': 3, 'D': 4}.get(self.hydgrp, 3)  # Default to 3 if not found

@@ -80,6 +80,72 @@ class Site:
 
         return cls(opc=paths['opc'], dly=paths['dly'], sol=paths['soil'], sit=paths['sit'], site_id=site_id)
 
+    @classmethod
+    def fetch_usa(cls, lat, lon, opc, site_id=None, start_date=None, end_date=None):
+        """
+        Fetch all required EPIC input files for a location in the conterminous USA.
+        
+        This method automatically retrieves:
+        - Soil data from SSURGO via Soil Data Access
+        - Weather data from Daymet
+        - Elevation and slope from DEM (GLO-30)
+        
+        Args:
+            lat (float): Latitude of the site
+            lon (float): Longitude of the site
+            opc (str): Path to the OPC (operation schedule) file
+            site_id (str, optional): Site identifier. Auto-generated if None.
+            start_date (str, optional): Weather data start date (YYYY-MM-DD format)
+            end_date (str, optional): Weather data end date (YYYY-MM-DD format)
+        
+        Returns:
+            Site: A Site object with all input files fetched and ready for simulation
+        
+        Example:
+            >>> site = Site.fetch_usa(41.1686, -96.4736, opc='./irrigated_corn.OPC')
+            >>> print(site)
+        """
+        from geoEpic.spatial import DEM, SSURGO, Daymet
+        import tempfile
+        import shortuuid
+        
+        # Generate site ID if not provided
+        if site_id is None:
+            site_id = shortuuid.uuid()[:8]
+        
+        # Create temp directory for files
+        temp_dir = tempfile.mkdtemp(prefix=f'geoepic_{site_id}_')
+        
+        # 1. Fetch elevation and slope from DEM
+        elevation, slope = DEM.fetch(lat, lon)
+        
+        # 2. Fetch soil data from SSURGO
+        sol = SSURGO.fetch(lat, lon)
+        sol_path = os.path.join(temp_dir, f'{site_id}.SOL')
+        sol.save(sol_path)
+        
+        # 3. Fetch weather data from Daymet
+        dly = Daymet.fetch(lat, lon, start_date, end_date)
+        dly_path = os.path.join(temp_dir, f'{site_id}.DLY')
+        dly.save(dly_path)
+        
+        # 4. Create site file with location and terrain info
+        sit = SIT({
+            'ID': site_id, 
+            'lat': lat, 
+            'lon': lon, 
+            'elevation': elevation, 
+            'slope_steep': slope,
+            'slope_length': 0.0  # Default slope length
+        })
+        sit_path = os.path.join(temp_dir, f'{site_id}.SIT')
+        sit.save(sit_path)
+        
+        # Resolve OPC path
+        opc_path = os.path.abspath(opc) if opc else None
+        
+        return cls(opc=opc_path, dly=dly_path, sol=sol_path, sit=sit_path, site_id=site_id)
+
     @property
     def latitude(self):
         """Latitude of the site."""

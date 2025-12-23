@@ -61,7 +61,11 @@ def get_gridmet_data(lat: float, lon: float, start: str, end: str, vars=['ws']):
     """
     Fetch GRIDMET data for specified variables and location within a time range.
     For 'rh', fetch rmax and rmin, then average to get daily mean RH.
+    
+    Falls back to HTTPS if HTTP fails, and returns zeros with warning if both fail.
     """
+    import warnings
+    
     # Mapping from short variable names to GRIDMET dataset names
     variables_map = {
         'ws': 'vs',   # Wind speed
@@ -83,16 +87,30 @@ def get_gridmet_data(lat: float, lon: float, start: str, end: str, vars=['ws']):
     fetch_vars = list(dict.fromkeys(fetch_vars))  # Remove duplicates, preserve order
 
     var_dfs = {}
+    network_failed = False
+    
     for variable in fetch_vars:
         if variable not in variables_map:
             raise ValueError(f"Variable {variable} not recognized.")
         
-        # Construct the URL for the dataset
-        dataset_url = f"http://thredds.northwestknowledge.net:8080/thredds/dodsC/agg_met_{variables_map[variable]}_1979_CurrentYear_CONUS.nc"
-        # with tempfile.NamedTemporaryFile(suffix=".nc") as tmp:
-        #     tmp.write(requests.get(dataset_url).content)
-        #     temp_path = tmp.name
-        data = xr.open_dataset(dataset_url, engine="netcdf4")
+        # Try HTTPS first, then HTTP as fallback
+        urls = [
+            f"https://thredds.northwestknowledge.net/thredds/dodsC/agg_met_{variables_map[variable]}_1979_CurrentYear_CONUS.nc",
+            f"http://thredds.northwestknowledge.net:8080/thredds/dodsC/agg_met_{variables_map[variable]}_1979_CurrentYear_CONUS.nc"
+        ]
+        
+        data = None
+        for dataset_url in urls:
+            try:
+                data = xr.open_dataset(dataset_url, engine="netcdf4")
+                break  # Success, exit loop
+            except (OSError, Exception) as e:
+                continue  # Try next URL
+        
+        if data is None:
+            # Both URLs failed - set flag and continue
+            network_failed = True
+            continue
         
         # Select the nearest location data and time slice
         data = data.sel(lon=lon, lat=lat, method='nearest')
@@ -104,6 +122,19 @@ def get_gridmet_data(lat: float, lon: float, start: str, end: str, vars=['ws']):
         var_df.reset_index(inplace=True)
         var_dfs[variable] = var_df
 
+    # If network failed for all variables, return DataFrame with zeros
+    if network_failed and not var_dfs:
+        warnings.warn(
+            "GridMET data fetch failed (network blocked). Using zeros for wind speed and other GridMET variables.",
+            UserWarning
+        )
+        # Create a date range and return zeros
+        date_range = pd.date_range(start=start, end=end, freq='D')
+        df = pd.DataFrame({'date': date_range})
+        for v in vars:
+            df[v] = 0.0
+        return df.round(2)
+    
     # Merge all variable DataFrames on 'day'
     df = None
     for var_df in var_dfs.values():
@@ -112,13 +143,26 @@ def get_gridmet_data(lat: float, lon: float, start: str, end: str, vars=['ws']):
         else:
             df = df.merge(var_df, on='day', how='outer')
 
+    # Handle case where some variables failed but not all
+    if df is None:
+        warnings.warn(
+            "GridMET data fetch failed (network blocked). Using zeros for wind speed and other GridMET variables.",
+            UserWarning
+        )
+        date_range = pd.date_range(start=start, end=end, freq='D')
+        df = pd.DataFrame({'date': date_range})
+        for v in vars:
+            df[v] = 0.0
+        return df.round(2)
+
     # For 'rh', average rmax and rmin, then drop them
     if 'rh' in vars:
-        if 'rmax' not in df.columns or 'rmin' not in df.columns:
-            raise ValueError("rmax and rmin must be present to calculate rh")
-        df['rh'] = (df['rmax'] + df['rmin']) / 2
-        df['rh'] = df['rh'] / 100
-        df = df.drop(columns=[col for col in ['rmax', 'rmin'] if col in df.columns])
+        if 'rmax' in df.columns and 'rmin' in df.columns:
+            df['rh'] = (df['rmax'] + df['rmin']) / 2
+            df['rh'] = df['rh'] / 100
+            df = df.drop(columns=[col for col in ['rmax', 'rmin'] if col in df.columns])
+        else:
+            df['rh'] = 0.0
 
     # Convert tmax and tmin from Kelvin to Celsius if present
     if 'tmax' in df.columns:

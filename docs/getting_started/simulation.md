@@ -3,7 +3,37 @@ The GeoEPIC package facilitates running simulations and examining outputs, compl
 
 ## Single Site Simulation
 
-Follow these steps to run a simulation for an individual site:
+### Quick Start: Crop Yield Estimation
+
+For locations in the conterminous USA, the `Site.fetch_usa` method provides a streamlined workflow that automatically retrieves soil (SSURGO), weather (Daymet), and terrain (DEM) data:
+
+```python
+from geoEpic.core import Site, EPICModel
+from geoEpic.io import ACY, DGN
+
+# Location of interest (Mead, Nebraska, USA)
+lat, lon = 41.1686, -96.4736
+
+# Fetch required input data and create Site object
+site = Site.fetch_usa(lat, lon, opc='./irrigated_corn.OPC')
+
+# Configure and run model
+model = EPICModel('./model/EPIC1102.exe')
+model.start_date = '2015-01-01'
+model.duration = 5  # in years
+model.run(site)
+model.close()
+
+# Extract outputs
+yields = ACY(site).get_var('YLDG')
+lai = DGN(site).get_var('LAI')
+```
+
+This example simulates corn growth for 5 years (2015-2019) near Mead, Nebraska. The `Site.fetch_usa` method handles all input file generation automatically.
+
+### Manual Site Setup
+
+For more control over input files, follow these steps to run a simulation for an individual site:
 
 1.  **Prepare the Site Object:**
     First, create a `Site` object. This object encapsulates necessary input file references: the crop management file (`OPC`), weather data file (`DLY`), soil file (`SOL`), and site file (`SIT`). The `Site``` object also keeps track of output files generated during the simulation, like the annual crop yield file (`ACY`).

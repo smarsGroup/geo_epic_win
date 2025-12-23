@@ -53,6 +53,11 @@ class EPICModel:
         # Load file names from EPICFILE.DAT
         self._load_file_names()
         self.get_output_types()
+        # Ensure ACY and DGN are always enabled by default
+        for default_type in ['ACY', 'DGN']:
+            if default_type not in self._output_types:
+                self._output_types.append(default_type)
+        self.set_output_types(self._output_types)
 
         if platform.system() != "Windows":
             # On Unix-like systems, use chmod to make the file executable
@@ -98,10 +103,10 @@ class EPICModel:
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
         with open(epiccont_path, 'r') as file:
             line = file.readline()
-            values = line.split()
-            year = int(values[1])
-            month = int(values[2])
-            day = int(values[3])
+            # Read by fixed 4-char positions: duration[0:4], year[4:8], month[8:12], day[12:16]
+            year = int(line[4:8].strip())
+            month = int(line[8:12].strip())
+            day = int(line[12:16].strip())
             self._start_date = date(year, month, day)
         return self._start_date
 
@@ -131,13 +136,16 @@ class EPICModel:
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
         with open(epiccont_path, 'r+') as file:
             lines = file.readlines()
-            values = lines[0].split()
-            values[1] = f"{value.year:4d}"
-            values[2] = f"{value.month:2d}"
-            values[3] = f"{value.day:2d}"
-            lines[0] = ' '.join(values) + '\n'
+            line0 = lines[0]
+            # Read first 4 chars as duration (preserve it), replace chars 4-16 with year/month/day
+            duration_part = line0[0:4]  # Keep original duration
+            rest_of_line = line0[16:] if len(line0) > 16 else '\n'
+            # Format year, month, day each as 4 chars
+            formatted = f"{duration_part}{value.year:4d}{value.month:4d}{value.day:4d}"
+            lines[0] = formatted + rest_of_line
             file.seek(0)
             file.writelines(lines)
+            file.truncate()
 
     @property
     def duration(self):
@@ -150,8 +158,8 @@ class EPICModel:
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
         with open(epiccont_path, 'r') as file:
             line = file.readline()
-            values = line.split()
-            self._duration = int(values[0])
+            # Read by fixed 4-char position: duration[0:4]
+            self._duration = int(line[0:4].strip())
         return self._duration
 
     @duration.setter
@@ -166,11 +174,13 @@ class EPICModel:
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
         with open(epiccont_path, 'r+') as file:
             lines = file.readlines()
-            values = lines[0].split()
-            values[0] = f" {value:3d}"
-            lines[0] = ' '.join(values) + '\n'
+            line0 = lines[0]
+            # Only replace first 4 chars (duration), keep rest unchanged
+            rest_of_line = line0[4:] if len(line0) > 4 else '\n'
+            lines[0] = f"{value:4d}" + rest_of_line
             file.seek(0)
             file.writelines(lines)
+            file.truncate()
 
     @property
     def output_types(self):
@@ -219,15 +229,21 @@ class EPICModel:
         Args:
             config (dict): Configuration dictionary containing model settings.
         """
-        self.start_date = config.get('start_date', self.start_date)
-        self.duration = config.get('duration', self.duration)
+        # Only set if config explicitly provides a value (avoid read-then-write)
+        if 'start_date' in config and config['start_date'] is not None:
+            self.start_date = config['start_date']
+        if 'duration' in config and config['duration'] is not None:
+            self.duration = config['duration']
+        
         self.output_dir = os.path.abspath(config.get('output_dir', self.output_dir))
         self.log_dir = os.path.abspath(config.get('log_dir', self.log_dir))
         if self.output_dir:
             os.makedirs(self.output_dir, exist_ok=True)
         if self.log_dir:
             os.makedirs(self.log_dir, exist_ok=True)
-        self.set_output_types(config.get('output_types', self.output_types))
+        
+        if 'output_types' in config and config['output_types'] is not None:
+            self.set_output_types(config['output_types'])
 
     @classmethod
     def from_config(cls, config_path):

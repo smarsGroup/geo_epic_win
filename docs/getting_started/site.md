@@ -19,7 +19,28 @@ GeoEPIC provides tools, primarily through its Python API, to manage `.SIT` files
     *   Slope Length (`SL`) - in meters
     *   Other parameters as required by the specific EPIC simulation setup (e.g., weather station details, drainage type). Refer to the EPIC manual for a full list and description of `.SIT` parameters.
 
-### **1.2 Using Python API**
+### **1.2 Fetching Elevation and Slope**
+
+The `DEM` class in the `geoEpic.spatial` module retrieves elevation and slope data from digital elevation models:
+
+```python
+from geoEpic.spatial import DEM
+from geoEpic.io import SIT
+
+# Defaults to GLO-30, can specify source="ASTER" or "SRTM"
+elevation, slope = DEM.fetch(lat=35.9768, lon=-90.1399)
+
+# Create new site file with fetched data
+new_site = SIT({'elevation': elevation, 'slope_steep': slope, 'lat': 35.9768, 'lon': -90.1399})
+new_site.save('new_site.SIT')
+```
+
+Supported DEM sources:
+- **GLO-30** (default): Copernicus Global DEM at 30m resolution
+- **SRTM**: NASA Shuttle Radar Topography Mission
+- **ASTER**: Advanced Spaceborne Thermal Emission and Reflection Radiometer
+
+### **1.3 Using Python API**
 
 The `SIT` class within the `geoEpic.io` module allows for programmatic loading, modification, and saving of `.SIT` files.
 
@@ -32,50 +53,16 @@ The `SIT` class within the `geoEpic.io` module allows for programmatic loading, 
 
 **Usage Example:**
 
-The following code demonstrates loading a `.SIT` file, modifying several parameters (site area, slope, and a specific value using the `entries` list), and saving the changes to a new file.
+The following example demonstrates loading and modifying a `.SIT` file:
 
 ```python
 from geoEpic.io import SIT
 
-# Define file paths
-input_sit_path = './path/to/your/template_or_existing.SIT'
-output_sit_path = './path/to/your/new_or_modified_site.SIT'
-
-try:
-    # Load the SIT file
-    sit_file = SIT.load(input_sit_path)
-    print(f"Loaded site file: {input_sit_path}")
-
-    # Modify site attributes directly
-    original_area = sit_file.area
-    sit_file.area = 1.5  # site area in hectares
-    print(f"Changed site area from {original_area} ha to {sit_file.area} ha")
-
-    original_slope = sit_file.slope
-    sit_file.slope = 0.02 # slope as a fraction (e.g., 0.02 for 2%)
-    print(f"Changed slope from {original_slope} to {sit_file.slope}")
-
-    # Modify a specific entry using the 'entries' list
-    # Example: Change the value at Line 4, Field 1 (0-based indexing for fields might apply)
-    # Check the SIT file structure and geoEpic documentation for exact indexing
-    line_index = 4 # Assuming line 5 in the file (0-based index)
-    field_index = 1 # Assuming the second value on that line
-    if len(sit_file.entries) > line_index and len(sit_file.entries[line_index]) > field_index:
-        original_entry_value = sit_file.entries[line_index][field_index]
-        sit_file.entries[line_index][field_index] = 2.0
-        print(f"Changed entry at Ln{line_index+1}-F{field_index+1} from {original_entry_value} to {sit_file.entries[line_index][field_index]}")
-    else:
-        print(f"Warning: Cannot access entry at Ln{line_index+1}-F{field_index+1}. File structure might differ.")
-
-    # Save the changes to a new SIT file
-    sit_file.save(output_sit_path)
-    print(f"Saved modified site file to: {output_sit_path}")
-
-except FileNotFoundError:
-    print(f"Error: Input site file not found at {input_sit_path}")
-except Exception as e:
-    print(f"An error occurred during site file processing: {e}")
-
+# Load and modify existing file
+sit_file = SIT.load('./site1.SIT')
+sit_file.elevation = 335.0
+sit_file.slope = 0.02
+sit_file.save('./site1_modified.SIT')
 ```
 
-This example illustrates how the `SIT` class simplifies managing site characteristics. Direct property accessors provide an intuitive interface for common parameters, while the `entries` attribute offers flexibility for modifying any part of the file, ensuring compatibility with the EPIC model's requirements whether you are creating a new site configuration from a template or editing an existing one.
+This example illustrates how the `SIT` class simplifies managing site characteristics through direct property accessors.

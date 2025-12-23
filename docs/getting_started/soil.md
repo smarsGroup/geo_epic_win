@@ -74,28 +74,28 @@ To process a downloaded SSURGO GDB file and generate soil files for all unique s
 
 ### **2.3 Using Python API**
 
-To download soil data programmatically from the Soil Data Access (SDA) service, you can use the `SoilDataAccess` class. This class provides a method to fetch soil properties based on either a mukey (integer) or a WKT location string.
+The `geoEpic.spatial` module provides classes for fetching soil data programmatically:
+
+*   **`SSURGO.fetch(lat, lon)`**: Fetches soil properties from USDA SSURGO for a given location.
+*   **`SoilGrids.fetch(lat, lon)`**: Fetches soil properties from the global ISRIC SoilGrids database (250m resolution).
 
 ```python
-from soil_data_access import SoilDataAccess
+from geoEpic.spatial import SSURGO, SoilGrids
+from geoEpic.io import SOL
 
-# Fetch soil properties using a mukey (integer)
-soil_data_mukey = SoilDataAccess.fetch_properties(123456)
-print(soil_data_mukey)
+# Fetch soil data from USDA SSURGO or SoilGrids
+soil_ssurgo = SSURGO.fetch(lat=35.9768, lon=-90.1399)
+soil_grids = SoilGrids.fetch(lat=35.9768, lon=-90.1399)
+soil_grids.save('soilgrids_1.SOL')
 
-# Fetch soil properties using a WKT location (string)
-wkt_location = "POINT(-93.62 41.58)" # Example point WKT
-soil_data_wkt = SoilDataAccess.fetch_properties(wkt_location)
-print(soil_data_wkt)
-
-# Example using a Polygon WKT
-# wkt_polygon = "POLYGON((-93.5 41.5, -93.5 41.6, -93.4 41.6, -93.4 41.5, -93.5 41.5))"
-# soil_data_poly = SoilDataAccess.fetch_properties(wkt_polygon)
-# print(soil_data_poly)
-
+# Load and modify existing soil file
+soil = SOL.load('./existing_soil.SOL')
+soil.albedo = 0.15
+soil.layers_df.loc[0, 'Bulk_Density'] = 1.35
+soil.save('modified_soil.SOL')
 ```
 
-This `fetch_properties` method returns a Pandas DataFrame containing various soil properties (e.g., bulk density, field capacity, sand content) for the specified input.
+Both `SSURGO.fetch` and `SoilGrids.fetch` return a `SOL` object that can be directly saved or modified.
 
 ## **3. Editing Soil File**
 
