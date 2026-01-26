@@ -1,4 +1,4 @@
-# Geo-EPIC
+# Geo-EPIC-win
 
 A toolkit for geospatial crop simulations using EPIC model
 
@@ -8,12 +8,12 @@ Documentation: https://smarsgroup.github.io/geo_epic_win/
 
 ## Overview
 
-This package expands the capabilities of the EPIC crop simulation model, to simulate crop growth and development across large geographies, such as entire states or counties by leveraging openly availabe remote sensing products and geospatial databases. Additionally, the toolkit features a unique calibration module that allows fine-tuning of model parameters to reflect specific local conditions or experimental results. This toolkit allows researchers to assess crop production potential, management scenarios and risks at broader scales, informing decision-making for sustainable agricultural practices.
+This package expands the capabilities of the EPIC crop simulation model to simulate crop growth and development across large geographies, such as entire states or counties by leveraging openly availabe remote sensing products and geospatial databases. Additionally, the toolkit features a unique calibration module that allows fine-tuning of model parameters to reflect specific local conditions or experimental results. This toolkit allows researchers to assess crop production potential, management scenarios and risks at broader scales, informing decision-making for sustainable agricultural practices.
 
 ## Installation
 
 Before starting the setup, ensure you have wget and conda installed.
-Follow the links for corresponding installation guides.
+Follow the links for the corresponding installation guides.
 
 Setup a Virtual environment. (conda Recommended)
 
