@@ -13,8 +13,8 @@ def get_gee_pool():
 
 def extract_features(collection, aoi, date_range, resolution, pool):
 
-    # worker = pool.acquire()
-    
+    worker = pool.acquire() if pool is not None else None
+
     def map_function(image):
         # Function to reduce image region and extract data
         date = image.date().format()
@@ -30,8 +30,9 @@ def extract_features(collection, aoi, date_range, resolution, pool):
                 'expression': daily_data,
                 'fileFormat': 'PANDAS_DATAFRAME'
             })
-    finally: pass
-        # pool.release(worker)
+    finally:
+        if worker is not None:
+            pool.release(worker)
 
     if not df.empty:
         df['Date'] = pd.to_datetime(df['Date']).dt.date

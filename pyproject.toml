@@ -149,8 +149,7 @@ dependencies = [
     "redis",
     "pebble",
     "Pyarrow",
-    "netCDF4",
-    "pywin32>=306; sys_platform == 'win32'"
+    "netCDF4"
 ]
 
 # List additional groups of dependencies here (e.g. development
@@ -165,7 +164,7 @@ dependencies = [
 [project.optional-dependencies]
 gdal = ["gdal"]  # only for `geo_epic soil process_gdb` (gSSURGO geodatabase)
 calib = ["pygmo"]
-test = ["coverage"]
+test = ["pytest", "coverage"]
 
 # List URLs that are relevant to your project
 #

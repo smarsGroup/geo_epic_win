@@ -1,0 +1,32 @@
+name: Tests
+
+on:
+  push:
+    branches: ['**']
+    paths-ignore: ['docs/**', '*.md']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / py${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python: ['3.11']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - name: Install package with test extras
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test]"
+      - name: Import smoke test
+        run: python -c "import geoEpic.core, geoEpic.utils, geoEpic.io, geoEpic.weather, geoEpic.soil, geoEpic.gee; print('imports ok')"
+      - name: Run tests (parallel EPIC simulations from the template workspace)
+        run: python -m pytest -v -ra tests

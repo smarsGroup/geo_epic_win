@@ -67,7 +67,7 @@ class Site:
             name = str(site_info.get(key, site_id))
             if not name.lower().endswith(cfg['ext'].lower()):
                 name += cfg['ext']
-            paths[key] = os.path.join(cfg['dir'], name)
+            paths[key] = cls._resolve_case_insensitive(cfg['dir'], name)
 
         # # Handle 'sit' separately
         # sit_path = os.path.join(config['site_dir'], f"1.SIT")
@@ -79,6 +79,20 @@ class Site:
             raise FileNotFoundError("Missing required files:\n" + "\n".join(missing_files))
 
         return cls(opc=paths['opc'], dly=paths['dly'], sol=paths['soil'], sit=paths['sit'], site_id=site_id)
+
+    @staticmethod
+    def _resolve_case_insensitive(directory, name):
+        """Return ``directory/name``; if that does not exist, look for a file whose
+        name matches ignoring case (e.g. ``site.sol`` vs ``site.SOL``), so that
+        run-info entries written on Windows also resolve on Linux."""
+        path = os.path.join(directory, name)
+        if os.path.exists(path) or not os.path.isdir(directory):
+            return path
+        lower = name.lower()
+        for entry in os.listdir(directory):
+            if entry.lower() == lower:
+                return os.path.join(directory, entry)
+        return path
 
     @classmethod
     def fetch_usa(cls, lat, lon, opc, site_id=None, start_date=None, end_date=None):

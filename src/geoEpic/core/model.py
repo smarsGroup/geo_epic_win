@@ -12,6 +12,9 @@ from geoEpic.utils import FileLockHandle
 from datetime import datetime, date
 from weakref import finalize
 
+# EPIC data files are byte-oriented ASCII/latin-1; never let the locale decide.
+EPIC_ENCODING = 'latin-1'
+
 class EPICModel:
     """
     This class handles the setup and execution of the EPIC model executable.
@@ -107,7 +110,7 @@ class EPICModel:
             datetime.date: The start date of the simulation.
         """
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
-        with open(epiccont_path, 'r') as file:
+        with open(epiccont_path, 'r', encoding=EPIC_ENCODING) as file:
             line = file.readline()
             # Read by fixed 4-char positions: duration[0:4], year[4:8], month[8:12], day[12:16]
             year = int(line[4:8].strip())
@@ -140,7 +143,7 @@ class EPICModel:
         
         self._start_date = value
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
-        with open(epiccont_path, 'r+') as file:
+        with open(epiccont_path, 'r+', encoding=EPIC_ENCODING) as file:
             lines = file.readlines()
             line0 = lines[0]
             # Read first 4 chars as duration (preserve it), replace chars 4-16 with year/month/day
@@ -162,7 +165,7 @@ class EPICModel:
             int: The duration of the simulation in years.
         """
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
-        with open(epiccont_path, 'r') as file:
+        with open(epiccont_path, 'r', encoding=EPIC_ENCODING) as file:
             line = file.readline()
             # Read by fixed 4-char position: duration[0:4]
             self._duration = int(line[0:4].strip())
@@ -178,7 +181,7 @@ class EPICModel:
         """
         self._duration = value
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
-        with open(epiccont_path, 'r+') as file:
+        with open(epiccont_path, 'r+', encoding=EPIC_ENCODING) as file:
             lines = file.readlines()
             line0 = lines[0]
             # Only replace first 4 chars (duration), keep rest unchanged
@@ -200,7 +203,7 @@ class EPICModel:
 
     def get_output_types(self):
         print_file_path = os.path.join(self.model_dir, self.file_names['FPRNT'])
-        with open(print_file_path, 'r') as file:
+        with open(print_file_path, 'r', encoding=EPIC_ENCODING) as file:
             lines = file.readlines()
         exts = lines[self.PF_EXT1].replace('*', ' ').strip().split() + lines[self.PF_EXT2].replace('*', ' ').strip().split()
         toggles = lines[self.PF_TOG1].strip().split() + lines[self.PF_TOG2].strip().split()
@@ -221,7 +224,7 @@ class EPICModel:
         """Load file names from EPICFILE.DAT"""
         self.file_names = {}
         epicfile_path = os.path.join(self.model_dir, 'EPICFILE.DAT')
-        with open(epicfile_path, 'r') as f:
+        with open(epicfile_path, 'r', encoding=EPIC_ENCODING) as f:
             lines = f.readlines()
         for line in lines:
             parts = line.split()
@@ -279,7 +282,7 @@ class EPICModel:
         self._output_types = output_types
         print_file_path = os.path.join(self.model_dir, self.file_names['FPRNT'])
         outputs_to_enable = ' '.join(output_types).lower().split()
-        with open(print_file_path, 'r') as file:
+        with open(print_file_path, 'r', encoding=EPIC_ENCODING) as file:
             lines = file.readlines()
 
         exts = lines[self.PF_EXT1].replace('*', ' ').strip().split() + lines[self.PF_EXT2].replace('*', ' ').strip().split()
@@ -290,7 +293,7 @@ class EPICModel:
 
         lines[self.PF_TOG1] = '   ' + '   '.join(toggles[:len(lines[self.PF_TOG1].strip().split())]) + '\n'
         lines[self.PF_TOG2] = '   ' + '   '.join(toggles[len(lines[self.PF_TOG1].strip().split()):]) + '\n'
-        with open(print_file_path, 'w') as file:
+        with open(print_file_path, 'w', encoding=EPIC_ENCODING) as file:
             file.writelines(lines)
             
     def run(self, site, verbose = False, dest = None):
@@ -357,7 +360,7 @@ class EPICModel:
 
             # Copy/rename the executable inside the run directory
             shutil.copy2(exe_src, executable_with_site_id)
-            with open(log_file, 'w') as log:
+            with open(log_file, 'w', encoding=EPIC_ENCODING) as log:
                 process = subprocess.Popen(
                     [executable_with_site_id],
                     stdin=subprocess.PIPE,
@@ -401,30 +404,30 @@ class EPICModel:
         # Determine the base directory for file operations
         base_dir = dest if dest is not None else '.'
         
-        with open(os.path.join(base_dir, 'EPICRUN.DAT'), 'w') as ofile:
+        with open(os.path.join(base_dir, 'EPICRUN.DAT'), 'w', encoding=EPIC_ENCODING) as ofile:
             fmt = '%s 1  0  0  0  1  1  1/'%(site.site_id)
             ofile.write(fmt)
 
-        with open(os.path.join(base_dir, self.file_names['FSITE']), 'w') as ofile:
+        with open(os.path.join(base_dir, self.file_names['FSITE']), 'w', encoding=EPIC_ENCODING) as ofile:
             fmt = '1    "./%s"\n' % (os.path.basename(site.sit_path))
             ofile.write(fmt)
 
-        with open(os.path.join(base_dir, self.file_names['FSOIL']), 'w') as ofile:
+        with open(os.path.join(base_dir, self.file_names['FSOIL']), 'w', encoding=EPIC_ENCODING) as ofile:
             fmt = '1    "./%s"\n' % (os.path.basename(site.sol_path))
             ofile.write(fmt)
 
-        with open(os.path.join(base_dir, self.file_names['FWLST']), 'w') as ofile:
+        with open(os.path.join(base_dir, self.file_names['FWLST']), 'w', encoding=EPIC_ENCODING) as ofile:
             ofile.write('1    1.DLY\n')
 
-        with open(os.path.join(base_dir, self.file_names['FWPM1']), 'w') as ofile:
+        with open(os.path.join(base_dir, self.file_names['FWPM1']), 'w', encoding=EPIC_ENCODING) as ofile:
             fmt = '1    1.WP1   %.2f   %.2f    %.2f\n' % (site.latitude, site.longitude, site.elevation)
             ofile.write(fmt)
         
-        with open(os.path.join(base_dir, self.file_names['FWIND']), 'w') as ofile:
+        with open(os.path.join(base_dir, self.file_names['FWIND']), 'w', encoding=EPIC_ENCODING) as ofile:
             fmt = '1    1.WND   %.2f   %.2f    %.2f\n' % (site.latitude, site.longitude, site.elevation)
             ofile.write(fmt)
             
-        with open(os.path.join(base_dir, self.file_names['FOPSC']), 'w') as ofile:
+        with open(os.path.join(base_dir, self.file_names['FOPSC']), 'w', encoding=EPIC_ENCODING) as ofile:
             fmt = '1    "./%s"\n' % (os.path.basename(site.opc_path))
             ofile.write(fmt)
 
@@ -442,7 +445,7 @@ class EPICModel:
         :param armx: Maximum single application volume (ARMX) in mm - optional
         """
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
-        with open(epiccont_path, 'r+') as file:
+        with open(epiccont_path, 'r+', encoding=EPIC_ENCODING) as file:
             lines = file.readlines()
             if len(lines) < self.EC_IRR + 1:
                 raise ValueError("File does not have enough lines to update irrigation parameters.")
@@ -465,6 +468,7 @@ class EPICModel:
             
             file.seek(0)
             file.writelines(lines)
+            file.truncate()
 
     def auto_Nfertilization(self, bft0, fnp=None, fmx=None):
         """
@@ -477,7 +481,7 @@ class EPICModel:
         :param fmx: Maximum annual N fertilizer applied for a crop (FMX) - optional
         """
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
-        with open(epiccont_path, 'r+') as file:
+        with open(epiccont_path, 'r+', encoding=EPIC_ENCODING) as file:
             lines = file.readlines()
             if len(lines) < self.EC_NIT + 1:
                 raise ValueError("File does not have enough lines to update nitrogen parameters.")
@@ -496,3 +500,4 @@ class EPICModel:
             
             file.seek(0)
             file.writelines(lines)
+            file.truncate()
