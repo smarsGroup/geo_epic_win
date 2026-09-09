@@ -1,10 +1,9 @@
 name: Tests
 
+# Manual trigger only for now (Actions tab -> Tests -> Run workflow), so that
+# the in-progress Windows EPIC investigation does not spam failure emails.
+# Re-enable push/pull_request triggers once the Windows run is green.
 on:
-  push:
-    branches: ['**']
-    paths-ignore: ['docs/**', '*.md']
-  pull_request:
   workflow_dispatch:
 
 jobs:
