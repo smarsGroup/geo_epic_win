@@ -113,9 +113,10 @@ class EPICModel:
         with open(epiccont_path, 'r', encoding=EPIC_ENCODING) as file:
             line = file.readline()
             # Read by fixed 4-char positions: duration[0:4], year[4:8], month[8:12], day[12:16]
-            year = int(line[4:8].strip())
-            month = int(line[8:12].strip())
-            day = int(line[12:16].strip())
+            # Line 1 of EPICCONT.DAT is a whitespace-separated integer list:
+            # NBYR IYR0 IMO0 IDA0 ...  (e.g. '   5 2015   1   1   3 2345 ...')
+            tokens = line.split()
+            year, month, day = int(tokens[1]), int(tokens[2]), int(tokens[3])
             self._start_date = date(year, month, day)
         return self._start_date
 
@@ -145,13 +146,7 @@ class EPICModel:
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
         with open(epiccont_path, 'r+', encoding=EPIC_ENCODING) as file:
             lines = file.readlines()
-            line0 = lines[0]
-            # Read first 4 chars as duration (preserve it), replace chars 4-16 with year/month/day
-            duration_part = line0[0:4]  # Keep original duration
-            rest_of_line = line0[16:] if len(line0) > 16 else '\n'
-            # Format year, month, day each as 4 chars
-            formatted = f"{duration_part}{value.year:4d}{value.month:4d}{value.day:4d}"
-            lines[0] = formatted + rest_of_line
+            lines[0] = self._replace_tokens(lines[0], {1: value.year, 2: value.month, 3: value.day})
             file.seek(0)
             file.writelines(lines)
             file.truncate()
@@ -168,7 +163,7 @@ class EPICModel:
         with open(epiccont_path, 'r', encoding=EPIC_ENCODING) as file:
             line = file.readline()
             # Read by fixed 4-char position: duration[0:4]
-            self._duration = int(line[0:4].strip())
+            self._duration = int(line.split()[0])
         return self._duration
 
     @duration.setter
@@ -183,10 +178,7 @@ class EPICModel:
         epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
         with open(epiccont_path, 'r+', encoding=EPIC_ENCODING) as file:
             lines = file.readlines()
-            line0 = lines[0]
-            # Only replace first 4 chars (duration), keep rest unchanged
-            rest_of_line = line0[4:] if len(line0) > 4 else '\n'
-            lines[0] = f"{value:4d}" + rest_of_line
+            lines[0] = self._replace_tokens(lines[0], {0: int(value)})
             file.seek(0)
             file.writelines(lines)
             file.truncate()
@@ -394,20 +386,20 @@ class EPICModel:
                 except Exception: pass
 
     @staticmethod
-    def _write_workspace_dat(run_dir):
-        ws_path = os.path.join(run_dir, 'WORKSPACE.DAT')
-        if not os.path.exists(ws_path):
-            return
-        with open(ws_path, 'r', encoding=EPIC_ENCODING) as f:
-            lines = f.read().splitlines()
-        if not lines:
-            return
-        run_dir_abs = os.path.abspath(run_dir).rstrip('\\/') + os.sep
-        if len(lines) < 2:
-            lines.append('')
-        lines[1] = run_dir_abs
-        with open(ws_path, 'w', encoding=EPIC_ENCODING) as f:
-            f.write('\n'.join(lines) + '\n')
+    def _replace_tokens(line, replacements):
+        """Replace whitespace-separated integer tokens in an EPIC control line,
+        keeping every other character (spacing, line ending) exactly as is.
+        ``replacements`` maps token index -> new integer value. If the new value
+        is wider than the original token's field, the field is widened."""
+        import re
+        out, last = [], 0
+        for i, m in enumerate(re.finditer(r'\S+', line)):
+            if i in replacements:
+                width = m.end() - m.start()
+                out.append(line[last:m.start()] + f"{int(replacements[i]):{width}d}")
+                last = m.end()
+        out.append(line[last:])
+        return ''.join(out)
 
     def _writeDATFiles(self, site, dest = None):
         """
@@ -443,12 +435,6 @@ class EPICModel:
             fmt = '1    1.WND   %.2f   %.2f    %.2f\n' % (site.latitude, site.longitude, site.elevation)
             ofile.write(fmt)
             
-        # WORKSPACE.DAT: the Windows EPIC1102 build reads the *list* files
-        # (SITECOM, SOILCOM, OPSCCOM, WPM1USEL, WINDUSEL, ...) from the directory
-        # named on line 2. If that line is blank the executable falls back to a
-        # hard-coded C:\WEATDATA\, so point it at the run directory itself.
-        self._write_workspace_dat(base_dir)
-
         with open(os.path.join(base_dir, self.file_names['FOPSC']), 'w', encoding=EPIC_ENCODING) as ofile:
             fmt = '1    "./%s"\n' % (os.path.basename(site.opc_path))
             ofile.write(fmt)
