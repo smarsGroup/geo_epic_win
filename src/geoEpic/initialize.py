@@ -55,15 +55,10 @@ def run_command(command):
     return subprocess.run(command, check=True)
 
 def check_and_install_dependencies():
-    # Check for GDAL
-    try:
-        import gdal
-        print("GDAL is already installed.")
-    except ImportError:
-        print("Installing GDAL...")
-        run_command(['conda', 'install', '-c', 'conda-forge', 'gdal'])
-    
-    # Check for pygmo
+    # GDAL is no longer a dependency of geo_epic_win (only the optional
+    # 'soil process_gdb' gSSURGO-geodatabase route needs it).
+
+    # Check for pygmo (optional, calibration only)
     try:
         import pygmo
         print("pygmo is already installed.")
@@ -80,6 +75,11 @@ def check_and_install_dependencies():
             print("Installing pywin32...")
             run_command(['conda', 'install', '-c', 'conda-forge', 'pywin32', '-y'])
 
-setup_metadata()
-check_and_install_dependencies()
+def main():
+    setup_metadata()
+    check_and_install_dependencies()
+
+
+if __name__ == '__main__':
+    main()
 

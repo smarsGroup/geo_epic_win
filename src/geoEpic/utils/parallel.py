@@ -35,11 +35,11 @@ def parallel_executor(func, args, method='Process', max_workers=10, return_value
 
     # Pick pool type
     use_process = method.lower().startswith('p')
-    is_windows = sys.platform.startswith('win')
+    import multiprocessing
+    needs_pickle = multiprocessing.get_start_method(allow_none=True) != 'fork'
 
-    if use_process and is_windows and not _is_importable_callable(func):
-        if verbose:
-            raise RuntimeError(
+    if use_process and needs_pickle and not _is_importable_callable(func):
+        raise RuntimeError(
                 "parallel_executor: For method='Process' the worker must be importable "
                 "(module-level function or @staticmethod in a real module). "
                 "In notebooks, either move the function to a .py or use method='Thread'."

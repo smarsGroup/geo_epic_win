@@ -4,7 +4,7 @@ import geopandas as gpd
 from datetime import datetime, timedelta
 import os
 from geoEpic.utils import parallel_executor
-from opc_class2 import OPC
+from geoEpic.io import OPC
 from geoEpic.io import ConfigParser
 import argparse
 import sys

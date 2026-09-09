@@ -12,10 +12,7 @@ script_paths = {
     },
     "weather": {
         "gee": "weather/gee.py",
-        "windspeed": "weather/nldas_ws.py",
-        "daymet": "weather/download_daymet.py",
         "download_daily": "weather/download_daily.py",
-        "daily2monthly": "weather/daily2monthly.py"
     },
     "soil": {
         "process_gdb": "soil/ssurgo_gdb.py",
@@ -24,11 +21,7 @@ script_paths = {
     "opc": {
         "generate": "opc/generate_opc.py"
     },
-    "sites": {
-        "generate": "sites/generate.py"
-    },
     "workspace": {
-        "prepare": "workspace/prepare.py",
         "run": "workspace/run.py",
         "new": "workspace/create_ws.py",
         "copy": "workspace/parallel_copy.py",
@@ -38,7 +31,6 @@ script_paths = {
 default_functions = {
     "weather": "gee",
     "soil": "usda",
-    "sites": "generate",
     "workspace": "new",
     "init": "init",
     "opc": "generate",
@@ -60,9 +52,17 @@ def find_function(func_name):
     return None, None
 
 
-def dispatch(module, func, options_str, wait=True):
+def dispatch(module, func, options, wait=True):
+    """Run the script for ``module``/``func`` in a subprocess.
+
+    ``options`` is a list of argument strings (preferred) or a single string.
+    Arguments are passed as a list, never through a shell, so paths with
+    spaces (e.g. ``C:\\Program Files\\...``) work on every platform.
+    """
     root_path = os.path.dirname(__file__)
-    command = f'{sys.executable} {{script_path}} {options_str}'
+    if isinstance(options, str):
+        import shlex
+        options = shlex.split(options, posix=(os.name != 'nt'))
 
     if not module:
         module, relative_path = find_function(func)
@@ -78,17 +78,17 @@ def dispatch(module, func, options_str, wait=True):
         raise DispatchError(f"Command '{module} {func}' not found.")
 
     env = os.environ.copy()
-    command = command.format(script_path=script_path)
+    command = [sys.executable, script_path, *options]
 
+    proc = subprocess.Popen(command, env=env)
     if wait:
-        subprocess.Popen(command, shell=True, env=env).wait()
-    else:
-        subprocess.Popen(command, shell=True, env=env)
+        proc.wait()
+    return proc
 
 
 def print_expected_usage():
     print('''
-    GeoEPIC Tool Kit CLI (win_v1.0)
+    GeoEPIC Tool Kit CLI (v1.1, Windows/Linux)
             
     usage: geo_epic [module] [function] [options] 
 
@@ -108,11 +108,11 @@ def main():
         module = first_arg
         if len(args) > 1 and args[1] in script_paths[module]:
             func = args[1]
-            options_str = " ".join(args[2:])
+            options = args[2:]
         else:
             if module in default_functions:
                 func = default_functions[module]
-                options_str = " ".join(args[1:])
+                options = args[1:]
             else:
                 print_expected_usage()
                 return
@@ -120,12 +120,12 @@ def main():
         module, _ = find_function(first_arg)
         if module:
             func = first_arg
-            options_str = " ".join(args[1:])
+            options = args[1:]
         else:
             print_expected_usage()
             return
 
-    dispatch(module, func, options_str)
+    dispatch(module, func, options)
 
 if __name__ == '__main__':
     main()

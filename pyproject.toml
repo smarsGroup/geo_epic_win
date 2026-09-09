@@ -38,7 +38,7 @@ version = "1.0.0"  # REQUIRED, although can be dynamic
 # This is a one-line description or tagline of what your project does. This
 # corresponds to the "Summary" metadata field:
 # https://packaging.python.org/specifications/core-metadata/#summary
-description = "A toolkit for geospatial crop simulations for windows"
+description = "A toolkit for geospatial crop simulations (Windows and Linux)"
 
 # This is an optional longer description of your project that represents
 # the body of text which users will see when they visit PyPI.
@@ -150,8 +150,7 @@ dependencies = [
     "pebble",
     "Pyarrow",
     "netCDF4",
-    "mkl",
-    "intel-openmp"
+    "pywin32>=306; sys_platform == 'win32'"
 ]
 
 # List additional groups of dependencies here (e.g. development
@@ -164,7 +163,8 @@ dependencies = [
 # referred to as "extras". For a more extensive definition see:
 # https://packaging.python.org/en/latest/specifications/dependency-specifiers/#extras
 [project.optional-dependencies]
-dev = ["gdal==3.7"]
+gdal = ["gdal"]  # only for `geo_epic soil process_gdb` (gSSURGO geodatabase)
+calib = ["pygmo"]
 test = ["coverage"]
 
 # List URLs that are relevant to your project
@@ -195,8 +195,6 @@ geo_epic = "geoEpic.dispatcher:main"
 # installed, specify them here.
 package-data = {"geoEpic" = [
     "assets/**/**/*",
-    "io/inputs/template.sol",
-    "io/inputs/template.sit",
     "io/inputs/template.SOL",
     "io/inputs/template.SIT",
     "assets/EPICeditor.xlsm",

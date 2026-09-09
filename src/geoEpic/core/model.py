@@ -1,6 +1,8 @@
 import os
+import stat
 import shutil
 import subprocess
+import warnings
 # from glob import glob
 # import pandas as pd
 import numpy as np
@@ -60,8 +62,12 @@ class EPICModel:
         self.set_output_types(self._output_types)
 
         if platform.system() != "Windows":
-            # On Unix-like systems, use chmod to make the file executable
-            subprocess.Popen(f'chmod +x {self.executable}', shell=True).wait()
+            # On Unix-like systems, make sure the binary is executable
+            try:
+                st = os.stat(self.executable)
+                os.chmod(self.executable, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+            except OSError as e:
+                warnings.warn(f"Could not set execute permission on {self.executable}: {e}")
 
         # Define the path to the RAM-backed filesystem
         self.cache_path = os.path.join(self.base_dir, '.cache')#'/dev/shm'  # On Linux systems
@@ -380,7 +386,7 @@ class EPICModel:
                 site.outputs[out_type] = dst
         finally:
             # Clean up
-            if self.delete_after_run or self.cache_path == '/dev/shm':
+            if self.delete_after_run:
                 try: shutil.rmtree(new_dir)
                 except Exception: pass
 

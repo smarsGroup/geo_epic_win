@@ -88,7 +88,8 @@ def filter_dataframe(df, expression):
             return filtered_dfs[0]
         else:
             filtered_df = pd.concat(filtered_dfs)
-            filtered_df = filtered_df.drop_duplicates(subset = 'FieldID', keep = 'last')
+            key = 'SiteID' if 'SiteID' in filtered_df.columns else ('FieldID' if 'FieldID' in filtered_df.columns else None)
+            filtered_df = filtered_df.drop_duplicates(subset = key, keep = 'last')
             return filtered_df
 
             

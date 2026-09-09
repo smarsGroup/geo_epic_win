@@ -2,7 +2,15 @@ import os
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-import pygmo as pg
+try:
+    import pygmo as pg
+except ImportError:  # optional: only needed for calibration
+    pg = None
+
+
+def _require_pygmo():
+    if pg is None:
+        raise ImportError("Calibration requires the optional 'pygmo' package (conda install -c conda-forge pygmo).")
 
 class PygmoProblem:
     """
@@ -122,6 +130,7 @@ class Problem_Wrapper:
             *dfs (DataFrame-like): Variable number of parameter objects with constraints.
         """
         self.problem = PygmoProblem(workspace, *dfs)
+        _require_pygmo()
         self.pg_problem = pg.problem(self.problem)
         # Initialize optimization components as None
         self.algorithm = None

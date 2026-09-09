@@ -1,4 +1,5 @@
 import os
+import getpass
 import shutil
 import stat
 import warnings
@@ -62,7 +63,7 @@ class Workspace:
         self.model = EPICModel.from_config(config_path)
         
         # Create Cache folders on RAM or local storage
-        username = os.getlogin()
+        username = getpass.getuser()
         if cache_path is None: 
             if os.path.exists('/dev/shm'): cache_path = '/dev/shm'
             else: cache_path = os.path.join(self.base_dir, '.cache')
@@ -83,7 +84,11 @@ class Workspace:
         # else:
             # self.data_logger = DataLogger(self.cache, backend = 'redis')
 
-        self.num_of_workers = 8
+        # Parallel workers: from config if present, else a conservative default
+        try:
+            self.num_of_workers = int(self.config.get('num_of_workers') or 8)
+        except (TypeError, ValueError):
+            self.num_of_workers = 8
 
         # --- register cleanup WITHOUT capturing a bound method ---
         self_ref = weakref.ref(self)

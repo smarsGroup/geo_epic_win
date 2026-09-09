@@ -76,6 +76,7 @@ class DWC:
             acy_file_path = file_path.outputs['ACY']
         else:
             # Derive ACY file path from DWC file path
+            dwc_file_path = file_path
             base_dir = os.path.dirname(file_path)
             base_name = os.path.splitext(os.path.basename(file_path))[0]
             acy_file_path = os.path.join(base_dir, f"{base_name}.ACY")

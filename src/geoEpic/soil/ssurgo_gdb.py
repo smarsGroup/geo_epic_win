@@ -2,7 +2,11 @@ import os
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-from osgeo import ogr
+try:
+    from osgeo import ogr
+except ImportError as e:  # GDAL is optional; only this gSSURGO-geodatabase route needs it
+    raise SystemExit("geo_epic soil process_gdb needs GDAL/OGR (pip install gdal or conda install -c conda-forge gdal). "
+                     "Use 'geo_epic soil usda' (Soil Data Access) if GDAL is not available.") from e
 import argparse
 from geoEpic.utils import read_gdb_layer, parallel_executor
 from geoEpic.io import ConfigParser 
@@ -108,7 +112,8 @@ else:
 os.makedirs(outdir, exist_ok=True)
 
 # Read template file
-with open(f'{os.path.dirname(__file__)}/template.sol', 'r') as file:
+_template_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'io', 'inputs', 'template.SOL')
+with open(_template_path, 'r') as file:
     template_orig = file.readlines()
 padding = ['{:8.3f}'.format(0) for _ in range(23)]
 

@@ -34,5 +34,5 @@ if __name__ == "__main__":
     test_lat = 35.9768
     test_long = -90.1399
 
-    dly = AgEra.fetch(test_lat, test_long)
+    dly = AgEra5.fetch(test_lat, test_long)
     print(f"The output for {test_lat} and {test_long} is \n {dly}")
