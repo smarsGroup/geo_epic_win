@@ -85,20 +85,35 @@ def test_real_epic_runs_directly(workspace):
     def v_bare_fwd(d):
         ws_n1(d.replace('\\', '/'), trailing='/'); bare_pointers(d)
 
-    results = {}
-    for name, fn in [('quoted', v_quoted), ('bare', v_bare), ('bare_noslash', v_bare_noslash), ('bare_fwd', v_bare_fwd)]:
-        d = run_dir + '_' + name
-        shutil.rmtree(d, ignore_errors=True)
-        shutil.copytree(run_dir, d)
-        for f in glob.glob(os.path.join(d, 'umstead.ACY')) + glob.glob(os.path.join(d, 'umstead.DGN')):
-            os.remove(f)
-        fn(d)
-        r = subprocess.run([os.path.join(d, exe_name)], cwd=d, input=b'\r\n' * 20, capture_output=True, timeout=120)
+    def run_and_report(name, d, exe, site_prefix):
+        r = subprocess.run([exe], cwd=d, input=b'\r\n' * 20, capture_output=True, timeout=120)
         out = (r.stdout + r.stderr).decode(errors='replace')
-        acy = os.path.join(d, 'umstead.ACY')
-        size = os.path.getsize(acy) if os.path.exists(acy) else 0
-        lines = [l for l in out.splitlines() if l.strip()]
-        results[name] = (r.returncode & 0xFFFFFFFF, size)
-        print(f"\n=== VARIANT {name}: rc={results[name][0]:#x} ACY={size} bytes\n  files={sorted(os.listdir(d))[:12]}...\n  out:\n    " + "\n    ".join(lines[-14:]))
+        produced = {f: os.path.getsize(os.path.join(d, f)) for f in os.listdir(d) if f.lower().startswith(site_prefix.lower() + '.')}
+        lines = [l for l in out.splitlines() if l.strip() and 'Unknown' not in l]
+        print(f"\n=== VARIANT {name}: rc={r.returncode & 0xFFFFFFFF:#x} produced={produced}\n  out ({len(lines)} lines):\n    " + "\n    ".join(lines[:60]))
+        return produced
+
+    results = {}
+    # 1. our generated run folder, bare pointers, full output
+    d = run_dir + '_bare'; shutil.rmtree(d, ignore_errors=True); shutil.copytree(run_dir, d)
+    for f in glob.glob(os.path.join(d, 'umstead.*')): os.remove(f)
+    v_bare(d)
+    for lf in ('EPICRUN.DAT', 'SITECOM.DAT', 'SOILCOM.DAT', 'OPSCCOM.DAT', 'WDLSTCOM.DAT', 'WPM1USEL.DAT', 'WINDUSEL.DAT', 'WORKSPACE.DAT'):
+        p_ = os.path.join(d, lf)
+        if os.path.exists(p_):
+            print(f"  -- {lf}: {open(p_, errors='replace').read()[:200]!r}")
+    results['bare'] = run_and_report('bare', d, os.path.join(d, exe_name), 'umstead')
+
+    # 2. the template model folder exactly as shipped (its own pointer files & EPICRUN.DAT),
+    #    with the site/soil/opc/weather files copied next to the exe
+    for name, touch_ws in (('as_shipped_ws', True), ('as_shipped_raw', False)):
+        d = run_dir + '_' + name; shutil.rmtree(d, ignore_errors=True)
+        shutil.copytree(str(ws / 'model'), d)
+        for src in ('sites/umstead.SIT', 'soil/umstead.SOL', 'opc/umstead.OPC', 'weather/NCRDU.DLY'):
+            shutil.copy(str(ws / src), d)
+        if touch_ws:
+            ws_n1(d)
+        print(f"  -- EPICRUN.DAT: {open(os.path.join(d, 'EPICRUN.DAT'), errors='replace').read()[:120]!r}")
+        results[name] = run_and_report(name, d, os.path.join(d, 'EPIC1102.exe'), 'umstead_0')
     print("\n=== workspace run log head ===\n" + "".join(open(glob.glob(str(ws / 'log' / '*.log'))[0], errors='replace').readlines()[:12]) if glob.glob(str(ws / 'log' / '*.log')) else "(no log)")
-    assert any(v[1] > 0 for v in results.values()), f"no variant produced an ACY: {results}"
+    assert any(any(k.upper().endswith(".ACY") and v > 0 for k, v in p.items()) for p in results.values()), f"no variant produced an ACY: {results}"
