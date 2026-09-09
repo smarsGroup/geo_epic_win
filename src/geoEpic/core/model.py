@@ -393,6 +393,22 @@ class EPICModel:
                 try: shutil.rmtree(new_dir)
                 except Exception: pass
 
+    @staticmethod
+    def _write_workspace_dat(run_dir):
+        ws_path = os.path.join(run_dir, 'WORKSPACE.DAT')
+        if not os.path.exists(ws_path):
+            return
+        with open(ws_path, 'r', encoding=EPIC_ENCODING) as f:
+            lines = f.read().splitlines()
+        if not lines:
+            return
+        run_dir_abs = os.path.abspath(run_dir).rstrip('\\/') + os.sep
+        if len(lines) < 2:
+            lines.append('')
+        lines[1] = run_dir_abs
+        with open(ws_path, 'w', encoding=EPIC_ENCODING) as f:
+            f.write('\n'.join(lines) + '\n')
+
     def _writeDATFiles(self, site, dest = None):
         """
         Write configuration data files required for the model run.
@@ -427,6 +443,12 @@ class EPICModel:
             fmt = '1    1.WND   %.2f   %.2f    %.2f\n' % (site.latitude, site.longitude, site.elevation)
             ofile.write(fmt)
             
+        # WORKSPACE.DAT: the Windows EPIC1102 build reads the *list* files
+        # (SITECOM, SOILCOM, OPSCCOM, WPM1USEL, WINDUSEL, ...) from the directory
+        # named on line 2. If that line is blank the executable falls back to a
+        # hard-coded C:\WEATDATA\, so point it at the run directory itself.
+        self._write_workspace_dat(base_dir)
+
         with open(os.path.join(base_dir, self.file_names['FOPSC']), 'w', encoding=EPIC_ENCODING) as ofile:
             fmt = '1    "./%s"\n' % (os.path.basename(site.opc_path))
             ofile.write(fmt)
