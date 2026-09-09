@@ -66,4 +66,9 @@ def test_real_epic_runs_directly(workspace):
     lines = [l for l in out.splitlines() if l.strip() and 'Unknown' not in l and 'Fortran Pause' not in l]
     produced = {f: os.path.getsize(os.path.join(run_dir, f)) for f in os.listdir(run_dir) if f.startswith('umstead.')}
     print(f"returncode={r.returncode & 0xFFFFFFFF:#x} produced={produced}\n--- output ---\n" + "\n".join(lines[:60]))
-    assert r.returncode == 0 and produced.get('umstead.ACY', 0) > 0, "see captured output"
+    # NOTE: this EPIC1102.exe build finishes the simulation, prints TOTAL RUN TIME
+    # and writes complete outputs, but then dies with a heap-corruption access
+    # violation (0xC0000374) while shutting down. The exit code is therefore not a
+    # usable success signal; like EPICModel.run(), judge the run by its outputs.
+    assert 'TOTAL RUN TIME' in out, "EPIC did not reach the end of the simulation"
+    assert produced.get('umstead.ACY', 0) > 0 and produced.get('umstead.DGN', 0) > 0, "see captured output"
