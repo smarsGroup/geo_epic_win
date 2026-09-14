@@ -1,5 +1,9 @@
 # AgERA5, provided in Earth Engine by Climate Engine. Global coverage; used
 # outside North America.
+#
+# Band names verified live against the v2 asset on 2026-09-14. They differ from
+# the v1 collection the old CompositeCollection example used: v2 has no
+# Relative_Humidity_2m_06h, and wind carries the _24h suffix.
 description: AgERA5 daily agro-meteorology (about 11 km, global)
 scope: global
 global_scope:
@@ -13,5 +17,7 @@ collections:
       tmax: b('Temperature_Air_2m_Max_24h') - 273.15
       tmin: b('Temperature_Air_2m_Min_24h') - 273.15
       prcp: b('Precipitation_Flux')            # mm/day
-      rh: b('Relative_Humidity_2m_06h')        # %
-      ws: b('Wind_Speed_10m_Mean')             # m/s
+      # v2 supplies daily extremes rather than an instantaneous value; take
+      # their mean, as the gridMET spec does with rmax/rmin.
+      rh: (b('Derived_Relative_Humidity_2m_Max_24h') + b('Derived_Relative_Humidity_2m_Min_24h')) / 2
+      ws: b('Wind_Speed_10m_Mean_24h')         # m/s
