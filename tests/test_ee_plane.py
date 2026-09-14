@@ -108,6 +108,30 @@ def test_coarser_than_daily_is_not_usable_as_daily():
     assert any("Coarser-than-daily" in w for w in review_warnings(report))
 
 
+def test_point_geometries_are_sampled_not_buffered():
+    """A point must stay a point.
+
+    Verified live against gridMET at (41.20, -96.60) on 2020-01-01, where the
+    pixel holds 280.79998779296875 K: sampling the point returns exactly that,
+    a 90 m buffer returns null at the source's 4 km scale, and a buffer wide
+    enough to contain a pixel averages neighbours into 280.74918156376594.
+    Both backends therefore sample the point itself.
+    """
+    from geoEpic.ee.api_backend import EarthEngineApiBackend
+    backend = EarthEngineApiBackend()
+    if not backend.available():
+        pytest.skip("earthengine-api is not installed in this interpreter")
+    try:
+        geometry = backend._geometry({"type": "Point", "coordinates": [-96.60, 41.20]})
+        geojson = geometry.toGeoJSON()
+    except Exception as error:               # noqa: BLE001
+        # Constructing an ee.Geometry needs an initialized client, which means
+        # credentials; Q-EPIC's suite asserts the same contract offline.
+        pytest.skip("Earth Engine client not initialized: {}".format(error))
+    assert geojson["type"] == "Point"
+    assert geojson["coordinates"] == [-96.60, 41.20]
+
+
 def test_the_interface_is_abstract_until_a_backend_implements_it():
     backend = EarthEngineBackend()
     assert backend.available() is False

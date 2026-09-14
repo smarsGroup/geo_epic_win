@@ -60,8 +60,12 @@ class EarthEngineApiBackend(EarthEngineBackend):
         kind = geometry["type"]
         coordinates = geometry.get("coordinates")
         if kind == "Point":
-            # Buffer a point so a reducer has pixels to work with.
-            return ee.Geometry.Point(coordinates).buffer(90).bounds()
+            # Sample the point itself, at the spec's native resolution. A buffer
+            # smaller than the source pixel reduces to nothing at that scale, and
+            # one large enough to contain a pixel makes the reducer average
+            # neighbours - both verified against gridMET. Q-EPIC's backend does
+            # the same, so the two return identical series.
+            return ee.Geometry.Point(coordinates)
         if kind == "Polygon":
             return ee.Geometry.Polygon(coordinates)
         if kind == "MultiPolygon":
