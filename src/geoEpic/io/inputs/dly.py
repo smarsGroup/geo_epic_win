@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import os
 
+from geoEpic.epicfiles import dly as light_dly
+
 class DLY(pd.DataFrame):
     @classmethod
     def load(cls, path):
@@ -53,12 +55,11 @@ class DLY(pd.DataFrame):
             path = str(path)
             if not path.endswith('.DLY'): path += '.DLY'
             
-        # Remove duplicate rows from the DataFrame
+        # Formatting lives in the dependency-light writer so this class and the
+        # QGIS plugin cannot emit different bytes. Output is pinned by
+        # tests/fixtures/weather_2016.DLY.
         self.drop_duplicates(subset=['year', 'month', 'day'], inplace=True)
-        columns = ['year', 'month', 'day', 'srad', 'tmax', 'tmin', 'prcp', 'rh', 'ws']
-        with open(path, 'w') as ofile:
-            fmt = '%6d%4d%4d%6.2f%6.2f%6.2f%6.2f%6.2f%6.2f'
-            np.savetxt(ofile, self[columns].values, fmt = fmt)
+        light_dly.write(path, self[list(light_dly.COLUMNS)].values.tolist())
     
     
     def to_monthly(self, path=None):
