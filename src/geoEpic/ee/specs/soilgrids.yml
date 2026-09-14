@@ -1,0 +1,42 @@
+# SoilGrids v2 (ISRIC) depth-resolved profile properties, used outside the USA
+# where SSURGO via Soil Data Access is unavailable. Static, so the time range is
+# nominal and a single image is sampled per property.
+description: SoilGrids v2.0 (250 m, global) soil profile properties
+scope: global
+static: true
+global_scope:
+  variables: ['bulk_density', 'clay', 'sand', 'silt', 'organic_carbon', 'ph', 'cec', 'coarse_fragments']
+  resolution: 250
+collections:
+  soilgrids:
+    collection: 'projects/soilgrids-isric/bdod_mean'
+    variables:
+      bulk_density: b('bdod_0-5cm_mean') / 100   # cg/cm^3 -> g/cm^3
+  clay:
+    collection: 'projects/soilgrids-isric/clay_mean'
+    variables:
+      clay: b('clay_0-5cm_mean') / 10            # g/kg -> %
+  sand:
+    collection: 'projects/soilgrids-isric/sand_mean'
+    variables:
+      sand: b('sand_0-5cm_mean') / 10
+  silt:
+    collection: 'projects/soilgrids-isric/silt_mean'
+    variables:
+      silt: b('silt_0-5cm_mean') / 10
+  organic_carbon:
+    collection: 'projects/soilgrids-isric/soc_mean'
+    variables:
+      organic_carbon: b('soc_0-5cm_mean') / 100  # dg/kg -> %
+  ph:
+    collection: 'projects/soilgrids-isric/phh2o_mean'
+    variables:
+      ph: b('phh2o_0-5cm_mean') / 10             # pH*10 -> pH
+  cec:
+    collection: 'projects/soilgrids-isric/cec_mean'
+    variables:
+      cec: b('cec_0-5cm_mean') / 10              # mmol(c)/kg -> cmol(c)/kg
+  coarse_fragments:
+    collection: 'projects/soilgrids-isric/cfvo_mean'
+    variables:
+      coarse_fragments: b('cfvo_0-5cm_mean') / 10

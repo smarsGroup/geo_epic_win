@@ -1,0 +1,21 @@
+# Daymet V4 daily weather over North America, with wind speed borrowed from
+# gridMET because Daymet does not carry it. Q-EPIC surfaces this as a note on
+# the Daymet source; see Q17 in Q-EPIC docs/03_open_questions.md.
+description: Daymet V4 (1 km, North America), wind speed supplemented from gridMET
+scope: north-america
+global_scope:
+  variables: ['srad', 'tmax', 'tmin', 'prcp', 'rh', 'ws']
+  resolution: 1000
+collections:
+  daymet:
+    collection: 'NASA/ORNL/DAYMET_V4'
+    linkcollection:
+      collection: 'IDAHO_EPSCOR/GRIDMET'
+      bands: ['vs']
+    variables:
+      srad: b('srad') * b('dayl') / 1e6        # W/m^2 * s -> MJ/m^2/day
+      tmax: b('tmax')                          # already degrees C
+      tmin: b('tmin')                          # already degrees C
+      prcp: b('prcp')                          # mm/day
+      rh: 0.263 * b('vp') / exp(17.67 * b('tmax') / (b('tmax') + 243.5)) # % from vapour pressure
+      ws: b('vs')                              # m/s, from the linked gridMET band

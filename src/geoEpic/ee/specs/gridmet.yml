@@ -1,0 +1,15 @@
+description: gridMET (4 km, conterminous United States)
+scope: conus
+global_scope:
+  variables: ['srad', 'tmax', 'tmin', 'prcp', 'rh', 'ws']
+  resolution: 4000
+collections:
+  gridmet:
+    collection: 'IDAHO_EPSCOR/GRIDMET'
+    variables:
+      srad: b('srad') * 0.0864                 # W/m^2 mean -> MJ/m^2/day
+      tmax: b('tmmx') - 273.15                 # K -> degrees C
+      tmin: b('tmmn') - 273.15                 # K -> degrees C
+      prcp: b('pr')                            # mm/day
+      rh: (b('rmax') + b('rmin')) / 2          # %
+      ws: b('vs')                              # m/s
