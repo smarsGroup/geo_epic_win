@@ -159,6 +159,77 @@ proposed, plus a separate **layout descriptor** (those four constants and the
 `EPICFILE` entry list) chosen by inspecting the model folder rather than by
 `platform.system()`. Either subclass can then run either layout.
 
+## v1 binary strategy: Windows EPIC everywhere, Wine on Linux
+
+**Decided 2026-09-14.** v1 ships **one EPIC executable — the Windows build** — and
+runs it under Wine on Linux. A native Linux binary is a later switch.
+
+### What this buys
+
+- **One EPIC revision, so identical numerics on both platforms.** The current
+  blocker (Q11/B2) is that `assets/workspace_win/model` and geo-epic's Linux
+  `EPIC1102` are different builds with incompatible `EPICFILE`/`EPICCONT`
+  layouts. Shipping one binary removes that divergence entirely, and with it the
+  risk of the same workspace producing different yields on different machines.
+- **The layout axis becomes single-valued in v1.** This makes the Q14
+  recommendation easier, not harder: keep layout as a descriptor, ship exactly
+  one descriptor now, and adding the native Linux build later is a new descriptor
+  rather than a refactor of the model classes.
+- Halves the binary redistribution, packaging and CI-testing surface.
+
+### The cost, stated plainly
+
+**Wine cannot be bundled.** Measured on this machine: `libwine` alone is
+**545 MB** installed, against a QGIS plugin repository cap of 20 MB and our own
+< 25 MB budget. Wine is a system package, not a vendorable dependency.
+
+So on Linux, v1 is "install QGIS, this ZIP, **and Wine**". That is a real
+departure from the *nothing but QGIS* constraint in Q-EPIC `docs/00_goal.md`
+(constraint 1), and the goal document must be amended to say so rather than left
+contradicting the plan. It is a much milder ask than the Conda alternative — one
+distro package instead of a 40-package scientific stack — and Windows users are
+unaffected. Options if that trade is unacceptable:
+
+| # | Option | Note |
+|---|---|---|
+| L1 | Linux users install Wine from their distro; the plugin detects it and explains how, with a Settings field for a non-standard path. | **Recommended for v1.** One `apt`/`dnf` command, no Python involvement. |
+| L2 | Ship the native Linux ELF as well. | Blocked until a Linux build of the *same* EPIC revision as the `.exe` is obtained from the EPIC team. This is the v2 plan. |
+| L3 | Bundle a trimmed Wine. | Not viable at 545 MB, and a support burden of its own. |
+| L4 | Windows-only v1; Linux waits for L2. | Cleanest against the constraint, but leaves the maintainer's own platform unsupported. |
+
+### Consequences for the runner
+
+These follow from the decision and belong in the model classes, not in callers:
+
+- **Judge a run by its outputs, not by its exit code.** `EPIC1102.exe` is known to
+  crash `0xC0000374` on shutdown *after a complete, correct run*; under Wine the
+  exit status is doubly unreliable. Success means the expected `.ACY`/`.DGN`
+  exist and parse.
+- **Console behaviour.** The existing Wine harness needed a pty (`script -qec`) to
+  drive the executable; EPIC also pauses for input on error, so stdin must be fed
+  regardless of platform.
+- **`WINEPREFIX` placement.** Must not be the user's `~/.wine`. Put it under the
+  QGIS profile or the workspace, created and `wineboot`-initialised on first run,
+  so Q-EPIC never disturbs an existing Wine setup.
+- **`EPICModelLinux` changes meaning in v1**: it is no longer "run the Linux ELF"
+  but "run the Windows build under Wine". Worth naming the subclasses for what
+  they do rather than for the host OS, so the native-binary switch later is
+  additive.
+
+### The risk that needs measuring before committing
+
+Q-EPIC launches **one EPIC process per grid cell** — thousands of processes per
+run — and its published throughput (`docs/05_benchmarks.md`: ~5 sites/s per
+physical core, 0.06 s of per-site overhead) was measured with a native Linux
+binary. Wine adds per-process startup cost and funnels concurrent processes
+through a shared `wineserver`, neither of which that benchmark covers.
+
+**Before this is locked in, re-run the 200-site benchmark under Wine at 1, 8 and
+32 workers.** If per-site overhead rises materially or the `wineserver` serialises
+the pool, the estimator constants in `05_benchmarks.md` are wrong on Linux and the
+run-time estimate shown to users will be wrong with them. This is a measurement,
+not a guess, and the harness already exists.
+
 ## Proposed shape
 
 ```
@@ -223,6 +294,10 @@ Each has a proposed default so work can start without blocking.
 | Q14 | **Model class hierarchy.** `EPICModelWin` / `EPICModelLinux` under a common parent is agreed. Open: whether EPIC **build layout** (`PF_TOG1/2`, `EC_IRR/EC_NIT`, `EPICFILE` entry count, `EPICCONT` header rows) is folded into those subclasses or kept separate. | **Separate layout descriptor**, selected by inspecting the model folder, so either OS can run either layout — needed for the Wine harness and for a matched binary pair. |
 | Q15 | **Table interface scope.** Which of the 27 pandas members become interface methods, and which call sites get rewritten instead? | Rewrite rather than widen wherever a call site is one-off; `.apply` with arbitrary lambdas and `groupby` should not enter the interface. |
 | Q16 | Must `PandasTable` and `NumpyTable` agree on dtype and NaN behaviour exactly, or only on the values EPIC files can hold? | Only on what EPIC files can hold (fixed-width numerics and short strings); assert that in the shared fixtures. |
+| Q17 | **Wine as a Linux dependency.** Bundling is impossible (545 MB). Does v1 accept "QGIS + ZIP + Wine" on Linux, and how is Q-EPIC `docs/00_goal.md` constraint 1 amended? | Option L1: require the distro's Wine, detect it at startup, explain it clearly, allow a custom path in Settings. Amend the goal doc to scope "nothing but QGIS" to Windows for v1. |
+| Q18 | **Wine throughput.** Does per-process Wine overhead or a shared `wineserver` change the ~5 sites/s per core figure the run-time estimator is built on? | Unknown — **measure before locking the decision**: 200-site benchmark under Wine at 1, 8 and 32 workers, compared against the native figures. |
+| Q19 | `WINEPREFIX` location and first-run initialisation. | Under the QGIS profile, `wineboot`-initialised on first use; never the user's `~/.wine`. |
+| Q20 | Subclass naming now that `EPICModelLinux` means "Windows build under Wine" in v1 and "native ELF" later. | Name for behaviour, e.g. `EPICModelNative` / `EPICModelWine`, so the later native Linux build is an addition rather than a rename. |
 
 ## Explicit non-goals for this branch
 
@@ -232,8 +307,12 @@ Each has a proposed default so work can start without blocking.
 
 ## Next step
 
-Q1 and Q7 are settled. Answer Q3 (option A or the A′ shim), Q14 (layout as a
-descriptor or inside the subclasses) and Q15 (table interface scope), then capture
-the Q10 round-trip fixtures **before** touching any writer, parser or model class.
+Q1 and Q7 are settled, and the v1 binary strategy is decided (Windows build, Wine
+on Linux). Run the **Q18 Wine benchmark first** — it is cheap, the harness exists,
+and a bad result changes the packaging decision rather than the code. Then answer
+Q3 (option A or the A′ shim), Q14 (layout as a descriptor or inside the
+subclasses), Q15 (table interface scope) and Q17 (how the goal document is
+amended), and capture the Q10 round-trip fixtures **before** touching any writer,
+parser or model class.
 Nothing else should start until those fixtures exist: they are the only evidence
 that swapping a backend has not changed a byte of EPIC input.
