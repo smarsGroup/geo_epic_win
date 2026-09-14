@@ -260,10 +260,13 @@ files; nobody maintains a second implementation.
 Vendoring alone does not prevent drift: an `import pandas` added to a core module
 later would break the ZIP silently at a user's desk. Two guards, both cheap:
 
-1. **Build-time import guard.** Q-EPIC's `scripts/build_plugin.py` walks the
-   vendored tree and fails the build if any file imports outside an allowlist
-   (stdlib, `numpy`, `qgis`, `osgeo`). The boundary becomes a rule, not a
-   convention.
+1. **Build-time import guard.** `scripts/sync_geoepic.py` refuses to vendor, and
+   `scripts/build_plugin.py` refuses to build, if any file in the shared core
+   imports outside an allowlist: the standard library, `numpy` and
+   `ruamel.yaml`. That list is the **intersection** of the two profiles, not
+   what QGIS happens to offer - `qgis` and `PyQt5` are absent because the CLI
+   has no QGIS, and `osgeo` because a bare GeoEPIC install need not have it
+   (see Q21). The boundary becomes a rule, not a convention.
 2. **Dual-interpreter test run.** The same fixtures execute under QGIS's Python
    (no pandas) and under `epic_win_env` (with it). Both green means the single
    codebase genuinely works in both. *This*, not the packaging, is what prevents
@@ -298,6 +301,7 @@ Each has a proposed default so work can start without blocking.
 | Q18 | **Wine throughput.** Does per-process Wine overhead or a shared `wineserver` change the ~5 sites/s per core figure the run-time estimator is built on? | Unknown — **measure before locking the decision**: 200-site benchmark under Wine at 1, 8 and 32 workers, compared against the native figures. |
 | Q19 | `WINEPREFIX` location and first-run initialisation. | Under the QGIS profile, `wineboot`-initialised on first use; never the user's `~/.wine`. |
 | Q20 | Subclass naming now that `EPICModelLinux` means "Windows build under Wine" in v1 and "native ELF" later. | Name for behaviour, e.g. `EPICModelNative` / `EPICModelWine`, so the later native Linux build is an addition rather than a rename. |
+| Q21 | ~~May the shared core use PyQGIS?~~ **Decided 2026-09-14: no, keep it pure Python for now.** There is no pip-installable PyQGIS - the `pyqgis` name on PyPI is a documentation stub with no binaries, because `qgis.core` is SIP bindings over Qt, GDAL and PROJ. conda-forge *does* ship `qgis` for linux-64, win-64, osx-64 and osx-arm64 at the same version (3.44.11 checked), including `py311` builds right up to the current release, so the CLI could take it as a dependency and both profiles would then share `QgsGeometry`, `QgsSpatialIndex` and CRS transforms. That would remove much of the group I port work (`utils/raster_utils.py`, the BallTree and rasterio user). It is not free: a Qt/GDAL/PROJ stack for every CLI user, a coexistence risk with the geopandas/rasterio GDAL already in the environment, and version skew between the plugin's QGIS and the CLI's. | Revisit when the port reaches `raster_utils` and the geometry-heavy parts of group B, where the payoff is concrete. Until then the allowlist excludes `qgis`, `PyQt5` and `osgeo`. |
 
 ## Explicit non-goals for this branch
 
