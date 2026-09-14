@@ -1,21 +1,31 @@
-# Daymet V4 daily weather over North America, with wind speed borrowed from
-# gridMET because Daymet does not carry it. Q-EPIC surfaces this as a note on
-# the Daymet source; see Q17 in Q-EPIC docs/03_open_questions.md.
+# Daymet V4 daily weather over North America.
+#
+# Wind speed comes from gridMET as a second collection rather than through
+# Image.linkCollection: the link runs a join per image and measured 70.5 s for a
+# single year against 7.7 s without it, and results from several collections are
+# merged on date anyway.
+#
+# Daymet's GEE calendar carries 365 days even in leap years, dropping 31
+# December (verified live for 2020). The declared calendar below tells the
+# writer to repair that gap rather than emit a series with a hole in it.
 description: Daymet V4 (1 km, North America), wind speed supplemented from gridMET
 scope: north-america
+calendar: drops-dec-31-in-leap-years
 global_scope:
   variables: ['srad', 'tmax', 'tmin', 'prcp', 'rh', 'ws']
   resolution: 1000
 collections:
   daymet:
     collection: 'NASA/ORNL/DAYMET_V4'
-    linkcollection:
-      collection: 'IDAHO_EPSCOR/GRIDMET'
-      bands: ['vs']
     variables:
       srad: b('srad') * b('dayl') / 1e6        # W/m^2 * s -> MJ/m^2/day
       tmax: b('tmax')                          # already degrees C
       tmin: b('tmin')                          # already degrees C
       prcp: b('prcp')                          # mm/day
-      rh: 0.263 * b('vp') / exp(17.67 * b('tmax') / (b('tmax') + 243.5)) # % from vapour pressure
-      ws: b('vs')                              # m/s, from the linked gridMET band
+      # geoEpic.weather.formule.rh_vappr: vp / es(mean T), as a fraction.
+      rh: b('vp') / (611 * exp(17.502 * ((b('tmax') + b('tmin')) / 2) / (((b('tmax') + b('tmin')) / 2) + 240.97)))
+  gridmet_wind:
+    collection: 'IDAHO_EPSCOR/GRIDMET'
+    resolution: 4000                           # gridMET's own pixel, not Daymet's
+    variables:
+      ws: b('vs')                              # m/s

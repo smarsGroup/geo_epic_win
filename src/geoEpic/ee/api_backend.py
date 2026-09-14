@@ -101,11 +101,12 @@ class EarthEngineApiBackend(EarthEngineBackend):
         dates = []
         for source in spec.collections:
             collection, names = self._collection(source, window)
+            scale = spec.scale_for(source)
 
-            def reduce_image(image, names=names):
+            def reduce_image(image, names=names, scale=scale):
                 reducer = ee.Reducer.first() if point_like else ee.Reducer.mean()
                 values = image.reduceRegion(reducer=reducer, geometry=area,
-                                            scale=spec.resolution, maxPixels=int(1e9))
+                                            scale=scale, maxPixels=int(1e9))
                 return ee.Feature(None, values).set("date", image.date().format("YYYY-MM-dd"))
 
             try:

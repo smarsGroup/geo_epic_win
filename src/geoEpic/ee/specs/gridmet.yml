@@ -11,5 +11,5 @@ collections:
       tmax: b('tmmx') - 273.15                 # K -> degrees C
       tmin: b('tmmn') - 273.15                 # K -> degrees C
       prcp: b('pr')                            # mm/day
-      rh: (b('rmax') + b('rmin')) / 2          # %
+      rh: (b('rmax') + b('rmin')) / 200        # % -> fraction, as geoEpic stores it
       ws: b('vs')                              # m/s

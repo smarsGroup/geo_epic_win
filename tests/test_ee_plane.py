@@ -31,15 +31,43 @@ def test_weather_specs_agree_on_the_epic_variable_set():
         assert DatasetSpec.bundled(name).variables == epic, name
 
 
-def test_daymet_borrows_wind_from_gridmet():
+def test_daymet_borrows_wind_from_gridmet_as_a_second_collection():
+    """Daymet carries no wind speed, so gridMET supplies it.
+
+    It is a separate collection rather than an Image.linkCollection: the link
+    joins per image and measured 70.5 s for one year against 7.7 s without it,
+    and results from several collections are merged on date anyway.
+    """
     daymet = DatasetSpec.bundled("daymet")
-    source = daymet.collections[0]
-    assert source.link is not None
-    assert source.link.collection == "IDAHO_EPSCOR/GRIDMET"
-    assert "vs" in source.link.bands
-    # The wind expression must reference the linked band, or the link is dead code.
-    assert "vs" in source.variables["ws"]
-    assert "vs" in source.bands
+    assert len(daymet.collections) == 2
+    primary, wind = daymet.collections
+    assert primary.collection == "NASA/ORNL/DAYMET_V4"
+    assert "ws" not in primary.variables
+    assert wind.collection == "IDAHO_EPSCOR/GRIDMET"
+    assert "vs" in wind.variables["ws"]
+    # gridMET is sampled at its own pixel, not Daymet's finer one.
+    assert daymet.scale_for(wind) == 4000
+    assert daymet.scale_for(primary) == 1000
+
+
+def test_daymet_declares_the_calendar_gap_it_needs_repaired():
+    daymet = DatasetSpec.bundled("daymet")
+    assert daymet.calendar == "drops-dec-31-in-leap-years"
+    for other in ("gridmet", "agera5"):
+        assert DatasetSpec.bundled(other).calendar is None, other
+
+
+def test_relative_humidity_is_a_fraction_in_every_weather_spec():
+    """geoEpic stores rh as a fraction, not a percentage.
+
+    geoEpic.weather.formule.rh_vappr returns vp/es, and weather/daymet.py
+    divides rmax/rmin percentages by 100. A spec emitting percentages produced
+    values above 1.0 on 37-51 days of a fetched year before this was fixed.
+    """
+    for name in ("daymet", "gridmet", "agera5"):
+        spec = DatasetSpec.bundled(name)
+        expression = next(c.variables["rh"] for c in spec.collections if "rh" in c.variables)
+        assert "/ 200" in expression or "611" in expression, (name, expression)
 
 
 def test_band_references_are_extracted_from_expressions():

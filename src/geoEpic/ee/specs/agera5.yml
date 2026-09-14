@@ -18,6 +18,7 @@ collections:
       tmin: b('Temperature_Air_2m_Min_24h') - 273.15
       prcp: b('Precipitation_Flux')            # mm/day
       # v2 supplies daily extremes rather than an instantaneous value; take
-      # their mean, as the gridMET spec does with rmax/rmin.
-      rh: (b('Derived_Relative_Humidity_2m_Max_24h') + b('Derived_Relative_Humidity_2m_Min_24h')) / 2
+      # their mean, as the gridMET spec does, and divide by 100 because
+      # geoEpic stores relative humidity as a fraction, not a percentage.
+      rh: (b('Derived_Relative_Humidity_2m_Max_24h') + b('Derived_Relative_Humidity_2m_Min_24h')) / 200
       ws: b('Wind_Speed_10m_Mean_24h')         # m/s

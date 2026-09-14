@@ -36,7 +36,8 @@ class LinkedCollection:
 class SourceCollection:
     """One Earth Engine ImageCollection and the EPIC variables it supplies."""
 
-    def __init__(self, name, collection, variables, select=None, link=None, time_range=None):
+    def __init__(self, name, collection, variables, select=None, link=None,
+                 time_range=None, resolution=None):
         self.name = name
         self.collection = collection
         # variable name -> Earth Engine expression, e.g. "b('tmax') - 273.15"
@@ -44,6 +45,9 @@ class SourceCollection:
         self.select = select
         self.link = link
         self.time_range = tuple(time_range) if time_range else None
+        #: Native scale for this collection, when it differs from the dataset's
+        #: (a spec may draw one variable from a coarser product).
+        self.resolution = int(resolution) if resolution else None
 
     @property
     def bands(self):
@@ -60,7 +64,8 @@ class DatasetSpec:
     """A named, versionable description of one fetchable dataset."""
 
     def __init__(self, name, resolution, variables, collections,
-                 time_range=None, derived=None, description="", scope="global"):
+                 time_range=None, derived=None, description="", scope="global",
+                 calendar=None):
         if not collections:
             raise SpecError("A dataset spec needs at least one collection.")
         self.name = name
@@ -71,6 +76,9 @@ class DatasetSpec:
         self.derived = dict(derived or {})
         self.description = description
         self.scope = scope
+        #: A declared calendar quirk of the source, repaired when building a
+        #: continuous daily series. See geoEpic.epicfiles.dly.repair_calendar.
+        self.calendar = calendar
 
     # ------------------------------------------------------------------ load
 
@@ -94,6 +102,7 @@ class DatasetSpec:
                 select=str(config["select"]) if config.get("select") else None,
                 link=LinkedCollection(link["collection"], link["bands"]) if link else None,
                 time_range=config.get("time_range"),
+                resolution=config.get("resolution"),
             ))
         return cls(
             name=name or data.get("name") or "unnamed",
@@ -105,6 +114,7 @@ class DatasetSpec:
             derived=data.get("derived_variables") or {},
             description=data.get("description", ""),
             scope=data.get("scope", "global"),
+            calendar=data.get("calendar"),
         )
 
     @classmethod
@@ -137,6 +147,10 @@ class DatasetSpec:
         if start > end:
             raise SpecError("Start date {} is after end date {}.".format(start, end))
         return start, end
+
+    def scale_for(self, source):
+        """The scale to reduce one of this spec's collections at."""
+        return source.resolution or self.resolution
 
     def missing_variables(self, produced):
         """Which declared variables a set of produced columns does not cover."""

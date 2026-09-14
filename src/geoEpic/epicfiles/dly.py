@@ -116,6 +116,43 @@ def read(path):
     return rows
 
 
+#: Calendar quirks a source may declare, and how a continuous series is built.
+#: Daymet's GEE collection carries 365 days even in a leap year, dropping 31
+#: December (verified live for 2020; the ORNL CSV drops 29 February instead,
+#: which geoEpic.weather.daymet repairs by averaging its neighbours).
+CALENDARS = ("drops-dec-31-in-leap-years",)
+
+
+def repair_calendar(rows, first_year, last_year, calendar):
+    """Fill a source's known calendar gap so the series is continuous.
+
+    EPIC reads a .DLY as one unbroken run of days, so a hole is not an option.
+    Returns ``(rows, filled)`` where ``filled`` lists the dates synthesised, for
+    the caller to report - a fabricated day must never pass silently.
+    """
+    if not calendar:
+        return list(rows), []
+    if calendar not in CALENDARS:
+        raise DlyError("Unknown calendar policy {!r}.".format(calendar))
+
+    by_date = {(int(r["year"]), int(r["month"]), int(r["day"])): r for r in rows}
+    filled = []
+    for year in range(int(first_year), int(last_year) + 1):
+        if not is_leap(year) or (year, 12, 31) in by_date:
+            continue
+        previous = by_date.get((year, 12, 30))
+        if previous is None:
+            continue        # nothing to carry forward; leave the gap visible
+        # No following day exists inside the year to average with, so the last
+        # observed day is carried forward.
+        synthetic = dict(previous)
+        synthetic["day"] = 31
+        by_date[(year, 12, 31)] = synthetic
+        filled.append((year, 12, 31))
+    ordered = [by_date[key] for key in sorted(by_date)]
+    return ordered, filled
+
+
 def missing_dates(rows, start_year, end_year):
     """Calendar dates in the range that the rows do not cover.
 
