@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from geoEpic.soil.sda import SoilDataAccess
+from geoEpic.epicfiles import sol as light_sol
 
 class SOL:
     def __init__(self, soil_id=None, albedo=None, hydgrp=None, num_layers=None, layers_df=None):
@@ -62,7 +63,7 @@ class SOL:
         
         # --- Load template lines ---
         if template is None:
-            template_path = os.path.join(os.path.dirname(__file__), "template.SOL")
+            template_path = str(light_sol.TEMPLATE)
             with open(template_path, "r") as file:
                 template_lines = file.readlines()
         elif isinstance(template, (str, os.PathLike)):
@@ -78,30 +79,16 @@ class SOL:
                 "template must be None, a list of lines, or a path (str/os.PathLike)."
             )
         
-        template_lines[0] = f"ID: {self.soil_id}\n"
-        hydgrp_conv = {'A': 1, 'B': 2, 'C': 3, 'D': 4}.get(self.hydgrp, 3)  # Default to 3 if not found
-        template_lines[1] = '{:8.3f}{:8.3f}'.format(self.albedo, hydgrp_conv) + template_lines[1][16:]
-        template_lines[2] = '{:8.3f}'.format(self.num_layers_after_split) + template_lines[2][8:]
-        
-        columns_order = [
-            'Layer_depth', 'Bulk_Density', 'Wilting_capacity', 'Field_Capacity',
-            'Sand_content', 'Silt_content', 'N_concen', 'pH', 'Sum_Bases',
-            'Organic_Carbon', 'Calcium_Carbonate', 'Cation_exchange', 'Course_Fragment',
-            'cnds', 'pkrz', 'rsd', 'Bulk_density_dry', 'psp', 'Saturated_conductivity',
-        ]
-        self.layers_df = self.layers_df[columns_order]
-        self.layers_df = self.layers_df.sort_values(by='Layer_depth', ascending=True)
-        self.layers_df = self.layers_df.reset_index(drop=True)
-        self.layers_df = self.layers_df.fillna(0)
-        vals = self.layers_df.values.T
-        len_rows = len(vals)
-        for i in range(len_rows):
-            template_lines[3 + i] = ''.join([f'{val:8.3f}' for val in vals[i]]) + '\n'
-        
-        padding = ['{:8.3f}'.format(0) for _ in range(23)]
-        for i in range(len_rows + 3, 45):
-            template_lines[i] = ''.join(padding[:self.num_layers]) + '\n'
-        
+        # Rendering lives in the dependency-light writer so this class and the
+        # QGIS plugin cannot emit different bytes. Pinned by
+        # tests/fixtures/soil_123456.SOL.
+        layers = self.layers_df[list(light_sol.LAYER_PROPERTIES)].to_dict("records")
+        text = light_sol.dumps(self.soil_id, self.albedo, self.hydgrp, layers,
+                               template=template_lines,
+                               layers_after_split=self.num_layers_after_split)
+        with open(filepath, 'w+') as file:
+            file.write(text)
+        return
         with open(filepath, 'w+') as file:
             file.writelines(template_lines)
     

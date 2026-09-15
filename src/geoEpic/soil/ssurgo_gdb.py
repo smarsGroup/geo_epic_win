@@ -112,7 +112,8 @@ else:
 os.makedirs(outdir, exist_ok=True)
 
 # Read template file
-_template_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'io', 'inputs', 'template.SOL')
+from geoEpic.epicfiles import sol as _light_sol
+_template_path = str(_light_sol.TEMPLATE)
 with open(_template_path, 'r') as file:
     template_orig = file.readlines()
 padding = ['{:8.3f}'.format(0) for _ in range(23)]

@@ -1,0 +1,5 @@
+Layer_depth,Bulk_Density,Wilting_capacity,Field_Capacity,Sand_content,Silt_content,N_concen,pH,Sum_Bases,Organic_Carbon,Calcium_Carbonate,Cation_exchange,Course_Fragment,cnds,pkrz,rsd,Bulk_density_dry,psp,Saturated_conductivity
+0.28,1.35,0.102,0.195,66.9,25.1,0.0,6.25,12.5,1.16,0.0,11.3,3.2,0,0,0,1.42,0,9.0
+1.52,1.6,0.011,0.054,97.0,2.05,0.0,7.005,4.4445,0.29,0.5,3.33,0.0,0,0,0,1.71,0,36.0
+0.81,1.4,0.158,0.298,35.8,44.2,0.0,6.5,-1.5,0.58,0.0,8.8,12345.6789,0,0,0,1.55,0,18.0
+2.0,1.7,,0.02,99.5,0.5,0.0,8.15,0.0,0.05,0.0,1.1,0.0,0,0,0,1.8,0,72.0

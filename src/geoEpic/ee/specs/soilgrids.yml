@@ -1,42 +1,113 @@
-# SoilGrids v2 (ISRIC) depth-resolved profile properties, used outside the USA
-# where SSURGO via Soil Data Access is unavailable. Static, so the time range is
-# nominal and a single image is sampled per property.
-description: SoilGrids v2.0 (250 m, global) soil profile properties
+# SoilGrids v2.0 (ISRIC), for use outside the United States where SSURGO via
+# Soil Data Access is unavailable.
+#
+# Verified live 2026-09-15:
+#   * each asset is an Image, not an ImageCollection, hence `kind: image`
+#   * the grid is World_Mollweide at 250 m, and a point is sampled with
+#     Reducer.first at that scale
+#   * coverage has real gaps - water, rock and some built-up land return null,
+#     so a cell may legitimately have no soil and must be reported, not zeroed
+#
+# INCOMPLETE as an EPIC soil source. ISRIC carries composition but not the
+# hydraulic properties EPIC needs: wilting capacity, field capacity and
+# saturated conductivity. geoEpic.spatial.isric takes those from HiHydroSoil
+# v2.0 (projects/sat-io/open-datasets/HiHydroSoilv2_0/{crit-wilt,field-crit,
+# ksat}), which are ImageCollections. Until those are added here, this spec
+# describes the ISRIC half only and cannot produce a complete .SOL.
+description: SoilGrids v2.0 (250 m, global) soil composition
 scope: global
 static: true
 global_scope:
-  variables: ['bulk_density', 'clay', 'sand', 'silt', 'organic_carbon', 'ph', 'cec', 'coarse_fragments']
+  variables: ['bulk_density_0_5', 'bulk_density_5_15', 'bulk_density_15_30', 'bulk_density_30_60', 'bulk_density_60_100', 'bulk_density_100_200', 'clay_0_5', 'clay_5_15', 'clay_15_30', 'clay_30_60', 'clay_60_100', 'clay_100_200', 'sand_0_5', 'sand_5_15', 'sand_15_30', 'sand_30_60', 'sand_60_100', 'sand_100_200', 'silt_0_5', 'silt_5_15', 'silt_15_30', 'silt_30_60', 'silt_60_100', 'silt_100_200', 'organic_carbon_0_5', 'organic_carbon_5_15', 'organic_carbon_15_30', 'organic_carbon_30_60', 'organic_carbon_60_100', 'organic_carbon_100_200', 'nitrogen_0_5', 'nitrogen_5_15', 'nitrogen_15_30', 'nitrogen_30_60', 'nitrogen_60_100', 'nitrogen_100_200', 'ph_0_5', 'ph_5_15', 'ph_15_30', 'ph_30_60', 'ph_60_100', 'ph_100_200', 'cec_0_5', 'cec_5_15', 'cec_15_30', 'cec_30_60', 'cec_60_100', 'cec_100_200', 'coarse_fragments_0_5', 'coarse_fragments_5_15', 'coarse_fragments_15_30', 'coarse_fragments_30_60', 'coarse_fragments_60_100', 'coarse_fragments_100_200']
   resolution: 250
 collections:
-  soilgrids:
+  bulk_density:
     collection: 'projects/soilgrids-isric/bdod_mean'
+    kind: image
     variables:
-      bulk_density: b('bdod_0-5cm_mean') / 100   # cg/cm^3 -> g/cm^3
+      bulk_density_0_5: b('bdod_0-5cm_mean') / 100   # cg/cm^3 -> g/cm^3
+      bulk_density_5_15: b('bdod_5-15cm_mean') / 100   # cg/cm^3 -> g/cm^3
+      bulk_density_15_30: b('bdod_15-30cm_mean') / 100   # cg/cm^3 -> g/cm^3
+      bulk_density_30_60: b('bdod_30-60cm_mean') / 100   # cg/cm^3 -> g/cm^3
+      bulk_density_60_100: b('bdod_60-100cm_mean') / 100   # cg/cm^3 -> g/cm^3
+      bulk_density_100_200: b('bdod_100-200cm_mean') / 100   # cg/cm^3 -> g/cm^3
   clay:
     collection: 'projects/soilgrids-isric/clay_mean'
+    kind: image
     variables:
-      clay: b('clay_0-5cm_mean') / 10            # g/kg -> %
+      clay_0_5: b('clay_0-5cm_mean') / 10   # g/kg -> %
+      clay_5_15: b('clay_5-15cm_mean') / 10   # g/kg -> %
+      clay_15_30: b('clay_15-30cm_mean') / 10   # g/kg -> %
+      clay_30_60: b('clay_30-60cm_mean') / 10   # g/kg -> %
+      clay_60_100: b('clay_60-100cm_mean') / 10   # g/kg -> %
+      clay_100_200: b('clay_100-200cm_mean') / 10   # g/kg -> %
   sand:
     collection: 'projects/soilgrids-isric/sand_mean'
+    kind: image
     variables:
-      sand: b('sand_0-5cm_mean') / 10
+      sand_0_5: b('sand_0-5cm_mean') / 10   # g/kg -> %
+      sand_5_15: b('sand_5-15cm_mean') / 10   # g/kg -> %
+      sand_15_30: b('sand_15-30cm_mean') / 10   # g/kg -> %
+      sand_30_60: b('sand_30-60cm_mean') / 10   # g/kg -> %
+      sand_60_100: b('sand_60-100cm_mean') / 10   # g/kg -> %
+      sand_100_200: b('sand_100-200cm_mean') / 10   # g/kg -> %
   silt:
     collection: 'projects/soilgrids-isric/silt_mean'
+    kind: image
     variables:
-      silt: b('silt_0-5cm_mean') / 10
+      silt_0_5: b('silt_0-5cm_mean') / 10   # g/kg -> %
+      silt_5_15: b('silt_5-15cm_mean') / 10   # g/kg -> %
+      silt_15_30: b('silt_15-30cm_mean') / 10   # g/kg -> %
+      silt_30_60: b('silt_30-60cm_mean') / 10   # g/kg -> %
+      silt_60_100: b('silt_60-100cm_mean') / 10   # g/kg -> %
+      silt_100_200: b('silt_100-200cm_mean') / 10   # g/kg -> %
   organic_carbon:
     collection: 'projects/soilgrids-isric/soc_mean'
+    kind: image
     variables:
-      organic_carbon: b('soc_0-5cm_mean') / 100  # dg/kg -> %
+      organic_carbon_0_5: b('soc_0-5cm_mean') / 100   # dg/kg -> %
+      organic_carbon_5_15: b('soc_5-15cm_mean') / 100   # dg/kg -> %
+      organic_carbon_15_30: b('soc_15-30cm_mean') / 100   # dg/kg -> %
+      organic_carbon_30_60: b('soc_30-60cm_mean') / 100   # dg/kg -> %
+      organic_carbon_60_100: b('soc_60-100cm_mean') / 100   # dg/kg -> %
+      organic_carbon_100_200: b('soc_100-200cm_mean') / 100   # dg/kg -> %
+  nitrogen:
+    collection: 'projects/soilgrids-isric/nitrogen_mean'
+    kind: image
+    variables:
+      nitrogen_0_5: b('nitrogen_0-5cm_mean') / 100   # cg/kg -> %
+      nitrogen_5_15: b('nitrogen_5-15cm_mean') / 100   # cg/kg -> %
+      nitrogen_15_30: b('nitrogen_15-30cm_mean') / 100   # cg/kg -> %
+      nitrogen_30_60: b('nitrogen_30-60cm_mean') / 100   # cg/kg -> %
+      nitrogen_60_100: b('nitrogen_60-100cm_mean') / 100   # cg/kg -> %
+      nitrogen_100_200: b('nitrogen_100-200cm_mean') / 100   # cg/kg -> %
   ph:
     collection: 'projects/soilgrids-isric/phh2o_mean'
+    kind: image
     variables:
-      ph: b('phh2o_0-5cm_mean') / 10             # pH*10 -> pH
+      ph_0_5: b('phh2o_0-5cm_mean') / 10   # pH*10 -> pH
+      ph_5_15: b('phh2o_5-15cm_mean') / 10   # pH*10 -> pH
+      ph_15_30: b('phh2o_15-30cm_mean') / 10   # pH*10 -> pH
+      ph_30_60: b('phh2o_30-60cm_mean') / 10   # pH*10 -> pH
+      ph_60_100: b('phh2o_60-100cm_mean') / 10   # pH*10 -> pH
+      ph_100_200: b('phh2o_100-200cm_mean') / 10   # pH*10 -> pH
   cec:
     collection: 'projects/soilgrids-isric/cec_mean'
+    kind: image
     variables:
-      cec: b('cec_0-5cm_mean') / 10              # mmol(c)/kg -> cmol(c)/kg
+      cec_0_5: b('cec_0-5cm_mean') / 10   # mmol(c)/kg -> cmol(c)/kg
+      cec_5_15: b('cec_5-15cm_mean') / 10   # mmol(c)/kg -> cmol(c)/kg
+      cec_15_30: b('cec_15-30cm_mean') / 10   # mmol(c)/kg -> cmol(c)/kg
+      cec_30_60: b('cec_30-60cm_mean') / 10   # mmol(c)/kg -> cmol(c)/kg
+      cec_60_100: b('cec_60-100cm_mean') / 10   # mmol(c)/kg -> cmol(c)/kg
+      cec_100_200: b('cec_100-200cm_mean') / 10   # mmol(c)/kg -> cmol(c)/kg
   coarse_fragments:
     collection: 'projects/soilgrids-isric/cfvo_mean'
+    kind: image
     variables:
-      coarse_fragments: b('cfvo_0-5cm_mean') / 10
+      coarse_fragments_0_5: b('cfvo_0-5cm_mean') / 10   # cm3/dm3 -> volume %
+      coarse_fragments_5_15: b('cfvo_5-15cm_mean') / 10   # cm3/dm3 -> volume %
+      coarse_fragments_15_30: b('cfvo_15-30cm_mean') / 10   # cm3/dm3 -> volume %
+      coarse_fragments_30_60: b('cfvo_30-60cm_mean') / 10   # cm3/dm3 -> volume %
+      coarse_fragments_60_100: b('cfvo_60-100cm_mean') / 10   # cm3/dm3 -> volume %
+      coarse_fragments_100_200: b('cfvo_100-200cm_mean') / 10   # cm3/dm3 -> volume %

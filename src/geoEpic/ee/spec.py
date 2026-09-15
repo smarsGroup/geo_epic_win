@@ -36,10 +36,18 @@ class LinkedCollection:
 class SourceCollection:
     """One Earth Engine ImageCollection and the EPIC variables it supplies."""
 
+    KINDS = ("collection", "image")
+
     def __init__(self, name, collection, variables, select=None, link=None,
-                 time_range=None, resolution=None):
+                 time_range=None, resolution=None, kind="collection"):
         self.name = name
         self.collection = collection
+        #: "collection" for an ImageCollection filtered by date, "image" for a
+        #: single static asset such as SoilGrids, which carries no time axis.
+        if kind not in self.KINDS:
+            raise SpecError("Unknown source kind {!r}; expected one of {}.".format(
+                kind, ", ".join(self.KINDS)))
+        self.kind = kind
         # variable name -> Earth Engine expression, e.g. "b('tmax') - 273.15"
         self.variables = dict(variables)
         self.select = select
@@ -103,6 +111,7 @@ class DatasetSpec:
                 link=LinkedCollection(link["collection"], link["bands"]) if link else None,
                 time_range=config.get("time_range"),
                 resolution=config.get("resolution"),
+                kind=config.get("kind", "collection"),
             ))
         return cls(
             name=name or data.get("name") or "unnamed",
@@ -147,6 +156,11 @@ class DatasetSpec:
         if start > end:
             raise SpecError("Start date {} is after end date {}.".format(start, end))
         return start, end
+
+    @property
+    def is_static(self):
+        """True when every source is a single image with no time axis."""
+        return all(source.kind == "image" for source in self.collections)
 
     def scale_for(self, source):
         """The scale to reduce one of this spec's collections at."""

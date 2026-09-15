@@ -76,6 +76,10 @@ class EarthEngineApiBackend(EarthEngineBackend):
 
     def _collection(self, source, window):
         ee = _ee()
+        if getattr(source, "kind", "collection") != "collection":
+            raise EarthEngineError(
+                "{} is a static image, and sampling static sources is not implemented "
+                "yet. See the SoilGrids note in the spec.".format(source.collection))
         collection = ee.ImageCollection(source.collection)
         if source.link:
             collection = collection.linkCollection(
