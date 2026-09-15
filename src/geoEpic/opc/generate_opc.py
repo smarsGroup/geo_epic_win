@@ -6,12 +6,14 @@ import os
 from geoEpic.utils import parallel_executor
 from geoEpic.io import OPC
 from geoEpic.io import ConfigParser
+from geoEpic.epicfiles import opc as _opc_templates
 import argparse
 import sys
 
 parser = argparse.ArgumentParser(description="OPC file creation utility")
 parser.add_argument("-c", "--crop_data", default= "./crop_data.csv", help="Path to the year-wise crop data file")
-parser.add_argument("-t", "--template", default= "./crop_templates", help="Path to the crop template folder")
+parser.add_argument("-t", "--template", default=str(_opc_templates.TEMPLATE_DIR),
+                    help="Path to the crop template folder (defaults to the bundled set)")
 parser.add_argument("-o", "--output", default= "./files", help="Path to the output folder")
 
 args = parser.parse_args()
@@ -74,39 +76,15 @@ if not is_valid:
 # Validate Template Folder: Rename columns if necessary
 # -------------------------------------------
 def validate_template_folder(template_path):
-    # Check if Mapping file exists
-    mapping_file = os.path.join(template_path, 'MAPPING')
-    if not os.path.isfile(mapping_file):
-        return False, "Mapping file not found in the template folder"
+    """Delegate to geoEpic.epicfiles.opc so the CLI and the QGIS plugin agree.
 
-    # Validate Mapping file contents
-    try:
-        df = pd.read_csv(mapping_file)
-        # Rename if necessary
-        if 'cdl_code' in df.columns:
-            df.rename(columns={'cdl_code': 'crop_code'}, inplace=True)
-        elif 'epic_code' in df.columns:
-            df.rename(columns={'epic_code': 'crop_code'}, inplace=True)
-        
-        required_columns = ['crop_code', 'name']
-        for col in required_columns:
-            if col not in df.columns:
-                return False, f"Mapping file is missing required column: {col}"
-
-        if not pd.api.types.is_integer_dtype(df['crop_code']):
-            return False, "crop_code column in Mapping file should contain integers"
-
-    except Exception as e:
-        return False, f"Error reading Mapping file: {str(e)}"
-
-    # Check if FALLOW.OPC is present
-    fallow_opc = os.path.join(template_path, 'FALLOW.OPC')
-    if not os.path.isfile(fallow_opc):
-        return False, "FALLOW.OPC file not found in the template folder. It's used as default OPC if crop_code is not present in template."
-
-    return True, "Template folder validation successful"
+    A folder missing some templates is still usable - those crops fall back to
+    FALLOW - so the message is printed and the run continues.
+    """
+    return _opc_templates.validate(template_path)
 
 is_valid, message = validate_template_folder(template_path)
+print(message)
 if not is_valid:
     print(f"Template folder not valid: {message}")
     sys.exit()
@@ -114,18 +92,9 @@ if not is_valid:
 # -------------------------------------------
 # Get crop_code to template mapper
 # -------------------------------------------
-def get_crop_code_template_mapper(template_path):
-    mapping_file_path = os.path.join(template_path, 'MAPPING')
-    df = pd.read_csv(mapping_file_path)
-    # Rename if necessary
-    if 'cdl_code' in df.columns:
-        df.rename(columns={'cdl_code': 'crop_code'}, inplace=True)
-    elif 'epic_code' in df.columns:
-        df.rename(columns={'epic_code': 'crop_code'}, inplace=True)
-    mapper = dict(zip(df['crop_code'].astype(int), df['name']))
-    return mapper
+crop_code_mapper = _opc_templates.read_mapping(template_path)
 
-crop_code_mapper = get_crop_code_template_mapper(template_path)
+
 
 # -------------------------------------------
 # Build crop_info_list from CSV

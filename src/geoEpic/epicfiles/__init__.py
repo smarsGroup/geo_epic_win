@@ -3,6 +3,6 @@
 Dependency-light: importable inside QGIS, vendored into the Q-EPIC plugin, and
 used by the heavy ``geoEpic.io`` classes so both surfaces emit identical bytes.
 """
-from . import dly, sit, sol
+from . import dly, opc, sit, sol
 
-__all__ = ["dly", "sit", "sol"]
+__all__ = ["dly", "opc", "sit", "sol"]
