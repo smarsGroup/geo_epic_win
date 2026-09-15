@@ -195,7 +195,7 @@ geo_epic = "geoEpic.dispatcher:main"
 package-data = {"geoEpic" = [
     "assets/**/**/*",
     "epicfiles/templates/*.SOL",
-    "io/inputs/template.SIT",
+    "epicfiles/templates/*.SIT",
     "assets/EPICeditor.xlsm",
     "ee/specs/*.yml",
 ]}

@@ -4,6 +4,6 @@ Query building and response interpretation only: no HTTP client, so the QGIS
 plugin posts through QGIS networking and the CLI through requests, against one
 definition of the query and the unit conversions.
 """
-from . import sda, soilgrids
+from . import dem, sda, soilgrids
 
-__all__ = ["sda", "soilgrids"]
+__all__ = ["dem", "sda", "soilgrids"]

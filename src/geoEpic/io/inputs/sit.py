@@ -2,6 +2,8 @@ import os
 import numpy as np
 import pandas as pd
 
+from geoEpic.epicfiles import sit as light_sit
+
 class SIT:
     def __init__(self, *args, **kwargs):
         """
@@ -115,41 +117,21 @@ class SIT:
         return instance
 
     def save(self, output_dir):
+        """Save the current site information to a .SIT file.
+
+        Rendering lives in the dependency-light writer so this class and the
+        QGIS plugin cannot emit different bytes. Pinned by
+        tests/fixtures/site_plain.SIT and site_edges.SIT.
         """
-        Save the current site information to a .SIT file.
-        """
-        # Determine output file path
         if not self.site_info.get("ID"):
             raise ValueError("Site ID is not set. Cannot write to file.")
-
         if output_dir.endswith('.SIT') or output_dir.endswith('.sit'):
             output_file_path = output_dir.rsplit('.', 1)[0] + '.SIT'
         else:
             output_file_path = os.path.join(output_dir, f"{self.site_info['ID']}.SIT")
+        directory = os.path.dirname(output_file_path)
+        if directory:
+            os.makedirs(directory, exist_ok=True)
+        light_sit.write(output_file_path, self.site_info,
+                        template=self.template or None)
 
-        # Load template if not already present
-        if not self.template:
-            template_path = os.path.join(os.path.dirname(__file__), 'template.SIT')
-            if os.path.exists(template_path):
-                with open(template_path, 'r') as file:
-                    self.template = file.readlines()
-        
-        if not self.template:
-             raise FileNotFoundError(f"Template SIT file not found")
-
-        # Modify the template lines or create a new template if not read from a file
-        if not self.template:
-            self.template = [''] * 7  # Assuming the template has at least 7 lines
-        self.template[0] = 'Crop Simulations\n'
-        self.template[1] = 'Prototype\n'
-        self.template[2] = f'ID: {self.site_info["ID"]}\n'
-        self.template[3] = f'{self.site_info["lat"]:8.2f}{self.site_info["lon"]:8.2f}{self.site_info["elevation"]:8.2f}{self.template[3][24:]}' if len(self.template) > 3 else ''
-        self.template[4] = f'{self.template[4][:48]}{self.site_info["slope_length"]:8.2f}{self.site_info["slope_steep"]:8.2f}{self.template[4][64:]}' if len(self.template) > 4 else ''
-        self.template[6] = '                                                   \n' if len(self.template) > 6 else ''
-        
-        # Write the modified template to the new file
-        os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
-        with open(output_file_path, 'w') as f:
-            f.writelines(self.template)
-
-        # print(f"File written to: {output_file_path}")

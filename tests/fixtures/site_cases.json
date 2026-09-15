@@ -1,0 +1,18 @@
+{
+  "site_plain": {
+    "ID": "10000",
+    "lat": 41.2,
+    "lon": -96.6,
+    "elevation": 355.0,
+    "slope_length": 390.0,
+    "slope_steep": 0.8
+  },
+  "site_edges": {
+    "ID": "20000",
+    "lat": -0.305,
+    "lon": -179.995,
+    "elevation": -12345.678,
+    "slope_length": 0.0,
+    "slope_steep": 99.995
+  }
+}

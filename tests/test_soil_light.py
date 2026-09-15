@@ -222,3 +222,89 @@ def test_a_water_cell_is_refused_rather_than_zeroed():
     values = _grid_sample(bulk_density_0_5=None)
     with pytest.raises(soilgrids.SoilGridsError, match="No soil"):
         soilgrids.layers_from_sample(values)
+
+
+# ------------------------------------------------------------------ .SIT
+
+import json                                                       # noqa: E402
+from geoEpic.epicfiles import sit                                 # noqa: E402
+from geoEpic.soilsource import dem                                # noqa: E402
+
+
+def site_cases():
+    return json.loads((FIXTURES / "site_cases.json").read_text())
+
+
+def test_site_writer_reproduces_the_captured_output_exactly():
+    for name, info in site_cases().items():
+        expected = (FIXTURES / "{}.SIT".format(name)).read_bytes()
+        assert sit.dumps(info).encode() == expected, name
+
+
+def test_only_the_five_values_we_own_are_touched():
+    """Everything else on the line is the template's and must survive."""
+    template = sit.read_template()
+    produced = sit.dumps(site_cases()["site_plain"]).splitlines()
+    # Columns after the coordinates on line 3 are untouched.
+    assert produced[sit.COORDINATE_LINE][24:] == template[sit.COORDINATE_LINE].rstrip("\n")[24:]
+    # As are those before and after the slope fields on line 4.
+    assert produced[sit.SLOPE_LINE][:48] == template[sit.SLOPE_LINE][:48]
+    assert produced[sit.SLOPE_LINE][64:] == template[sit.SLOPE_LINE].rstrip("\n")[64:]
+    # And every line past the blank one.
+    assert produced[7:] == [line.rstrip("\n") for line in template[7:]]
+
+
+def test_an_overwide_elevation_runs_into_its_neighbour_as_before():
+    text = sit.dumps(site_cases()["site_edges"])
+    assert "-12345.68" in text.splitlines()[sit.COORDINATE_LINE]
+
+
+def test_a_site_without_an_id_is_refused():
+    with pytest.raises(sit.SitError):
+        sit.dumps({"ID": "", "lat": 1, "lon": 2, "elevation": 3})
+
+
+def test_site_round_trips(tmp_path):
+    info = site_cases()["site_plain"]
+    path = sit.write(tmp_path / "10000", info)
+    back = sit.read(path)
+    assert back["ID"] == "10000"
+    assert abs(back["lat"] - 41.2) < 0.005
+    assert abs(back["elevation"] - 355.0) < 0.005
+    assert abs(back["slope_steep"] - 0.8) < 0.005
+    assert not list(tmp_path.glob("*.partial"))
+
+
+# ------------------------------------------------------------- batched DEM
+
+def test_points_are_split_into_request_sized_batches():
+    points = [(i, 41.0, -96.0) for i in range(1201)]
+    groups = dem.batches(points, size=500)
+    assert [len(g) for g in groups] == [500, 500, 201]
+    assert dem.batches([]) == []
+    assert len(dem.batches(points, size=0)) == 1201     # a silly size still works
+
+
+def test_a_response_maps_back_onto_the_keys_that_were_asked_for():
+    response = {"result": {"id": ["a", "b"], "elevation": [355.0, 400.0],
+                           "slope": [0.8, 2.5]}}
+    found = dem.assemble(response, ["a", "b", "c"])
+    assert found["a"] == {"elevation": 355.0, "slope": 0.8}
+    # A key the service did not return is absent, never zero.
+    assert found["c"] == {"elevation": None, "slope": None}
+
+
+def test_a_point_outside_the_dem_is_refused_rather_than_put_at_sea_level():
+    with pytest.raises(dem.DemError):
+        dem.site_from("1", 41.2, -96.6, {"elevation": None, "slope": None})
+    with pytest.raises(dem.DemError):
+        dem.site_from("1", 41.2, -96.6, {"elevation": 355.0, "slope": None})
+    site = dem.site_from("1", 41.2, -96.6, {"elevation": 355.0, "slope": 0.8}, slope_length=390.0)
+    assert site["ID"] == "1" and site["elevation"] == 355.0 and site["slope_steep"] == 0.8
+
+
+def test_the_known_dems_describe_their_band_and_scale():
+    assert dem.describe("USGS/3DEP/10m")["band"] == "elevation"
+    assert dem.describe("COPERNICUS/DEM/GLO30")["band"] == "DEM"
+    # A custom asset still gets a usable default rather than an exception.
+    assert dem.describe("projects/x/assets/mydem")["scale"] > 0
