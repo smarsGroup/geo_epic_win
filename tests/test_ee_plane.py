@@ -8,7 +8,7 @@ import sys
 
 import pytest
 
-from geoEpic.ee import (CollectionReport, DatasetSpec, EarthEngineBackend, SpecError,
+from geoEpic.ee import (CollectionReport, DatasetSpec, EarthEngineBackend, Sample, SpecError,
                         TimeSeries, available, cadence_from, review_warnings)
 
 
@@ -96,6 +96,50 @@ def test_malformed_specs_are_rejected_with_a_reason():
         DatasetSpec.from_dict({"collections": {"x": {"collection": "A/B"}}})
     with pytest.raises(SpecError):
         DatasetSpec.bundled("no_such_source")
+    with pytest.raises(SpecError):
+        DatasetSpec.from_dict({"collections": {"x": {
+            "collection": "A/B", "variables": {"a": "b('a')"},
+            "images": {"a": "member", "extra": "other"}}}})
+
+
+def test_soilgrids_mixes_isric_images_and_hihydro_collections():
+    """ISRIC is one Image per property; HiHydroSoil is one ImageCollection.
+
+    Verified live 2026-09-15: HiHydroSoil members are addressed by
+    system:index (WCpF2_0-5cm_M_250m, band b1) and stay collections rather
+    than being flattened into individual Image ids.
+    """
+    spec = DatasetSpec.bundled("soilgrids")
+    assert spec.is_static
+    assert spec.resolution == 250
+    assert {c.kind for c in spec.collections} == {"image", "collection"}
+    isric = [c for c in spec.collections if "soilgrids-isric" in c.collection]
+    hydro = [c for c in spec.collections if c.kind == "collection"]
+    assert len(isric) == 9
+    assert all(c.kind == "image" for c in isric)
+    assert {c.name for c in hydro} == {
+        "field_capacity", "wilting_capacity", "saturated_conductivity"}
+    assert all(c.collection.startswith("projects/sat-io/open-datasets/HiHydroSoilv2_0/")
+               for c in hydro)
+    field = next(c for c in hydro if c.name == "field_capacity")
+    assert field.collection.endswith("/wcpf2")
+    assert field.images["field_capacity_0_5"] == "WCpF2_0-5cm_M_250m"
+    assert "* 0.0001" in field.variables["field_capacity_0_5"]
+    ksat = next(c for c in hydro if c.name == "saturated_conductivity")
+    assert "0.416" in ksat.variables["saturated_conductivity_0_5"]
+    hsg = next(c for c in spec.collections if c.name == "hydrologic_soil_group")
+    assert hsg.kind == "image"
+    assert len(spec.variables) == 73
+    # Weather specs stay timed even though mixed kinds are legal.
+    assert not DatasetSpec.bundled("gridmet").is_static
+
+
+def test_sample_is_the_result_shape_for_static_sources():
+    sample = Sample({"clay_0_5": 22.0, "field_capacity_0_5": None})
+    assert sample.get("clay_0_5") == 22.0
+    assert sample.require(["clay_0_5", "field_capacity_0_5"]) == ["field_capacity_0_5"]
+    assert not sample.is_empty()
+    assert Sample({}).is_empty()
 
 
 # ---------------------------------------------------------------- contract
@@ -165,6 +209,7 @@ def test_the_interface_is_abstract_until_a_backend_implements_it():
     assert backend.available() is False
     for call in (lambda: backend.initialize(),
                  lambda: backend.extract(None, None),
+                 lambda: backend.sample(None, None),
                  lambda: backend.inspect("A/B")):
         with pytest.raises(NotImplementedError):
             call()

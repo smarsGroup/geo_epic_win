@@ -63,59 +63,24 @@ class DLY(pd.DataFrame):
     
     
     def to_monthly(self, path=None):
-        """
-        Save as monthly file
+        """Save the monthly statistics (.WP1) and wind (.WND) companions.
+
+        Rendering lives in the dependency-light writer so this class and the
+        QGIS plugin cannot emit different bytes. Pinned by
+        tests/fixtures/weather_2016.WP1 and .WND.
         """
         basename = "1" if not hasattr(self, 'basename') else self.basename
-        if path is None: path = f"./{basename}.WP1"
+        if path is None:
+            path = f"./{basename}"
         else:
             path = str(path)
-            if not path.endswith('.WP1'): path += '.WP1'
-
-        # Remove duplicate rows from the DataFrame
+            for suffix in ('.WP1', '.WND', '.DLY'):
+                if path.upper().endswith(suffix):
+                    path = path[:-4]
+                    break
         self.drop_duplicates(subset=['year', 'month', 'day'], inplace=True)
-        grouped = self.groupby('month')
-        # Calculate mean for all columns except 'prcp'
-        ss = grouped.mean()
-        dayinmonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-        ss['prcp'] = ss['prcp'] * dayinmonth
-        # Standard deviations
-        ss['sdtmx'] = grouped['tmax'].std()
-        ss['sdtmn'] = grouped['tmin'].std()
-        ss['sdrf'] = grouped['prcp'].std()
-        # Additional calculations
-        ss['dayp'] = grouped.apply(lambda x: (x['prcp'] > 0.5).sum() / len(x) * dayinmonth[x.name - 1], include_groups=False)
-        ss['skrf'] = 3 * abs(ss['prcp'] - ss['prcp'].median()) / ss['sdrf']
-        ss['prw1'] = grouped.apply(lambda x: np.sum(np.diff(x['prcp'] > 0.5) == -1) / len(x), include_groups=False)
-        ss['prw2'] = grouped.apply(lambda x: np.sum((x['prcp'].fillna(0) > 0.5).shift(fill_value=False) & (x['prcp'].fillna(0) > 0.5)) / len(x), include_groups=False)
-        ss['wi'] = 0
-        # Reorder columns
-        ss = ss[['tmax', 'tmin', 'prcp', 'srad', 'rh', 'ws', 'sdtmx', 'sdtmn', 'sdrf', 'dayp', 'skrf', 'prw1', 'prw2', 'wi']]
-        ss.columns = ['OBMX', 'OBMN', 'RMO', 'OBSL', 'RH','UAVO', 'SDTMX', 'SDTMN','RST2', 'DAYP', 'RST3', 'PRW1', 'PRW2', 'WI']
-        order = [0, 1, 6, 7, 2, 8, 10, 11, 12, 9, 13, 3, 4, 5]
-        ss = ss[ss.columns[order]]
-        values = np.float64(ss.T.values)
-        
-        lines = [f'Monthly Weather Statistics : {basename}',  "     .00     .00"]
-        fmt = "%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%8s"
-        for i, row in enumerate(values):
-            line = fmt % tuple(row.tolist() + [str(ss.columns[i])])
-            lines.append(line)
-        
-        with open(path, 'w') as ofile:
-            ofile.write('\n'.join(lines))
-            
-        # Generate WND file
-        wnd_path = path.replace('.WP1', '.WND')
-        with open(wnd_path, 'w') as wnd_file:
-            # Write station name (placeholder)
-            wnd_file.write(f"Monthly Wind Statistics : {basename}\n")
-            # Write two placeholder values
-            wnd_file.write("     .00     .00\n")
-            # Write last row of values (UAVO - wind speed)
-            wind_speeds = [f"{speed:10.2f}" for speed in values[-1]]
-            wnd_file.write("".join(wind_speeds) + "\n")
-            # Write 16 lines of zeros (4 to 19)
-            for _ in range(16):
-                wnd_file.write("".join([f"{0.0:10.1f}" for _ in range(12)]) + "\n")
-        return ss
+        rows = self[list(light_dly.COLUMNS)].to_dict("records")
+        light_dly.write_monthly(path, rows, name=basename)
+        months, stats = light_dly.monthly_statistics(rows)
+        return pd.DataFrame({name: stats[name] for name in light_dly.WP1_ROWS},
+                            index=months)

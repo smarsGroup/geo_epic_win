@@ -57,6 +57,32 @@ class TimeSeries:
         return not self.dates
 
 
+class Sample:
+    """One set of values at a place, from sources with no time axis.
+
+    Static products such as SoilGrids and HiHydroSoil answer "what is here",
+    not "what happened when", so a TimeSeries would be the wrong shape.
+    """
+
+    def __init__(self, values, spec_name="", source=""):
+        self.values = dict(values)
+        self.spec_name = spec_name
+        self.source = source
+
+    def __len__(self):
+        return len(self.values)
+
+    def get(self, name, default=None):
+        return self.values.get(name, default)
+
+    def require(self, names):
+        """Names with no value, so a caller can refuse rather than guess."""
+        return [name for name in names if self.values.get(name) is None]
+
+    def is_empty(self):
+        return not any(value is not None for value in self.values.values())
+
+
 class CollectionReport:
     """What inspecting an arbitrary ImageCollection told us.
 
@@ -106,6 +132,14 @@ class EarthEngineBackend:
 
         ``geometry`` is GeoJSON-shaped: ``{"type": "Point"|"Polygon"|
         "MultiPolygon", "coordinates": ...}``. No shapely.
+        """
+        raise NotImplementedError
+
+    def sample(self, spec, geometry):
+        """Evaluate a static DatasetSpec over a geometry and return a Sample.
+
+        SoilGrids and HiHydroSoil have no time axis, so a TimeSeries is the
+        wrong shape. Timed specs should use ``extract``.
         """
         raise NotImplementedError
 

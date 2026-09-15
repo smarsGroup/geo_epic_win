@@ -9,7 +9,7 @@ It reproduces the behaviour of ``geoEpic.gee.core.CompositeCollection`` against
 the shared DatasetSpec, so both backends fetch from the same definition.
 """
 from .backend import (CollectionReport, EarthEngineBackend, EarthEngineError,
-                      TimeSeries, cadence_from)
+                      Sample, TimeSeries, cadence_from)
 
 
 def _ee():
@@ -95,6 +95,9 @@ class EarthEngineApiBackend(EarthEngineBackend):
         return collection.select(names), names
 
     def extract(self, spec, geometry, date_range=None):
+        if getattr(spec, "is_static", False):
+            raise EarthEngineError(
+                "{} is a static dataset; use sample() rather than extract().".format(spec.name))
         self._ensure()
         ee = _ee()
         window = spec.window(date_range)
@@ -131,6 +134,51 @@ class EarthEngineApiBackend(EarthEngineBackend):
         columns = {name: [merged[d].get(name) for d in dates] for name in spec.variables
                    if any(name in merged[d] for d in dates)}
         return TimeSeries(dates, columns, spec_name=spec.name, source=self.name)
+
+    def _static_image(self, source):
+        """One Image carrying this source's computed bands, with no time axis."""
+        ee = _ee()
+        names = list(source.variables)
+        if getattr(source, "kind", "collection") == "image":
+            image = ee.Image(source.collection)
+            for variable, formula in source.variables.items():
+                image = image.addBands(image.expression(formula).rename(variable))
+            return image.select(names)
+        members = getattr(source, "images", None) or {}
+        if not members:
+            raise EarthEngineError(
+                "{} is an ImageCollection of depth slices; the spec must name its members.".format(
+                    source.collection))
+        image = None
+        for variable, formula in source.variables.items():
+            member = ee.Image("{}/{}".format(source.collection, members[variable]))
+            computed = member.expression(formula).rename(variable)
+            image = computed if image is None else image.addBands(computed)
+        return image
+
+    def sample(self, spec, geometry):
+        if not getattr(spec, "is_static", False):
+            raise EarthEngineError(
+                "{} is a timed dataset; use extract() for a time series.".format(spec.name))
+        self._ensure()
+        ee = _ee()
+        area = self._geometry(geometry)
+        point_like = geometry.get("type") == "Point"
+        reducer = ee.Reducer.first() if point_like else ee.Reducer.mean()
+        merged = {name: None for name in spec.variables}
+        for source in spec.collections:
+            try:
+                image = self._static_image(source)
+                data = image.reduceRegion(
+                    reducer=reducer, geometry=area,
+                    scale=spec.scale_for(source), maxPixels=int(1e9)).getInfo()
+            except Exception as error:
+                raise EarthEngineError("Sampling failed for {}: {}".format(
+                    source.collection, error))
+            for name in source.variables:
+                if data and data.get(name) is not None:
+                    merged[name] = data.get(name)
+        return Sample(merged, spec_name=spec.name, source=self.name)
 
     # ------------------------------------------------------------ inspection
 

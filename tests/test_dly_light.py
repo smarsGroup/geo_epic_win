@@ -112,3 +112,60 @@ def test_leap_years_follow_the_gregorian_rule():
     assert dly.is_leap(2016) and dly.is_leap(2000)
     assert not dly.is_leap(1900) and not dly.is_leap(2017)
     assert dly.days_in(2016, 2) == 29 and dly.days_in(2017, 2) == 28
+
+
+# ------------------------------------------------------- monthly companions
+
+WP1_SHA = "19f2c769304a542153ddfc8b36f56aa5a5752c3218c6f46d8265e97ab31b0555"
+WND_SHA = "30fbd4402df0ce0da0058f587b2211e0bafe15505cf0c2ac52fb56bafc270ea8"
+
+
+def test_monthly_companions_reproduce_the_captured_pandas_output():
+    rows = sample_rows()
+    assert hashlib.sha256(dly.dumps_monthly(rows, "weather_2016").encode()).hexdigest() == WP1_SHA
+    assert hashlib.sha256(dly.dumps_wind(rows, "weather_2016").encode()).hexdigest() == WND_SHA
+    assert dly.dumps_monthly(rows, "weather_2016").encode() == (FIXTURES / "weather_2016.WP1").read_bytes()
+    assert dly.dumps_wind(rows, "weather_2016").encode() == (FIXTURES / "weather_2016.WND").read_bytes()
+
+
+def test_the_wp1_layout_is_fourteen_named_rows_over_twelve_months():
+    lines = dly.dumps_monthly(sample_rows(), "site").splitlines()
+    assert lines[0] == "Monthly Weather Statistics : site"
+    assert len(lines) == 2 + len(dly.WP1_ROWS)
+    for line, label in zip(lines[2:], dly.WP1_ROWS):
+        assert line.endswith(label.rjust(8))
+        assert len(line) == 12 * 10 + 8
+
+
+def test_prw1_is_always_zero_which_is_an_upstream_bug_not_a_port_error():
+    """to_monthly asks `np.diff(prcp > 0.5) == -1`, but np.diff on a boolean
+    array yields booleans, so the comparison is never true.
+
+    The port reproduces the zeros deliberately: PRW1 feeds EPIC's precipitation
+    occurrence model, so silently correcting it would change results. If this
+    test ever fails, upstream has changed the behaviour and the decision in
+    epicfiles/dly.py needs revisiting.
+    """
+    months, stats = dly.monthly_statistics(sample_rows())
+    assert stats["PRW1"] == [0.0] * len(months)
+    # What the expression was evidently reaching for, for comparison.
+    wet_days = [row for row in sample_rows() if row["month"] == 1]
+    wet = [row["prcp"] > dly.WET_MM for row in wet_days]
+    intended = sum(1 for a, b in zip(wet, wet[1:]) if a and not b) / len(wet)
+    assert intended > 0, "the fixture must actually contain a wet-to-dry day"
+
+
+def test_prw2_counts_wet_days_that_follow_a_wet_day():
+    rows = [{"year": 2016, "month": 1, "day": d, "srad": 0.0, "tmax": 0.0, "tmin": 0.0,
+             "prcp": p, "rh": 0.0, "ws": 0.0}
+            for d, p in enumerate([1.0, 1.0, 0.0, 1.0], start=1)]
+    months, stats = dly.monthly_statistics(rows)
+    assert stats["PRW2"] == [0.25]          # only day 2 follows a wet day
+    assert stats["DAYP"] == [0.75 * 31]     # three wet days of four, scaled
+
+
+def test_writing_the_companions_leaves_no_partial_files(tmp_path):
+    written = dly.write_monthly(tmp_path / "site.DLY", sample_rows())
+    assert [Path(p).name for p in written] == ["site.WP1", "site.WND"]
+    assert not list(tmp_path.glob("*.partial"))
+    assert (tmp_path / "site.WP1").read_text().startswith("Monthly Weather Statistics : site")

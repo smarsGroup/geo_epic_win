@@ -1,24 +1,31 @@
-# SoilGrids v2.0 (ISRIC), for use outside the United States where SSURGO via
-# Soil Data Access is unavailable.
+# Global soil for EPIC: ISRIC SoilGrids for composition, HiHydroSoil v2.0 for
+# the hydraulic properties ISRIC does not carry, and HiHydroSoil's hydrologic
+# soil group. Used outside the United States, where SSURGO via Soil Data Access
+# is unavailable.
 #
 # Verified live 2026-09-15:
-#   * each asset is an Image, not an ImageCollection, hence `kind: image`
-#   * the grid is World_Mollweide at 250 m, and a point is sampled with
+#   * ISRIC publishes one Image per property with a band per depth, hence
+#     `kind: image`
+#   * HiHydroSoil publishes an ImageCollection per property whose members are
+#     one image per depth (system:index WCpF2_0-5cm_M_250m and so on, band b1).
+#     Those stay `kind: collection`; the spec model allows mixed kinds in one
+#     dataset. Members are named under `images:` so a sampler can address them
+#     directly (Image.load of collection/index works).
+#   * hydrologic soil group is a single Image
+#   * the ISRIC grid is World_Mollweide at 250 m; both are sampled with
 #     Reducer.first at that scale
-#   * coverage has real gaps - water, rock and some built-up land return null,
-#     so a cell may legitimately have no soil and must be reported, not zeroed
+#   * coverage has real gaps - water and rock return null, so a cell may
+#     legitimately have no soil and must be reported, not zeroed
 #
-# INCOMPLETE as an EPIC soil source. ISRIC carries composition but not the
-# hydraulic properties EPIC needs: wilting capacity, field capacity and
-# saturated conductivity. geoEpic.spatial.isric takes those from HiHydroSoil
-# v2.0 (projects/sat-io/open-datasets/HiHydroSoilv2_0/{crit-wilt,field-crit,
-# ksat}), which are ImageCollections. Until those are added here, this spec
-# describes the ISRIC half only and cannot produce a complete .SOL.
-description: SoilGrids v2.0 (250 m, global) soil composition
+# Conversions follow geoEpic.spatial.isric: HiHydroSoil values are stored as
+# integers scaled by 1e-4, and Ksat additionally converts cm/day to mm/h.
+# Field capacity is wcpf2 (not field-crit) and wilting is wcpf4-2 (not
+# crit-wilt); live samples at Nebraska were 0.41 and 0.17 m3/m3.
+description: SoilGrids v2.0 and HiHydroSoil v2.0 (250 m, global)
 scope: global
 static: true
 global_scope:
-  variables: ['bulk_density_0_5', 'bulk_density_5_15', 'bulk_density_15_30', 'bulk_density_30_60', 'bulk_density_60_100', 'bulk_density_100_200', 'clay_0_5', 'clay_5_15', 'clay_15_30', 'clay_30_60', 'clay_60_100', 'clay_100_200', 'sand_0_5', 'sand_5_15', 'sand_15_30', 'sand_30_60', 'sand_60_100', 'sand_100_200', 'silt_0_5', 'silt_5_15', 'silt_15_30', 'silt_30_60', 'silt_60_100', 'silt_100_200', 'organic_carbon_0_5', 'organic_carbon_5_15', 'organic_carbon_15_30', 'organic_carbon_30_60', 'organic_carbon_60_100', 'organic_carbon_100_200', 'nitrogen_0_5', 'nitrogen_5_15', 'nitrogen_15_30', 'nitrogen_30_60', 'nitrogen_60_100', 'nitrogen_100_200', 'ph_0_5', 'ph_5_15', 'ph_15_30', 'ph_30_60', 'ph_60_100', 'ph_100_200', 'cec_0_5', 'cec_5_15', 'cec_15_30', 'cec_30_60', 'cec_60_100', 'cec_100_200', 'coarse_fragments_0_5', 'coarse_fragments_5_15', 'coarse_fragments_15_30', 'coarse_fragments_30_60', 'coarse_fragments_60_100', 'coarse_fragments_100_200']
+  variables: ['bulk_density_0_5', 'bulk_density_5_15', 'bulk_density_15_30', 'bulk_density_30_60', 'bulk_density_60_100', 'bulk_density_100_200', 'clay_0_5', 'clay_5_15', 'clay_15_30', 'clay_30_60', 'clay_60_100', 'clay_100_200', 'sand_0_5', 'sand_5_15', 'sand_15_30', 'sand_30_60', 'sand_60_100', 'sand_100_200', 'silt_0_5', 'silt_5_15', 'silt_15_30', 'silt_30_60', 'silt_60_100', 'silt_100_200', 'organic_carbon_0_5', 'organic_carbon_5_15', 'organic_carbon_15_30', 'organic_carbon_30_60', 'organic_carbon_60_100', 'organic_carbon_100_200', 'nitrogen_0_5', 'nitrogen_5_15', 'nitrogen_15_30', 'nitrogen_30_60', 'nitrogen_60_100', 'nitrogen_100_200', 'ph_0_5', 'ph_5_15', 'ph_15_30', 'ph_30_60', 'ph_60_100', 'ph_100_200', 'cec_0_5', 'cec_5_15', 'cec_15_30', 'cec_30_60', 'cec_60_100', 'cec_100_200', 'coarse_fragments_0_5', 'coarse_fragments_5_15', 'coarse_fragments_15_30', 'coarse_fragments_30_60', 'coarse_fragments_60_100', 'coarse_fragments_100_200', 'field_capacity_0_5', 'field_capacity_5_15', 'field_capacity_15_30', 'field_capacity_30_60', 'field_capacity_60_100', 'field_capacity_100_200', 'wilting_capacity_0_5', 'wilting_capacity_5_15', 'wilting_capacity_15_30', 'wilting_capacity_30_60', 'wilting_capacity_60_100', 'wilting_capacity_100_200', 'saturated_conductivity_0_5', 'saturated_conductivity_5_15', 'saturated_conductivity_15_30', 'saturated_conductivity_30_60', 'saturated_conductivity_60_100', 'saturated_conductivity_100_200', 'hydrologic_soil_group']
   resolution: 250
 collections:
   bulk_density:
@@ -111,3 +118,59 @@ collections:
       coarse_fragments_30_60: b('cfvo_30-60cm_mean') / 10   # cm3/dm3 -> volume %
       coarse_fragments_60_100: b('cfvo_60-100cm_mean') / 10   # cm3/dm3 -> volume %
       coarse_fragments_100_200: b('cfvo_100-200cm_mean') / 10   # cm3/dm3 -> volume %
+  field_capacity:
+    collection: 'projects/sat-io/open-datasets/HiHydroSoilv2_0/wcpf2'
+    kind: collection
+    images:
+      field_capacity_0_5: WCpF2_0-5cm_M_250m
+      field_capacity_5_15: WCpF2_5-15cm_M_250m
+      field_capacity_15_30: WCpF2_15-30cm_M_250m
+      field_capacity_30_60: WCpF2_30-60cm_M_250m
+      field_capacity_60_100: WCpF2_60-100cm_M_250m
+      field_capacity_100_200: WCpF2_100-200cm_M_250m
+    variables:
+      field_capacity_0_5: b('b1') * 0.0001   # x1e-4 -> m3/m3
+      field_capacity_5_15: b('b1') * 0.0001   # x1e-4 -> m3/m3
+      field_capacity_15_30: b('b1') * 0.0001   # x1e-4 -> m3/m3
+      field_capacity_30_60: b('b1') * 0.0001   # x1e-4 -> m3/m3
+      field_capacity_60_100: b('b1') * 0.0001   # x1e-4 -> m3/m3
+      field_capacity_100_200: b('b1') * 0.0001   # x1e-4 -> m3/m3
+  wilting_capacity:
+    collection: 'projects/sat-io/open-datasets/HiHydroSoilv2_0/wcpf4-2'
+    kind: collection
+    images:
+      wilting_capacity_0_5: WCpF4-2_0-5cm_M_250m
+      wilting_capacity_5_15: WCpF4-2_5-15cm_M_250m
+      wilting_capacity_15_30: WCpF4-2_15-30cm_M_250m
+      wilting_capacity_30_60: WCpF4-2_30-60cm_M_250m
+      wilting_capacity_60_100: WCpF4-2_60-100cm_M_250m
+      wilting_capacity_100_200: WCpF4-2_100-200cm_M_250m
+    variables:
+      wilting_capacity_0_5: b('b1') * 0.0001   # x1e-4 -> m3/m3
+      wilting_capacity_5_15: b('b1') * 0.0001   # x1e-4 -> m3/m3
+      wilting_capacity_15_30: b('b1') * 0.0001   # x1e-4 -> m3/m3
+      wilting_capacity_30_60: b('b1') * 0.0001   # x1e-4 -> m3/m3
+      wilting_capacity_60_100: b('b1') * 0.0001   # x1e-4 -> m3/m3
+      wilting_capacity_100_200: b('b1') * 0.0001   # x1e-4 -> m3/m3
+  saturated_conductivity:
+    collection: 'projects/sat-io/open-datasets/HiHydroSoilv2_0/ksat'
+    kind: collection
+    images:
+      saturated_conductivity_0_5: Ksat_0-5cm_M_250m
+      saturated_conductivity_5_15: Ksat_5-15cm_M_250m
+      saturated_conductivity_15_30: Ksat_15-30cm_M_250m
+      saturated_conductivity_30_60: Ksat_30-60cm_M_250m
+      saturated_conductivity_60_100: Ksat_60-100cm_M_250m
+      saturated_conductivity_100_200: Ksat_100-200cm_M_250m
+    variables:
+      saturated_conductivity_0_5: b('b1') * 0.0001 * 0.416   # x1e-4 cm/day -> mm/h
+      saturated_conductivity_5_15: b('b1') * 0.0001 * 0.416   # x1e-4 cm/day -> mm/h
+      saturated_conductivity_15_30: b('b1') * 0.0001 * 0.416   # x1e-4 cm/day -> mm/h
+      saturated_conductivity_30_60: b('b1') * 0.0001 * 0.416   # x1e-4 cm/day -> mm/h
+      saturated_conductivity_60_100: b('b1') * 0.0001 * 0.416   # x1e-4 cm/day -> mm/h
+      saturated_conductivity_100_200: b('b1') * 0.0001 * 0.416   # x1e-4 cm/day -> mm/h
+  hydrologic_soil_group:
+    collection: 'projects/sat-io/open-datasets/HiHydroSoilv2_0/Hydrologic_Soil_Group_250m'
+    kind: image
+    variables:
+      hydrologic_soil_group: b('b1')   # 1=A 2=B 3=C 4=D

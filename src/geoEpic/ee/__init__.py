@@ -5,11 +5,11 @@ inside QGIS. Backends are imported lazily so that importing this package never
 requires ``earthengine-api``.
 """
 from .backend import (CollectionReport, EarthEngineBackend, EarthEngineError,
-                      TimeSeries, cadence_from, review_warnings)
+                      Sample, TimeSeries, cadence_from, review_warnings)
 from .spec import DatasetSpec, SourceCollection, SpecError, available, is_asset_id
 from .variables import EPIC_VARIABLES, looks_meteorological, recognise
 
-__all__ = ["CollectionReport", "EarthEngineBackend", "EarthEngineError", "TimeSeries",
+__all__ = ["CollectionReport", "EarthEngineBackend", "EarthEngineError", "Sample", "TimeSeries",
            "cadence_from", "review_warnings", "DatasetSpec", "SourceCollection",
            "SpecError", "available", "is_asset_id", "api_backend", "EPIC_VARIABLES", "recognise",
            "looks_meteorological", "WEATHER_SPECS", "spec_for_source"]

@@ -34,16 +34,17 @@ class LinkedCollection:
 
 
 class SourceCollection:
-    """One Earth Engine ImageCollection and the EPIC variables it supplies."""
+    """One Earth Engine Image or ImageCollection and the EPIC variables it supplies."""
 
     KINDS = ("collection", "image")
 
     def __init__(self, name, collection, variables, select=None, link=None,
-                 time_range=None, resolution=None, kind="collection"):
+                 time_range=None, resolution=None, kind="collection", images=None):
         self.name = name
         self.collection = collection
-        #: "collection" for an ImageCollection filtered by date, "image" for a
-        #: single static asset such as SoilGrids, which carries no time axis.
+        #: "collection" for an ImageCollection (a date-filtered weather product,
+        #: or a static product whose members are depth slices such as
+        #: HiHydroSoil), "image" for a single static asset such as SoilGrids.
         if kind not in self.KINDS:
             raise SpecError("Unknown source kind {!r}; expected one of {}.".format(
                 kind, ", ".join(self.KINDS)))
@@ -56,6 +57,15 @@ class SourceCollection:
         #: Native scale for this collection, when it differs from the dataset's
         #: (a spec may draw one variable from a coarser product).
         self.resolution = int(resolution) if resolution else None
+        #: For a static ImageCollection, map each variable to the member's
+        #: system:index so a sampler can load collection/index as an Image.
+        self.images = {str(k): str(v) for k, v in dict(images or {}).items()}
+        if self.images:
+            missing = [n for n in self.variables if n not in self.images]
+            extra = [n for n in self.images if n not in self.variables]
+            if missing or extra:
+                raise SpecError(
+                    "Collection {!r} images mapping does not match its variables.".format(name))
 
     @property
     def bands(self):
@@ -73,7 +83,7 @@ class DatasetSpec:
 
     def __init__(self, name, resolution, variables, collections,
                  time_range=None, derived=None, description="", scope="global",
-                 calendar=None):
+                 calendar=None, static=None):
         if not collections:
             raise SpecError("A dataset spec needs at least one collection.")
         self.name = name
@@ -87,6 +97,9 @@ class DatasetSpec:
         #: A declared calendar quirk of the source, repaired when building a
         #: continuous daily series. See geoEpic.epicfiles.dly.repair_calendar.
         self.calendar = calendar
+        #: YAML `static: true` marks a spec with no time axis even when some
+        #: sources are ImageCollections (depth slices, not dates).
+        self._declared_static = None if static is None else bool(static)
 
     # ------------------------------------------------------------------ load
 
@@ -112,6 +125,7 @@ class DatasetSpec:
                 time_range=config.get("time_range"),
                 resolution=config.get("resolution"),
                 kind=config.get("kind", "collection"),
+                images=config.get("images"),
             ))
         return cls(
             name=name or data.get("name") or "unnamed",
@@ -124,6 +138,7 @@ class DatasetSpec:
             description=data.get("description", ""),
             scope=data.get("scope", "global"),
             calendar=data.get("calendar"),
+            static=data.get("static"),
         )
 
     @classmethod
@@ -159,7 +174,14 @@ class DatasetSpec:
 
     @property
     def is_static(self):
-        """True when every source is a single image with no time axis."""
+        """True when this spec has no time axis.
+
+        Declared by YAML ``static: true``, so a dataset may mix Images and
+        ImageCollections (SoilGrids plus HiHydroSoil) and still be static.
+        Without that flag, inferred when every source is a single image.
+        """
+        if self._declared_static is not None:
+            return self._declared_static
         return all(source.kind == "image" for source in self.collections)
 
     def scale_for(self, source):

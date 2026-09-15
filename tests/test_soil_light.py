@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 from geoEpic.epicfiles import sol
-from geoEpic.soilsource import sda
+from geoEpic.soilsource import sda, soilgrids
 
 FIXTURES = Path(__file__).with_name("fixtures")
 EXPECTED_SHA = "c07444a4d23bc929ca744f0da153ef765a7cb97901a969d1b8f04e553739497a"
@@ -170,3 +170,55 @@ def test_the_profile_feeds_the_writer_directly(tmp_path):
     assert back["soil_id"] == 77
     assert back["hydgrp"] == "A"
     assert len(back["layers"]) == 2
+
+
+# --------------------------------------------------------------- SoilGrids
+
+def test_pixel_id_matches_the_isric_hash():
+    """Pinned to geoEpic.spatial.isric.SoilGrids.generate_soil_id."""
+    assert soilgrids.pixel_id(41.20, -96.60) == 80917543
+    assert soilgrids.pixel_id(35.9768, -90.1399) == soilgrids.pixel_id(35.9768, -90.1399)
+    # Nearby points inside the same 0.0025 deg cell share an id.
+    assert soilgrids.pixel_id(41.20, -96.60) == soilgrids.pixel_id(41.201, -96.601)
+
+
+def _grid_sample(**overrides):
+    values = {"hydrologic_soil_group": 2}
+    for suffix, _depth in soilgrids.DEPTHS:
+        values["bulk_density_{}".format(suffix)] = 1.35
+        values["sand_{}".format(suffix)] = 40.0
+        values["silt_{}".format(suffix)] = 35.0
+        values["field_capacity_{}".format(suffix)] = 0.4116
+        values["wilting_capacity_{}".format(suffix)] = 0.1711
+        values["saturated_conductivity_{}".format(suffix)] = 2.62
+        values["nitrogen_{}".format(suffix)] = 0.12
+        values["ph_{}".format(suffix)] = 6.5
+        values["organic_carbon_{}".format(suffix)] = 1.1
+        values["cec_{}".format(suffix)] = 18.0
+        values["coarse_fragments_{}".format(suffix)] = 5.0
+    values.update(overrides)
+    return values
+
+
+def test_a_sample_becomes_six_epic_layers_in_isric_units(tmp_path):
+    profile = soilgrids.profile_from_sample(_grid_sample())
+    assert profile["albedo"] == 0.15
+    assert profile["hydgrp"] == "B"
+    assert [layer["Layer_depth"] for layer in profile["layers"]] == [
+        0.05, 0.15, 0.30, 0.60, 1.00, 2.00]
+    top = profile["layers"][0]
+    assert top["Field_Capacity"] == 0.4116
+    assert top["Wilting_capacity"] == 0.1711
+    assert top["Field_Capacity"] > top["Wilting_capacity"]
+    assert top["Bulk_density_dry"] == top["Bulk_Density"]
+    path = sol.write(tmp_path / "grid", 80917543, profile["albedo"],
+                     profile["hydgrp"], profile["layers"])
+    back = sol.read(path)
+    assert back["soil_id"] == 80917543
+    assert len(back["layers"]) == 6
+
+
+def test_a_water_cell_is_refused_rather_than_zeroed():
+    values = _grid_sample(bulk_density_0_5=None)
+    with pytest.raises(soilgrids.SoilGridsError, match="No soil"):
+        soilgrids.layers_from_sample(values)
