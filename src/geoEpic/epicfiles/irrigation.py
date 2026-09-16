@@ -9,6 +9,12 @@ source is a choice, and each one numbers its classes differently:
   IrrMapper         eleven western US states, 30 m, 1985-2025, one image per
                     state per year. `classification` is 0 irrigated, 1 dryland,
                     2 uncultivated, 3 wetland.
+  Global irrigation global, annual 2001-2015, but 9 km - one pixel covers 86
+                    square kilometres. Its middle class means "up to 2000 ha
+                    irrigated somewhere in this block", which is not an answer
+                    about any one cell, so it is read as unknown rather than
+                    irrigated. Measured: Iowa is class 1 throughout, and calling
+                    that irrigated would flood a rainfed state.
   a raster you supply  read as 1 irrigated / 0 rainfed unless you say otherwise.
 
 All three were confirmed against the live service rather than taken from
@@ -23,13 +29,15 @@ one definition of what "irrigated" means for each source.
 NONE = "None · every cell rainfed"
 WORLDCEREAL = "ESA WorldCereal · global, 2021"
 IRRMAPPER = "IrrMapper · western US, 1985-2025"
+GLOBAL_COARSE = "Global irrigation · 9 km, 2001-2015"
 CUSTOM_ASSET = "Earth Engine asset"
 QGIS_LAYER = "QGIS raster layer"
 LOCAL_FILE = "Local raster file"
 
 #: Offered in this order; NONE is the default because assuming irrigation where
 #: there is none changes yields more than the reverse.
-SOURCES = [NONE, WORLDCEREAL, IRRMAPPER, CUSTOM_ASSET, QGIS_LAYER, LOCAL_FILE]
+SOURCES = [NONE, WORLDCEREAL, IRRMAPPER, GLOBAL_COARSE, CUSTOM_ASSET,
+           QGIS_LAYER, LOCAL_FILE]
 
 #: Sources read from a raster the user supplies rather than Earth Engine.
 LOCAL_SOURCES = (QGIS_LAYER, LOCAL_FILE)
@@ -39,7 +47,9 @@ SPECS = {
         "asset": "ESA/WorldCereal/2021/MODELS/v100",
         "band": "classification",
         "product": "irrigation",
+        "index": None,
         "irrigated_values": (100,),
+        "unknown_values": (),
         "scale": 10,
         "years": (2021, 2021),
         "credit": "ESA WorldCereal Consortium",
@@ -52,13 +62,35 @@ SPECS = {
         "asset": "projects/ee-dgketchum/assets/IrrMapper/IrrMapperComp",
         "band": "classification",
         "product": None,
+        # One image per state per year, indexed "MT_2020".
+        "index": "state_year",
         "irrigated_values": (0,),
+        "unknown_values": (),
         "scale": 30,
         "years": (1985, 2025),
         "credit": "Ketchum et al. · IrrMapper",
         "coverage": "AZ CA CO ID MT NM NV OR UT WA WY",
         "note": ("Annual, 1985-2025, but only the eleven western states. Outside "
                  "them there is no data and no cell is marked irrigated."),
+    },
+    GLOBAL_COARSE: {
+        "asset": "users/deepakna/global_irrigation_maps",
+        "band": "classification",
+        "product": None,
+        "index": "year",
+        "irrigated_values": (2,),
+        # Class 1 is "low to medium": up to 2000 ha irrigated somewhere in an
+        # 86 sq km block, which says nothing about a 500 m cell inside it.
+        # Reported as unknown rather than guessed either way.
+        "unknown_values": (1,),
+        "scale": 9000,
+        "years": (2001, 2015),
+        "credit": "Nagaraj et al. · global irrigation maps",
+        "coverage": "global",
+        "note": ("Global and annual, but 9 km - one pixel covers 86 square "
+                 "kilometres, so it describes a block, not a cell. Only its "
+                 "\"high irrigation\" class is read as irrigated; the middle "
+                 "class is left unknown."),
     },
 }
 
@@ -85,7 +117,10 @@ def is_irrigated(source, value):
         return None
     spec = SPECS.get(source)
     if spec is not None:
-        return int(value) in spec["irrigated_values"]
+        code = int(value)
+        if code in spec.get("unknown_values", ()):
+            return None
+        return code in spec["irrigated_values"]
     if source in LOCAL_SOURCES or source == CUSTOM_ASSET:
         return float(value) != 0.0
     return None

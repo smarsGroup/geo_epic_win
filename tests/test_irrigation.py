@@ -29,10 +29,27 @@ def test_each_source_knows_which_value_means_irrigated():
         assert irr.is_irrigated(irr.IRRMAPPER, other) is False
 
 
+def test_the_coarse_global_source_reads_its_middle_class_as_unknown():
+    # Class 1 is "up to 2000 ha irrigated somewhere in an 86 sq km block",
+    # which says nothing about one cell inside it. Reading it as irrigated
+    # would flood rainfed states: Iowa is class 1 across most of its area.
+    assert irr.is_irrigated(irr.GLOBAL_COARSE, 2) is True
+    assert irr.is_irrigated(irr.GLOBAL_COARSE, 0) is False
+    assert irr.is_irrigated(irr.GLOBAL_COARSE, 1) is None
+
+
+def test_the_coarse_source_is_annual_within_its_span():
+    assert irr.covers_year(irr.GLOBAL_COARSE, 2001)
+    assert irr.covers_year(irr.GLOBAL_COARSE, 2015)
+    assert not irr.covers_year(irr.GLOBAL_COARSE, 2020)
+    assert irr.year_for(irr.GLOBAL_COARSE, 2020) == 2015
+    assert "9 km" in irr.describe(irr.GLOBAL_COARSE)
+
+
 def test_no_data_is_unknown_not_rainfed():
     # The difference matters: a cell outside IrrMapper's states has no answer,
     # which is not the same as an answer of "not irrigated".
-    for source in (irr.WORLDCEREAL, irr.IRRMAPPER, irr.QGIS_LAYER):
+    for source in (irr.WORLDCEREAL, irr.IRRMAPPER, irr.GLOBAL_COARSE, irr.QGIS_LAYER):
         assert irr.is_irrigated(source, None) is None
         assert irr.is_irrigated(source, float("nan")) is None
 
