@@ -44,6 +44,31 @@ def batches(points, size=BATCH):
     return [points[start:start + size] for start in range(0, len(points), size)]
 
 
+#: Written into the image before reducing, so every point yields a number.
+#:
+#: Without it the response is unusable in a way that does not announce itself.
+#: ``AggregateFeatureCollection.array`` omits a feature whose property is null,
+#: so a batch containing one point outside the DEM comes back with fewer
+#: elevations than ids - and zipping them by position then hands every later
+#: cell its neighbour's elevation and slope. Measured against IrrMapper: five
+#: points in, three values out, no error. Unmasking first keeps the arrays the
+#: same length; this value marks the points that had no data.
+MISSING = -9999.0
+
+
+def _restore(value):
+    """A sampled number, or None where the sentinel says there was no data."""
+    if value is None:
+        return None
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    if number != number or number <= MISSING + 1.0:
+        return None
+    return number
+
+
 def assemble(response, keys):
     """Map a batched response back onto the keys that were requested.
 
@@ -55,14 +80,20 @@ def assemble(response, keys):
     ids = [str(value) for value in (result.get("id") or [])]
     elevations = result.get("elevation") or []
     slopes = result.get("slope") or []
-    found = {}
-    for index, key in enumerate(ids):
-        elevation = elevations[index] if index < len(elevations) else None
-        slope = slopes[index] if index < len(slopes) else None
-        found[key] = {"elevation": elevation, "slope": slope}
+    empty = {"elevation": None, "slope": None}
+    if len(elevations) != len(ids) or len(slopes) != len(ids):
+        # Positional zipping is only safe while the columns are the same length.
+        # Shorter ones mean values were dropped, and guessing which cell each
+        # belongs to would write confident, wrong site files: refuse instead.
+        raise DemError(
+            "The elevation service returned {} ids but {} elevations and {} slopes. "
+            "Values cannot be matched to cells, so none are used."
+            .format(len(ids), len(elevations), len(slopes)))
+    found = {key: {"elevation": _restore(elevations[index]),
+                   "slope": _restore(slopes[index])}
+             for index, key in enumerate(ids)}
     # Keys the service did not return at all are absent, not zero.
-    return {str(key): found.get(str(key), {"elevation": None, "slope": None})
-            for key in keys}
+    return {str(key): found.get(str(key), dict(empty)) for key in keys}
 
 
 def site_from(key, latitude, longitude, sample, slope_length=0.0):
