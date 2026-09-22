@@ -116,3 +116,108 @@ def expected_outputs(site_id, output_types):
         # from a run that simply produced no rows for the chosen outputs.
         types.append("ACY")
     return ["{}.{}".format(site_id, kind) for kind in types]
+
+
+# ---------------------------------------------------------------- run period
+
+#: The first line of EPICCONT.DAT begins NBYR IYR0 IMO0 IDA0: how many years to
+#: simulate, then the start year, month and day.
+PERIOD_FIELDS = 4
+FIELD_WIDTH = 4
+
+
+def _plausible(years, year, month, day):
+    return years >= 1 and 1800 <= year <= 2200 and 1 <= month <= 12 and 1 <= day <= 31
+
+
+def period_style(line):
+    """How EPICCONT's first line is laid out: "fixed" or "free".
+
+    Both exist in the wild. Some model folders write Fortran I4 fields, where a
+    duration of 20 and a start year of 2001 run together as "  202001" and a
+    whitespace split reads one number; others separate every value with
+    spaces, where the same split is exactly right and fixed fields read
+    garbage. Whichever interpretation yields a plausible date is the one the
+    file uses.
+    """
+    fields = [line[i:i + FIELD_WIDTH] for i in range(0, FIELD_WIDTH * PERIOD_FIELDS, FIELD_WIDTH)]
+    try:
+        values = [int(field) for field in fields]
+        if _plausible(*values):
+            return "fixed"
+    except ValueError:
+        pass
+    tokens = line.split()
+    try:
+        if len(tokens) >= PERIOD_FIELDS and _plausible(*[int(tokens[i]) for i in range(PERIOD_FIELDS)]):
+            return "free"
+    except ValueError:
+        pass
+    raise RunControlError("The first line of EPICCONT.DAT does not start with a readable "
+                          "duration and start date: {!r}".format(line.rstrip()[:40]))
+
+
+def read_period(text):
+    """``(years, start year, month, day)`` from EPICCONT.DAT's text."""
+    line = text.splitlines()[0] if text else ""
+    if period_style(line) == "fixed":
+        return tuple(int(line[i:i + FIELD_WIDTH])
+                     for i in range(0, FIELD_WIDTH * PERIOD_FIELDS, FIELD_WIDTH))
+    return tuple(int(token) for token in line.split()[:PERIOD_FIELDS])
+
+
+def _replace_free(line, values):
+    """Rewrite the first tokens of a space-separated line, keeping its columns.
+
+    Each value takes the width of its original token plus the spaces before it,
+    right-aligned, so the columns after it stay where they were - "   5" becomes
+    "  20" rather than pushing everything one place right.
+    """
+    import re
+    matches = list(re.finditer(r"\S+", line))
+    out, last = [], 0
+    for index, match in enumerate(matches[:len(values)]):
+        field = line[last:match.end()]
+        text = str(int(values[index]))
+        # Keep one separating space unless the field is the start of the line.
+        room = len(field) - (1 if last and not field[:1].isspace() else 0)
+        out.append(text.rjust(max(room, len(text) + (1 if last else 0))))
+        last = match.end()
+    return "".join(out) + line[last:]
+
+
+def with_period(text, start_year, years, month=1, day=1):
+    """EPICCONT.DAT's text with a new run period, in the file's own style.
+
+    Line endings are kept as they were: the Windows model folder uses CRLF, and
+    rewriting it with LF is an edit nobody asked for.
+    """
+    if not _plausible(int(years), int(start_year), int(month), int(day)):
+        raise RunControlError("Not a usable run period: {} years from {}-{:02d}-{:02d}.".format(
+            years, start_year, int(month), int(day)))
+    lines = text.splitlines(True)
+    if not lines:
+        raise RunControlError("EPICCONT.DAT is empty.")
+    first = lines[0]
+    body = first.rstrip("\r\n")
+    ending = first[len(body):]
+    values = (int(years), int(start_year), int(month), int(day))
+    if period_style(body) == "fixed":
+        width = FIELD_WIDTH * PERIOD_FIELDS
+        body = "".join("{:4d}".format(value) for value in values) + body[width:]
+    else:
+        body = _replace_free(body, values)
+    lines[0] = body + ending
+    return "".join(lines)
+
+
+def read_text(path):
+    """A control file's text with its line endings exactly as stored."""
+    with open(str(path), "r", encoding=ENCODING, newline="") as handle:
+        return handle.read()
+
+
+def write_text(path, text):
+    """Write control text back without translating its line endings."""
+    with open(str(path), "w", encoding=ENCODING, newline="") as handle:
+        handle.write(text)

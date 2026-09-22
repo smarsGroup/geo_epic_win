@@ -77,3 +77,22 @@ def test_mismatched_toggles_are_refused_rather_than_zipped_short(tmp_path):
     path = make(tmp_path, toggles="   0\n")
     with pytest.raises(printfile.PrintFileError):
         printfile.enabled(path)
+
+
+def test_crlf_endings_survive_a_rewrite(tmp_path):
+    # The Windows print file is CRLF; translating it would be an unasked edit.
+    path = tmp_path / "PRNT.DAT"
+    body = "{}\n{}\n note\n{}\n".format(BODY, TOGGLES, EXTENSIONS).replace("\n", "\r\n")
+    path.write_bytes(body.encode("latin-1"))
+    printfile.set_enabled(path, ["ACM"])
+    after = path.read_bytes().decode("latin-1")
+    assert after.count("\r\n") == body.count("\r\n")
+    assert printfile.enabled(path) == ["ACM"]
+
+
+def test_with_enabled_changes_only_the_toggle_lines(tmp_path):
+    text = open(WINDOWS, encoding="latin-1", newline="").read()
+    updated = printfile.with_enabled(text, ["ACY", "DGN", "ANN"])
+    changed = [i for i, (a, b) in enumerate(zip(text.splitlines(True), updated.splitlines(True)))
+               if a != b]
+    assert set(changed) <= set(printfile.TOGGLE_LINES)

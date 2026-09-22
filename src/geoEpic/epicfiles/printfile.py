@@ -90,10 +90,17 @@ def enabled(path):
     return [name.upper() for name, flag in zip(names, flags) if flag == "1"]
 
 
-def set_enabled(path, wanted):
-    """Switch on exactly ``wanted`` and nothing else. Returns what was written."""
-    lines = _read(path)
-    names = extensions(path)
+def with_enabled(text, wanted):
+    """The print file's text with exactly ``wanted`` switched on.
+
+    Only the two toggle lines change, and each keeps its own line ending - the
+    Windows print file is CRLF, and converting it is an edit nobody asked for.
+    """
+    lines = text.splitlines(True)
+    first, second = _extension_lines(lines)
+    names = []
+    for index in (first, second):
+        names.extend(token.lower() for token in lines[index].replace("*", " ").split())
     flags = _toggles(lines)
     if len(flags) < len(names):
         raise PrintFileError("The print file's toggles do not match its extensions.")
@@ -103,14 +110,24 @@ def set_enabled(path, wanted):
         raise PrintFileError(
             "This EPIC build cannot write: {}. It supports: {}.".format(
                 ", ".join(sorted(name.upper() for name in unknown)),
-                ", ".join(supported(path))))
+                ", ".join(name.upper() for name in names if name not in NOT_FILES)))
     updated = ["1" if name in chosen else "0" for name in names]
     # The toggle lines keep their original split: the first holds as many
     # values as it did before, the rest go on the second.
     first_count = len(lines[TOGGLE_LINES[0]].split())
     for line_index, values in ((TOGGLE_LINES[0], updated[:first_count]),
                                (TOGGLE_LINES[1], updated[first_count:])):
-        lines[line_index] = "".join("{:>4}".format(value) for value in values) + "\n"
-    with open(str(path), "w", encoding=ENCODING, newline="\n") as handle:
-        handle.writelines(lines)
-    return [name.upper() for name in names if name in chosen]
+        original = lines[line_index]
+        ending = original[len(original.rstrip("\r\n")):] or "\n"
+        lines[line_index] = "".join("{:>4}".format(value) for value in values) + ending
+    return "".join(lines)
+
+
+def set_enabled(path, wanted):
+    """Switch on exactly ``wanted`` and nothing else. Returns what was written."""
+    with open(str(path), "r", encoding=ENCODING, newline="") as handle:
+        text = handle.read()
+    updated = with_enabled(text, wanted)
+    with open(str(path), "w", encoding=ENCODING, newline="") as handle:
+        handle.write(updated)
+    return enabled(path)
