@@ -15,8 +15,10 @@ output files to turn on/off in lines 15-16"):
 "Last two non-blank" rather than simply the last two lines: the Windows print
 file ends with the extension lines, but other builds end with a blank or
 space-filled line, and counting back from the end then reads the wrong lines.
-Against a real Linux PRNT0810.DAT that mistake reports RTC and SGI enabled for
-a model that in fact writes ACY and DGN.
+The print file shipped in this repo ends with its extension lines, so counting
+back works for it; a PRNT0810.DAT from a Linux EPIC build - not shipped here -
+ends with a blank line, and counting back there reports the wrong types. Finding
+the lines by content is right for both.
 
 Some builds mark selected extensions with an asterisk (``*acy``). The asterisk
 is documentation, not state - the toggles decide - so it is stripped.

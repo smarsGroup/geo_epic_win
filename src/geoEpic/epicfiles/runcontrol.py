@@ -133,12 +133,13 @@ def _plausible(years, year, month, day):
 def period_style(line):
     """How EPICCONT's first line is laid out: "fixed" or "free".
 
-    Both exist in the wild. Some model folders write Fortran I4 fields, where a
-    duration of 20 and a start year of 2001 run together as "  202001" and a
-    whitespace split reads one number; others separate every value with
-    spaces, where the same split is exactly right and fixed fields read
-    garbage. Whichever interpretation yields a plausible date is the one the
-    file uses.
+    The model folder shipped in this repo writes free format - every value
+    separated by spaces - and a whitespace split reads it exactly right. Other
+    EPIC builds write Fortran I4 fields, where a duration of 20 and a start
+    year of 2001 run together as "  202001" and that same split reads one
+    number. Detecting the layout costs little and lets one writer serve a model
+    folder the user points at, whichever build produced it. Whichever
+    interpretation yields a plausible date is the one the file uses.
     """
     fields = [line[i:i + FIELD_WIDTH] for i in range(0, FIELD_WIDTH * PERIOD_FIELDS, FIELD_WIDTH)]
     try:
