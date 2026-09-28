@@ -25,6 +25,30 @@ def test_every_bundled_spec_loads_and_declares_its_variables():
         assert not spec.missing_variables(produced), (name, spec.missing_variables(produced))
 
 
+def _hide(monkeypatch, *modules):
+    """Make importing these modules fail, as in a Python that lacks them."""
+    for name in modules:
+        monkeypatch.setitem(sys.modules, name, None)
+
+
+def test_specs_load_the_same_under_pyyaml_alone(monkeypatch):
+    # Windows QGIS ships PyYAML but not ruamel.yaml.
+    pytest.importorskip("yaml")
+    loaded = {name: DatasetSpec.bundled(name) for name in available()}
+    _hide(monkeypatch, "ruamel", "ruamel.yaml")
+    for name, spec in loaded.items():
+        again = DatasetSpec.bundled(name)
+        assert again.variables == spec.variables, name
+        assert [c.collection for c in again.collections] == \
+               [c.collection for c in spec.collections], name
+
+
+def test_no_yaml_parser_is_reported_as_the_missing_dependency(monkeypatch):
+    _hide(monkeypatch, "ruamel", "ruamel.yaml", "yaml")
+    with pytest.raises(SpecError, match="ruamel.yaml or PyYAML"):
+        DatasetSpec.bundled("daymet")
+
+
 def test_weather_specs_agree_on_the_epic_variable_set():
     epic = ["srad", "tmax", "tmin", "prcp", "rh", "ws"]
     for name in ("daymet", "gridmet", "agera5"):

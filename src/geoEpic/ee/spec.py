@@ -1,7 +1,8 @@
 """Dataset specifications shared by every Earth Engine backend.
 
-This module is part of the dependency-light core: standard library plus
-``ruamel.yaml``, which is present both in a GeoEPIC install and inside QGIS.
+This module is part of the dependency-light core: standard library plus a
+YAML parser - ``ruamel.yaml`` or PyYAML, whichever is present (see
+``load_yaml``).
 It must never import ``ee``, ``pandas`` or ``geopandas`` - it only *describes*
 what to fetch, so that the QGIS plugin and the CLI agree on the definition of a
 source without sharing a client.
@@ -20,6 +21,28 @@ SPEC_DIR = Path(__file__).with_name("specs")
 
 class SpecError(ValueError):
     pass
+
+
+def load_yaml(handle):
+    """Parse YAML safely with whichever parser this Python has.
+
+    No one parser is in every profile: a GeoEPIC install pins ``ruamel.yaml``,
+    Linux QGIS happens to carry it too, but Windows QGIS ships only PyYAML. The
+    bundled specs parse identically under both. Neither present is reported as
+    the missing dependency it is, not as an ImportError from deep in a load.
+    """
+    try:
+        from ruamel.yaml import YAML
+    except ImportError:
+        pass
+    else:
+        return YAML(typ="safe").load(handle)
+    try:
+        import yaml
+    except ImportError:
+        raise SpecError("Reading dataset specs needs a YAML parser: install "
+                        "ruamel.yaml or PyYAML into this Python.")
+    return yaml.safe_load(handle)
 
 
 class LinkedCollection:
@@ -143,10 +166,9 @@ class DatasetSpec:
 
     @classmethod
     def from_yaml(cls, path):
-        from ruamel.yaml import YAML
         path = Path(path)
-        with open(path, "r") as handle:
-            data = YAML(typ="safe").load(handle)
+        with open(path, "r", encoding="utf-8") as handle:
+            data = load_yaml(handle)
         if not isinstance(data, dict):
             raise SpecError("{} is not a mapping.".format(path))
         return cls.from_dict(data, name=path.stem)
