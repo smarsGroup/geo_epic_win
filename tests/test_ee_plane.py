@@ -251,10 +251,25 @@ def test_api_backend_imports_and_degrades_without_earthengine_api():
             backend.initialize()
 
 
-QGIS_PYTHON = "/usr/bin/python3"
+def _qgis_python():
+    """A QGIS interpreter to probe with: the system python3 QGIS uses on
+    Linux, QGIS's bundled python on Windows, or $GEOEPIC_QGIS_PYTHON."""
+    import glob
+    import os
+    chosen = os.environ.get("GEOEPIC_QGIS_PYTHON")
+    if chosen:
+        return chosen
+    if sys.platform == "win32":
+        found = sorted(glob.glob(r"C:\Program Files\QGIS 3*\apps\Python3*\python.exe"))
+        return found[-1] if found else None
+    return "/usr/bin/python3"
 
 
-@pytest.mark.skipif(sys.executable == QGIS_PYTHON, reason="already the QGIS interpreter")
+QGIS_PYTHON = _qgis_python()
+
+
+@pytest.mark.skipif(QGIS_PYTHON is None or sys.executable == QGIS_PYTHON,
+                    reason="no separate QGIS interpreter to probe with")
 def test_the_plane_imports_under_a_pandas_free_interpreter():
     """The core promise: this package works where pandas and ee do not exist."""
     probe = (
@@ -268,9 +283,10 @@ def test_the_plane_imports_under_a_pandas_free_interpreter():
         "assert 'ee' not in sys.modules, 'ee leaked into the light core';"
         "print('ok')" % _src_dir()
     )
-    result = subprocess.run([QGIS_PYTHON, "-c", probe], capture_output=True, text=True)
-    if result.returncode != 0 and "No such file" in (result.stderr or ""):
-        pytest.skip("no system python3 to probe with")
+    try:
+        result = subprocess.run([QGIS_PYTHON, "-c", probe], capture_output=True, text=True)
+    except FileNotFoundError:
+        pytest.skip("no QGIS interpreter at {}".format(QGIS_PYTHON))
     assert result.returncode == 0, result.stderr
     assert "ok" in result.stdout
 

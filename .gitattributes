@@ -1,0 +1,14 @@
+# EPIC input/output files and byte-exact test fixtures are checked out exactly
+# as committed. Git for Windows defaults to core.autocrlf=true, which rewrote
+# LF fixtures as CRLF and broke the tests that compare output byte for byte.
+# The shipped Windows model files are CRLF in the repository and stay so.
+*.DAT -text
+*.dat -text
+*.SIT -text
+*.SOL -text
+*.OPC -text
+*.DLY -text
+*.WP1 -text
+*.WND -text
+*.sens -text
+tests/fixtures/** -text
