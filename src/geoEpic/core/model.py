@@ -15,6 +15,24 @@ from weakref import finalize
 # EPIC data files are byte-oriented ASCII/latin-1; never let the locale decide.
 EPIC_ENCODING = 'latin-1'
 
+def launch_command(executable):
+    """How to start an EPIC binary on this machine.
+
+    A Windows build runs directly on Windows; anywhere else it runs under Wine,
+    and Wine's absence is reported as such rather than as an exec format error.
+    """
+    executable = str(executable)
+    if platform.system() == "Windows" or not executable.lower().endswith(".exe"):
+        return [executable]
+    wine = shutil.which("wine") or shutil.which("wine64")
+    if wine is None:
+        raise RuntimeError(
+            "{} is a Windows EPIC build; running it on {} needs Wine "
+            "(apt install wine64, or brew install --cask wine-stable).".format(
+                os.path.basename(executable), platform.system()))
+    return [wine, executable]
+
+
 class EPICModel:
     """
     This class handles the setup and execution of the EPIC model executable.
@@ -101,6 +119,25 @@ class EPICModel:
             raise RuntimeError("Model closed or not initialized.")
         return self._model_dir
 
+    # The run period lives in EPICCONT.DAT's first line. epicfiles.runcontrol
+    # reads and writes it in the file's own layout: some EPIC builds write
+    # Fortran I4 fields that touch ("  202001" is 20 years from 2001), and a
+    # whitespace split rewrote those into a line EPIC then misread, running
+    # no years at all.
+    def _epiccont(self):
+        return os.path.join(self.model_dir, 'EPICCONT.DAT')
+
+    def _period(self):
+        from geoEpic.epicfiles import runcontrol
+        return runcontrol.read_period(runcontrol.read_text(self._epiccont()))
+
+    def _write_period(self, years, start):
+        from geoEpic.epicfiles import runcontrol
+        path = self._epiccont()
+        text = runcontrol.read_text(path)
+        runcontrol.write_text(path, runcontrol.with_period(
+            text, start.year, int(years), start.month, start.day))
+
     @property
     def start_date(self):
         """
@@ -109,15 +146,8 @@ class EPICModel:
         Returns:
             datetime.date: The start date of the simulation.
         """
-        epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
-        with open(epiccont_path, 'r', encoding=EPIC_ENCODING) as file:
-            line = file.readline()
-            # Read by fixed 4-char positions: duration[0:4], year[4:8], month[8:12], day[12:16]
-            # Line 1 of EPICCONT.DAT is a whitespace-separated integer list:
-            # NBYR IYR0 IMO0 IDA0 ...  (e.g. '   5 2015   1   1   3 2345 ...')
-            tokens = line.split()
-            year, month, day = int(tokens[1]), int(tokens[2]), int(tokens[3])
-            self._start_date = date(year, month, day)
+        _, year, month, day = self._period()
+        self._start_date = date(year, month, day)
         return self._start_date
 
     @start_date.setter
@@ -143,13 +173,8 @@ class EPICModel:
             raise TypeError("Start date must be a datetime.date object, datetime.datetime object, or a string in 'YYYY-MM-DD' format.")
         
         self._start_date = value
-        epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
-        with open(epiccont_path, 'r+', encoding=EPIC_ENCODING) as file:
-            lines = file.readlines()
-            lines[0] = self._replace_tokens(lines[0], {1: value.year, 2: value.month, 3: value.day})
-            file.seek(0)
-            file.writelines(lines)
-            file.truncate()
+        years = self._period()[0]
+        self._write_period(years, value)
 
     @property
     def duration(self):
@@ -159,11 +184,7 @@ class EPICModel:
         Returns:
             int: The duration of the simulation in years.
         """
-        epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
-        with open(epiccont_path, 'r', encoding=EPIC_ENCODING) as file:
-            line = file.readline()
-            # Read by fixed 4-char position: duration[0:4]
-            self._duration = int(line.split()[0])
+        self._duration = self._period()[0]
         return self._duration
 
     @duration.setter
@@ -175,13 +196,8 @@ class EPICModel:
             value (int): The new duration to set in years.
         """
         self._duration = value
-        epiccont_path = os.path.join(self.model_dir, 'EPICCONT.DAT')
-        with open(epiccont_path, 'r+', encoding=EPIC_ENCODING) as file:
-            lines = file.readlines()
-            lines[0] = self._replace_tokens(lines[0], {0: int(value)})
-            file.seek(0)
-            file.writelines(lines)
-            file.truncate()
+        _, year, month, day = self._period()
+        self._write_period(value, date(year, month, day))
 
     @property
     def output_types(self):
@@ -194,12 +210,12 @@ class EPICModel:
         return self.get_output_types()
 
     def get_output_types(self):
+        # epicfiles.printfile finds the extension lines by content: a print
+        # file ending in a blank line put them one line off a fixed index,
+        # and every toggle was then read against the wrong extension.
+        from geoEpic.epicfiles import printfile
         print_file_path = os.path.join(self.model_dir, self.file_names['FPRNT'])
-        with open(print_file_path, 'r', encoding=EPIC_ENCODING) as file:
-            lines = file.readlines()
-        exts = lines[self.PF_EXT1].replace('*', ' ').strip().split() + lines[self.PF_EXT2].replace('*', ' ').strip().split()
-        toggles = lines[self.PF_TOG1].strip().split() + lines[self.PF_TOG2].strip().split()
-        self._output_types = [ext.upper() for ext, toggle in zip(exts, toggles) if toggle == '1']
+        self._output_types = printfile.enabled(print_file_path)
         return self._output_types
 
     @output_types.setter
@@ -271,23 +287,12 @@ class EPICModel:
         Args:
             output_types (list of str): List of output types to be enabled.
         """
-        self._output_types = output_types
+        from geoEpic.epicfiles import printfile
+        self._output_types = [str(kind).upper() for kind in output_types]
         print_file_path = os.path.join(self.model_dir, self.file_names['FPRNT'])
-        outputs_to_enable = ' '.join(output_types).lower().split()
-        with open(print_file_path, 'r', encoding=EPIC_ENCODING) as file:
-            lines = file.readlines()
+        # Only the two toggle lines change, each with its own line ending.
+        printfile.set_enabled(print_file_path, self._output_types)
 
-        exts = lines[self.PF_EXT1].replace('*', ' ').strip().split() + lines[self.PF_EXT2].replace('*', ' ').strip().split()
-        toggles = lines[self.PF_TOG1].strip().split() + lines[self.PF_TOG2].strip().split()
-
-        for i, ext in enumerate(exts):
-            toggles[i] = '1' if ext in outputs_to_enable else '0'
-
-        lines[self.PF_TOG1] = '   ' + '   '.join(toggles[:len(lines[self.PF_TOG1].strip().split())]) + '\n'
-        lines[self.PF_TOG2] = '   ' + '   '.join(toggles[len(lines[self.PF_TOG1].strip().split()):]) + '\n'
-        with open(print_file_path, 'w', encoding=EPIC_ENCODING) as file:
-            file.writelines(lines)
-            
     def run(self, site, verbose = False, dest = None):
         """
         Execute the model for the given site and handle output files.
@@ -354,7 +359,7 @@ class EPICModel:
             shutil.copy2(exe_src, executable_with_site_id)
             with open(log_file, 'w', encoding=EPIC_ENCODING) as log:
                 process = subprocess.Popen(
-                    [executable_with_site_id],
+                    launch_command(executable_with_site_id),
                     stdin=subprocess.PIPE,
                     stdout=log,
                     stderr=log,
