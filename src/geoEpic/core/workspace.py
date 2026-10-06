@@ -9,7 +9,6 @@ from geoEpic.io import DataLogger, ConfigParser
 from geoEpic.utils import parallel_executor, run_with_timeout, filter_dataframe
 from .model import EPICModel
 from .site import Site
-import geopandas as gpd
 from glob import glob
 # from geoEpic.utils.redis import WorkerPool
 from shortuuid import uuid 
@@ -308,7 +307,8 @@ class Workspace:
             if not hasattr(df, 'constraints') or len(df.constraints()) == 0:
                 raise ValueError("All parameter objects must have at least one sensitive variable")
         
-        import pygmo as pg
+        from .calibration import _require_pygmo
+        _require_pygmo()
         
         # Temporarily disable model lock to allow problem creation
         temp = self.model._model_lock
@@ -338,6 +338,7 @@ class Workspace:
             if not required_columns_csv.issubset(set(data.columns)):
                 raise ValueError("CSV file missing one or more required columns: 'SiteID', 'soil', 'opc', 'dly', 'lat', 'lon'")
         elif file_path.lower().endswith('.shp'):
+            import geopandas as gpd     # only for a shapefile site list
             data = gpd.read_file(file_path)
             data = data.to_crs(epsg=4326)  # Convert to latitude and longitude projection
             data['lat'] = data.geometry.centroid.y

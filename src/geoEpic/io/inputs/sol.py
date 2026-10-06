@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from geoEpic.soil.sda import SoilDataAccess
 from geoEpic.epicfiles import sol as light_sol
 
 class SOL:
@@ -38,6 +37,9 @@ class SOL:
         Returns:
             Soil: A new Soil object populated with data from SDA.
         """
+        # Imported here: geoEpic.soil brings the raster helpers, which reading
+        # and writing a .SOL never needs.
+        from geoEpic.soil.sda import SoilDataAccess
         layers_df = SoilDataAccess.fetch_properties(query)
         
         soil_id = int(layers_df['mukey'].iloc[0])

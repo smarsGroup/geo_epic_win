@@ -2,8 +2,6 @@ import os
 import platform
 from shortuuid import uuid 
 from .sql_writer import SQLTableWriter
-from .redis_writer import RedisWriter
-from .lmdb_writer import LMDBTableWriter
 
 class DataLogger:
     """
@@ -54,15 +52,7 @@ class DataLogger:
             ValueError: If an unsupported backend is specified.
         """
         filename = os.path.join(self.output_folder, f"{self.uuid}_{func_name}")
-        writer_classes = {
-            'redis': RedisWriter,
-            'sql': SQLTableWriter,
-            'lmdb': LMDBTableWriter
-        }
-        writer_class = writer_classes.get(self.backend)
-        if not writer_class:
-            raise ValueError(f"Unsupported backend: {self.backend}")
-        return writer_class(filename, **self.backend_kwargs)
+        return _writer_class(self.backend)(filename, **self.backend_kwargs)
 
     def log_dict(self, func_name, result):
         """
@@ -97,3 +87,18 @@ class DataLogger:
             if self.delete_on_read and not keep:
                 writer.delete_table()
         return df
+
+
+
+def _writer_class(backend):
+    """The writer for a backend. Redis and LMDB are imported only when chosen,
+    so the default SQL backend works on a Python without them (QGIS's own)."""
+    if backend == 'sql':
+        return SQLTableWriter
+    if backend == 'redis':
+        from .redis_writer import RedisWriter
+        return RedisWriter
+    if backend == 'lmdb':
+        from .lmdb_writer import LMDBTableWriter
+        return LMDBTableWriter
+    raise ValueError(f"Unsupported backend: {backend}")

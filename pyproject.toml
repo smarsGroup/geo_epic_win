@@ -125,7 +125,7 @@ dependencies = [
     "geopandas==1.0.1",
     "lxml==5.2.2",
     "matplotlib==3.9.2",
-    "numpy<2.0.0",
+    "numpy>=1.24",  # numpy 2 works (QGIS 3.44 on Windows ships 2.4)
     "pandas>=2.2.0",
     "pathspec==0.12.1",
     "pillow==10.4.0",

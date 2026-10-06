@@ -2,15 +2,20 @@ import os
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-try:
-    import pygmo as pg
-except ImportError:  # optional: only needed for calibration
-    pg = None
+pg = None
 
 
 def _require_pygmo():
+    """pygmo, imported on first use: only calibration with pygmo needs it."""
+    global pg
     if pg is None:
-        raise ImportError("Calibration requires the optional 'pygmo' package (conda install -c conda-forge pygmo).")
+        try:
+            import pygmo
+        except ImportError:
+            raise ImportError("Calibration requires the optional 'pygmo' package "
+                              "(conda install -c conda-forge pygmo).")
+        pg = pygmo
+    return pg
 
 class PygmoProblem:
     """
